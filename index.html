@@ -1,240 +1,190 @@
 <!DOCTYPE html>
 <html lang="tr">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blockmind — Crypto Platform</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script><style>
-  :root {
-    --bg: #080b12;
-    --bg2: #0d1120;
-    --bg3: #111827;
-    --card: #0f1623;
-    --border: #1e2d45;
-    --accent: #00d4ff;
-    --accent2: #0099cc;
-    --green: #00e676;
-    --red: #ff3d57;
-    --gold: #f7b731;
-    --text: #e8f0fe;
-    --muted: #6b7fa3;
-    --font: 'Syne', sans-serif;
-    --mono: 'JetBrains Mono', monospace;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  html { scroll-behavior: smooth; }
-  body { background: var(--bg); color: var(--text); font-family: var(--font); min-height:100vh; overflow-x:hidden; }
-  body::before {
-    content:'';
-    position:fixed; inset:0;
-    background-image: linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
-                      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events:none; z-index:0;
-  }
-  ::-webkit-scrollbar { width:6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius:3px; }
-  nav {
-    position:fixed; top:0; left:0; right:0; z-index:100;
-    display:flex; align-items:center; justify-content:space-between;
-    padding:0 32px; height:64px;
-    background: rgba(8,11,18,0.85);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-  }
-  .logo { font-size:22px; font-weight:800; letter-spacing:-0.5px; }
-  .logo span { color: var(--accent); }
-  .nav-right { display:flex; align-items:center; gap:12px; }
-  .lang-btn {
-    background: var(--bg3); border: 1px solid var(--border);
-    color: var(--muted); padding:6px 14px; border-radius:8px;
-    cursor:pointer; font-family:var(--font); font-size:13px;
-    transition: all 0.2s;
-  }
-  .lang-btn:hover { color:var(--accent); border-color:var(--accent); }
-  .btn {
-    padding:8px 20px; border-radius:10px; font-family:var(--font);
-    font-size:14px; font-weight:600; cursor:pointer; border:none;
-    transition: all 0.2s;
-  }
-  .btn-outline { background:transparent; border:1px solid var(--border); color:var(--text); }
-  .btn-outline:hover { border-color:var(--accent); color:var(--accent); }
-  .btn-primary { background: var(--accent); color: #000; }
-  .btn-primary:hover { background: #00b8d9; transform:translateY(-1px); }
-  .ticker-bar {
-    position:fixed; top:64px; left:0; right:0; z-index:99;
-    background: var(--bg2); border-bottom:1px solid var(--border);
-    padding:8px 0; overflow:hidden;
-  }
-  .ticker-track {
-    display:flex; gap:40px; width:max-content;
-    animation: ticker 30s linear infinite;
-  }
-  .ticker-track:hover { animation-play-state:paused; }
-  @keyframes ticker {
-    from { transform:translateX(0); }
-    to { transform:translateX(-50%); }
-  }
-  .ticker-item { display:flex; align-items:center; gap:8px; white-space:nowrap; }
-  .ticker-sym { font-family:var(--mono); font-size:13px; font-weight:500; color:var(--accent); }
-  .ticker-price { font-family:var(--mono); font-size:13px; color:var(--text); }
-  .ticker-change { font-family:var(--mono); font-size:12px; }
-  .up { color: var(--green); }
-  .down { color: var(--red); }
-  .page { display:none; padding-top:130px; min-height:100vh; position:relative; z-index:1; }
-  .page.active { display:block; }
-  .hero-section { max-width:1200px; margin:0 auto; padding:40px 24px; }
-  .hero-title { font-size:clamp(36px,5vw,64px); font-weight:800; line-height:1.05; letter-spacing:-2px; }
-  .hero-title span { color:var(--accent); }
-  .hero-sub { color:var(--muted); font-size:18px; margin:16px 0 32px; max-width:520px; line-height:1.6; }
-  .hero-btns { display:flex; gap:12px; flex-wrap:wrap; }
-  .btn-lg { padding:14px 32px; font-size:16px; border-radius:14px; }
-  .section-title { font-size:20px; font-weight:700; margin-bottom:20px; }
-  .coins-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap:16px; margin-bottom:48px; }
-  .coin-card {
-    background: var(--card); border:1px solid var(--border);
-    border-radius:16px; padding:20px;
-    transition: all 0.3s; cursor:default;
-    position:relative; overflow:hidden;
-  }
-  .coin-card::before {
-    content:''; position:absolute; inset:0;
-    background: linear-gradient(135deg, transparent 60%, rgba(0,212,255,0.04));
-    border-radius:16px;
-  }
-  .coin-card:hover { border-color: var(--accent); transform:translateY(-3px); box-shadow:0 8px 30px rgba(0,212,255,0.1); }
-  .coin-header { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
-  .coin-icon { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; }
-  .coin-name { font-weight:700; font-size:15px; }
-  .coin-sym { font-family:var(--mono); font-size:12px; color:var(--muted); }
-  .coin-price { font-family:var(--mono); font-size:22px; font-weight:500; margin-bottom:6px; }
-  .coin-change { font-family:var(--mono); font-size:13px; }
-  .coin-vol { font-family:var(--mono); font-size:11px; color:var(--muted); margin-top:8px; }
-  .modal-overlay {
-    display:none; position:fixed; inset:0; z-index:200;
-    background: rgba(0,0,0,0.7); backdrop-filter:blur(8px);
-    align-items:center; justify-content:center;
-  }
-  .modal-overlay.open { display:flex; }
-  .modal {
-    background: var(--bg2); border:1px solid var(--border);
-    border-radius:24px; padding:40px; width:100%; max-width:440px;
-    position:relative; animation: slideUp 0.3s ease;
-  }
-  @keyframes slideUp { from { transform:translateY(30px); opacity:0; } to { transform:translateY(0); opacity:1; } }
-  .modal-close {
-    position:absolute; top:16px; right:16px;
-    background:var(--bg3); border:none; color:var(--muted);
-    width:32px; height:32px; border-radius:8px; cursor:pointer;
-    font-size:18px; display:flex; align-items:center; justify-content:center;
-  }
-  .modal-close:hover { color:var(--text); }
-  .modal-title { font-size:24px; font-weight:800; margin-bottom:6px; }
-  .modal-sub { color:var(--muted); font-size:14px; margin-bottom:28px; }
-  .form-group { margin-bottom:16px; }
-  .form-label { font-size:13px; color:var(--muted); margin-bottom:6px; display:block; }
-  .form-input {
-    width:100%; background:var(--bg3); border:1px solid var(--border);
-    border-radius:10px; padding:12px 14px; color:var(--text);
-    font-family:var(--font); font-size:14px; outline:none;
-    transition: border-color 0.2s;
-  }
-  .form-input:focus { border-color: var(--accent); }
-  .modal-tabs { display:flex; gap:0; margin-bottom:24px; background:var(--bg3); border-radius:12px; padding:4px; }
-  .modal-tab {
-    flex:1; padding:8px; border:none; background:transparent;
-    color:var(--muted); font-family:var(--font); font-size:14px; font-weight:600;
-    border-radius:9px; cursor:pointer; transition:all 0.2s;
-  }
-  .modal-tab.active { background:var(--accent); color:#000; }
-  .btn-full { width:100%; padding:14px; font-size:15px; border-radius:12px; margin-top:8px; }
-  .msg { font-size:13px; text-align:center; margin-top:12px; padding:10px; border-radius:8px; }
-  .msg.success { background:rgba(0,230,118,0.1); color:var(--green); border:1px solid rgba(0,230,118,0.2); }
-  .msg.error { background:rgba(255,61,87,0.1); color:var(--red); border:1px solid rgba(255,61,87,0.2); }
-  .deposit-wrap { max-width:900px; margin:0 auto; padding:40px 24px; }
-  .deposit-title { font-size:32px; font-weight:800; margin-bottom:8px; }
-  .deposit-sub { color:var(--muted); margin-bottom:32px; }
-  .network-tabs { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:32px; }
-  .net-tab {
-    padding:8px 18px; background:var(--card); border:1px solid var(--border);
-    border-radius:10px; cursor:pointer; font-family:var(--font); font-size:14px;
-    color:var(--muted); transition:all 0.2s;
-  }
-  .net-tab.active { background:rgba(0,212,255,0.1); border-color:var(--accent); color:var(--accent); }
-  .address-card { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:24px; }
-  .addr-label { font-size:13px; color:var(--muted); margin-bottom:8px; }
-  .addr-box { display:flex; align-items:center; gap:10px; background:var(--bg3); border:1px solid var(--border); border-radius:12px; padding:14px 16px; }
-  .addr-text { font-family:var(--mono); font-size:13px; flex:1; word-break:break-all; color:var(--accent); }
-  .copy-btn { background:var(--accent); color:#000; border:none; border-radius:8px; padding:8px 14px; font-size:12px; font-weight:700; cursor:pointer; font-family:var(--font); white-space:nowrap; transition:all 0.2s; }
-  .copy-btn:hover { background:#00b8d9; }
-  .confirm-section { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:32px; margin-top:32px; }
-  .confirm-title { font-size:18px; font-weight:700; margin-bottom:6px; }
-  .confirm-sub { color:var(--muted); font-size:14px; margin-bottom:24px; }
-  .confirm-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-  @media(max-width:560px) { .confirm-grid { grid-template-columns:1fr; } }
-  .dash-wrap { max-width:1100px; margin:0 auto; padding:40px 24px; }
-  .dash-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:32px; flex-wrap:wrap; gap:16px; }
-  .dash-welcome { font-size:28px; font-weight:800; }
-  .stats-row { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; margin-bottom:32px; }
-  .stat-card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:24px; }
-  .stat-label { font-size:12px; color:var(--muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:1px; }
-  .stat-value { font-family:var(--mono); font-size:24px; font-weight:500; }
-  .stat-value.green { color:var(--green); }
-  .history-table { background:var(--card); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
-  .table-head { background:var(--bg3); padding:14px 20px; display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; }
-  .th { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
-  .table-row { padding:14px 20px; display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; border-top:1px solid var(--border); }
-  .table-row:hover { background:rgba(0,212,255,0.02); }
-  .td { font-family:var(--mono); font-size:14px; }
-  .badge { display:inline-block; padding:3px 10px; border-radius:6px; font-size:11px; font-weight:700; }
-  .badge-pending { background:rgba(247,183,49,0.15); color:var(--gold); }
-  .badge-confirmed { background:rgba(0,230,118,0.15); color:var(--green); }
-  .admin-wrap { max-width:1100px; margin:0 auto; padding:40px 24px; }
-  .admin-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:32px; flex-wrap:wrap; gap:12px; }
-  .admin-title { font-size:28px; font-weight:800; }
-  .admin-badge { background:rgba(255,61,87,0.15); color:var(--red); border:1px solid rgba(255,61,87,0.2); padding:4px 14px; border-radius:8px; font-size:12px; font-weight:700; }
-  .admin-stats { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:14px; margin-bottom:28px; }
-  .admin-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:20px; }
-  .admin-card-label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
-  .admin-card-val { font-family:var(--mono); font-size:22px; font-weight:500; color:var(--accent); }
-  .users-table { background:var(--card); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
-  .users-head { background:var(--bg3); padding:14px 20px; display:grid; grid-template-columns:2fr 2fr 1.5fr 1.5fr 1fr; gap:10px; }
-  .users-row { padding:14px 20px; display:grid; grid-template-columns:2fr 2fr 1.5fr 1.5fr 1fr; gap:10px; border-top:1px solid var(--border); align-items:center; }
-  .users-row:hover { background:rgba(0,212,255,0.02); }
-  .deposits-head { background:var(--bg3); padding:14px 20px; display:grid; grid-template-columns:2fr 1.5fr 2fr 1.5fr 1fr; gap:10px; }
-  .deposits-row { padding:14px 20px; display:grid; grid-template-columns:2fr 1.5fr 2fr 1.5fr 1fr; gap:10px; border-top:1px solid var(--border); align-items:center; }
-  .deposits-row:hover { background:rgba(0,212,255,0.02); }
-  .section-tabs { display:flex; gap:10px; margin-bottom:20px; }
-  .sec-tab { padding:8px 20px; background:var(--bg3); border:1px solid var(--border); border-radius:10px; cursor:pointer; font-family:var(--font); font-size:14px; font-weight:600; color:var(--muted); transition:all 0.2s; }
-  .sec-tab.active { background:rgba(0,212,255,0.1); border-color:var(--accent); color:var(--accent); }
-  .action-btn { background:transparent; border:1px solid var(--border); color:var(--muted); padding:5px 12px; border-radius:7px; cursor:pointer; font-size:12px; font-family:var(--font); transition:all 0.2s; }
-  .action-btn.approve { border-color:var(--green); color:var(--green); }
-  .action-btn.approve:hover { background:rgba(0,230,118,0.1); }
-  .action-btn.del { border-color:var(--red); color:var(--red); }
-  .action-btn.del:hover { background:rgba(255,61,87,0.1); }
-  .empty-state { text-align:center; padding:48px; color:var(--muted); font-size:15px; }
-  .admin-login { max-width:400px; margin:0 auto; padding:60px 24px; }
-  .admin-login-card { background:var(--card); border:1px solid rgba(255,61,87,0.3); border-radius:24px; padding:40px; }
-  .admin-login-title { font-size:22px; font-weight:800; margin-bottom:4px; }
-  .admin-login-sub { color:var(--muted); font-size:13px; margin-bottom:28px; }
-  .toast { position:fixed; bottom:24px; right:24px; z-index:300; background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:14px 20px; display:flex; align-items:center; gap:10px; transform:translateY(100px); opacity:0; transition:all 0.3s; max-width:320px; box-shadow:0 8px 32px rgba(0,0,0,0.4); }
-  .toast.show { transform:translateY(0); opacity:1; }
-  .toast-icon { font-size:18px; }
-  .toast-text { font-size:14px; }
-  .live-dot { display:inline-block; width:7px; height:7px; background:var(--green); border-radius:50%; margin-right:6px; animation:pulse2 1.5s ease infinite; }
-  @keyframes pulse2 { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.5)} }
-  .divider { height:1px; background:var(--border); margin:28px 0; }
-  .text-muted { color:var(--muted); }
-  .text-accent { color:var(--accent); }
-  .text-mono { font-family:var(--mono); }
-  @media(max-width:640px) {
-    nav { padding:0 16px; }
-    .users-head,.users-row,.deposits-head,.deposits-row { grid-template-columns:1fr 1fr; }
-    .table-head,.table-row { grid-template-columns:1fr 1fr; }
-  }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blockmind — Crypto Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080b12;--bg2:#0d1120;--bg3:#111827;--card:#0f1623;--border:#1e2d45;--accent:#00d4ff;--green:#00e676;--red:#ff3d57;--gold:#f7b731;--text:#e8f0fe;--muted:#6b7fa3;--font:'Syne',sans-serif;--mono:'JetBrains Mono',monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden;padding-bottom:70px;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:60px;background:rgba(8,11,18,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-size:19px;font-weight:800;}.logo span{color:var(--accent);}
+.nav-right{display:flex;align-items:center;gap:8px;}
+.lang-btn{background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:5px 10px;border-radius:7px;cursor:pointer;font-family:var(--font);font-size:12px;}
+.profile-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;cursor:pointer;border:2px solid var(--border);transition:border-color 0.2s;}
+.profile-avatar:hover{border-color:var(--accent);}
+.ticker-bar{position:fixed;top:60px;left:0;right:0;z-index:99;background:var(--bg2);border-bottom:1px solid var(--border);padding:7px 0;overflow:hidden;}
+.ticker-track{display:flex;gap:36px;width:max-content;animation:ticker 30s linear infinite;}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ticker-item{display:flex;align-items:center;gap:7px;white-space:nowrap;}
+.ticker-sym{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--accent);}
+.ticker-price{font-family:var(--mono);font-size:11px;}
+.ticker-change{font-family:var(--mono);font-size:10px;}
+.up{color:var(--green);}.down{color:var(--red);}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(8,11,18,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;height:65px;}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;transition:all 0.2s;border:none;background:transparent;color:var(--muted);font-family:var(--font);font-size:10px;font-weight:600;}
+.bnav-item.active{color:var(--accent);}
+.bnav-item svg{width:22px;height:22px;}
+.bnav-item.active svg{stroke:var(--accent);}
+.page{display:none;padding-top:108px;min-height:100vh;position:relative;z-index:1;}
+.page.active{display:block;}
+.btn{padding:8px 16px;border-radius:10px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all 0.2s;}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text);}
+.btn-primary{background:var(--accent);color:#000;}
+.btn-primary:hover{background:#00b8d9;}
+.btn-green{background:var(--green);color:#000;}
+.btn-red{background:var(--red);color:#fff;}
+.btn-full{width:100%;padding:13px;font-size:14px;border-radius:12px;margin-top:8px;}
+.btn-lg{padding:13px 28px;font-size:15px;border-radius:14px;}
+.hero-section{max-width:1000px;margin:0 auto;padding:28px 16px;}
+.hero-title{font-size:clamp(28px,5vw,52px);font-weight:800;line-height:1.05;letter-spacing:-2px;}
+.hero-title span{color:var(--accent);}
+.hero-sub{color:var(--muted);font-size:15px;margin:12px 0 24px;max-width:480px;line-height:1.6;}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap;}
+.divider{height:1px;background:var(--border);margin:20px 0;}
+.section-title{font-size:16px;font-weight:700;margin-bottom:14px;}
+.live-dot{display:inline-block;width:7px;height:7px;background:var(--green);border-radius:50%;margin-right:6px;animation:pulse2 1.5s ease infinite;}
+@keyframes pulse2{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(1.5)}}
+.coins-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:32px;}
+.coin-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;transition:all 0.3s;cursor:pointer;}
+.coin-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.coin-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.coin-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.coin-name{font-weight:700;font-size:13px;}.coin-sym{font-family:var(--mono);font-size:11px;color:var(--muted);}
+.coin-price{font-family:var(--mono);font-size:18px;font-weight:500;margin-bottom:4px;}
+.coin-change{font-family:var(--mono);font-size:11px;}
+.markets-wrap{max-width:900px;margin:0 auto;padding:20px 16px;}
+.market-search{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:11px 14px;color:var(--text);font-family:var(--font);font-size:14px;outline:none;margin-bottom:16px;}
+.market-search:focus{border-color:var(--accent);}
+.market-table{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+.market-head{background:var(--bg3);padding:12px 16px;display:grid;grid-template-columns:2fr 1.5fr 1fr 1fr;gap:8px;}
+.market-row{padding:12px 16px;display:grid;grid-template-columns:2fr 1.5fr 1fr 1fr;gap:8px;border-top:1px solid var(--border);align-items:center;cursor:pointer;}
+.market-row:hover{background:rgba(0,212,255,0.04);}
+.mth{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.mtd{font-family:var(--mono);font-size:13px;}
+.trade-btn-sm{padding:5px 12px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;border:none;font-family:var(--font);}
+.trade-wrap{max-width:600px;margin:0 auto;padding:20px 16px;}
+.trade-tabs{display:flex;background:var(--bg3);border-radius:14px;padding:4px;margin-bottom:20px;}
+.trade-tab{flex:1;padding:9px;border:none;background:transparent;font-family:var(--font);font-size:14px;font-weight:600;border-radius:11px;cursor:pointer;transition:all 0.2s;color:var(--muted);}
+.trade-tab.active-buy{background:var(--green);color:#000;}
+.trade-tab.active-sell{background:var(--red);color:#fff;}
+.trade-tab.active-convert{background:var(--accent);color:#000;}
+.trade-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;}
+.trade-label{font-size:12px;color:var(--muted);margin-bottom:6px;}
+.trade-input-wrap{position:relative;margin-bottom:16px;}
+.trade-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:13px 100px 13px 14px;color:var(--text);font-family:var(--mono);font-size:16px;outline:none;transition:border-color 0.2s;}
+.trade-input:focus{border-color:var(--accent);}
+.trade-coin-badge{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:12px;font-weight:700;color:var(--text);}
+.trade-coin-select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-family:var(--font);font-size:14px;outline:none;margin-bottom:16px;cursor:pointer;}
+.trade-info{background:var(--bg3);border-radius:12px;padding:14px;margin-bottom:16px;}
+.trade-info-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;}
+.trade-info-label{font-size:12px;color:var(--muted);}
+.trade-info-val{font-family:var(--mono);font-size:13px;}
+.convert-arrow{text-align:center;font-size:22px;margin:8px 0;cursor:pointer;color:var(--accent);}
+.wallet-wrap{max-width:700px;margin:0 auto;padding:20px 16px;}
+.wallet-header{background:linear-gradient(135deg,rgba(0,212,255,0.15),rgba(0,212,255,0.03));border:1px solid rgba(0,212,255,0.2);border-radius:20px;padding:24px;margin-bottom:20px;text-align:center;}
+.wallet-total-label{font-size:13px;color:var(--muted);margin-bottom:6px;}
+.wallet-total{font-family:var(--mono);font-size:36px;font-weight:500;color:var(--accent);}
+.wallet-btns{display:flex;gap:10px;justify-content:center;margin-top:16px;}
+.wallet-btn{display:flex;flex-direction:column;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:12px 20px;cursor:pointer;font-family:var(--font);font-size:12px;font-weight:600;color:var(--text);transition:all 0.2s;border:none;}
+.wallet-btn:hover{color:var(--accent);}
+.wallet-btn svg{width:20px;height:20px;}
+.coin-balance-list{display:flex;flex-direction:column;gap:10px;}
+.coin-balance-item{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;display:flex;align-items:center;justify-content:space-between;}
+.cbi-left{display:flex;align-items:center;gap:12px;}
+.cbi-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.cbi-name{font-weight:700;font-size:14px;}.cbi-sym{font-family:var(--mono);font-size:12px;color:var(--muted);}
+.cbi-right{text-align:right;}
+.cbi-amount{font-family:var(--mono);font-size:15px;font-weight:500;}
+.cbi-usd{font-family:var(--mono);font-size:12px;color:var(--muted);}
+.profile-wrap{max-width:600px;margin:0 auto;padding:20px 16px;}
+.profile-hero{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;text-align:center;margin-bottom:16px;}
+.profile-avatar-big{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:28px;margin:0 auto 14px;border:3px solid var(--border);}
+.profile-name{font-size:20px;font-weight:800;}
+.profile-username{font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:4px;}
+.profile-joined{font-size:12px;color:var(--muted);margin-top:6px;}
+.profile-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:18px;}
+.profile-stat{background:var(--bg3);border-radius:12px;padding:12px;text-align:center;}
+.profile-stat-val{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--accent);}
+.profile-stat-label{font-size:10px;color:var(--muted);margin-top:3px;}
+.profile-section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:12px;}
+.profile-section-title{font-size:14px;font-weight:700;margin-bottom:14px;color:var(--accent);}
+.ref-link-box{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 12px;}
+.ref-link-text{font-family:var(--mono);font-size:11px;flex:1;word-break:break-all;color:var(--accent);}
+.copy-btn{background:var(--accent);color:#000;border:none;border-radius:7px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap;}
+.profile-menu-item{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer;}
+.profile-menu-item:last-child{border-bottom:none;}
+.pmi-left{display:flex;align-items:center;gap:12px;}
+.pmi-icon{font-size:18px;}
+.pmi-label{font-size:14px;font-weight:600;}
+.pmi-sub{font-size:12px;color:var(--muted);}
+.deposit-wrap{max-width:800px;margin:0 auto;padding:20px 16px;}
+.network-tabs{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px;}
+.net-tab{padding:6px 14px;background:var(--card);border:1px solid var(--border);border-radius:9px;cursor:pointer;font-family:var(--font);font-size:12px;color:var(--muted);transition:all 0.2s;}
+.net-tab.active{background:rgba(0,212,255,0.1);border-color:var(--accent);color:var(--accent);}
+.address-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px;}
+.addr-label{font-size:12px;color:var(--muted);margin-bottom:6px;}
+.addr-box{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:11px 13px;}
+.addr-text{font-family:var(--mono);font-size:12px;flex:1;word-break:break-all;color:var(--accent);}
+.confirm-section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-top:20px;}
+.confirm-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:500px){.confirm-grid{grid-template-columns:1fr;}}
+.modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.75);backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:22px;padding:28px;width:100%;max-width:400px;position:relative;animation:slideUp 0.3s ease;max-height:90vh;overflow-y:auto;}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-close{position:absolute;top:13px;right:13px;background:var(--bg3);border:none;color:var(--muted);width:28px;height:28px;border-radius:7px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;}
+.modal-title{font-size:20px;font-weight:800;margin-bottom:4px;}
+.modal-sub{color:var(--muted);font-size:13px;margin-bottom:20px;}
+.modal-tabs{display:flex;margin-bottom:18px;background:var(--bg3);border-radius:11px;padding:3px;}
+.modal-tab{flex:1;padding:7px;border:none;background:transparent;color:var(--muted);font-family:var(--font);font-size:13px;font-weight:600;border-radius:9px;cursor:pointer;transition:all 0.2s;}
+.modal-tab.active{background:var(--accent);color:#000;}
+.form-group{margin-bottom:12px;}
+.form-label{font-size:12px;color:var(--muted);margin-bottom:5px;display:block;}
+.form-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:11px 13px;color:var(--text);font-family:var(--font);font-size:14px;outline:none;transition:border-color 0.2s;}
+.form-input:focus{border-color:var(--accent);}
+.msg{font-size:13px;text-align:center;margin-top:10px;padding:9px;border-radius:8px;}
+.msg.success{background:rgba(0,230,118,0.1);color:var(--green);border:1px solid rgba(0,230,118,0.2);}
+.msg.error{background:rgba(255,61,87,0.1);color:var(--red);border:1px solid rgba(255,61,87,0.2);}
+.admin-wrap{max-width:1000px;margin:0 auto;padding:20px 16px;}
+.admin-title{font-size:22px;font-weight:800;margin-bottom:4px;}
+.admin-badge{background:rgba(255,61,87,0.15);color:var(--red);border:1px solid rgba(255,61,87,0.2);padding:3px 10px;border-radius:7px;font-size:11px;font-weight:700;}
+.admin-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:20px;}
+.admin-card{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:16px;}
+.admin-card-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
+.admin-card-val{font-family:var(--mono);font-size:18px;font-weight:500;color:var(--accent);}
+.section-tabs{display:flex;gap:7px;margin-bottom:16px;flex-wrap:wrap;}
+.sec-tab{padding:6px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;cursor:pointer;font-family:var(--font);font-size:12px;font-weight:600;color:var(--muted);transition:all 0.2s;}
+.sec-tab.active{background:rgba(0,212,255,0.1);border-color:var(--accent);color:var(--accent);}
+.data-table{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.data-head{background:var(--bg3);padding:11px 16px;display:grid;gap:8px;}
+.data-row{padding:11px 16px;display:grid;gap:8px;border-top:1px solid var(--border);align-items:center;}
+.data-row:hover{background:rgba(0,212,255,0.02);}
+.th{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.td{font-family:var(--mono);font-size:12px;}
+.action-btn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:4px 9px;border-radius:6px;cursor:pointer;font-size:11px;font-family:var(--font);transition:all 0.2s;}
+.action-btn.approve{border-color:var(--green);color:var(--green);}
+.action-btn.del{border-color:var(--red);color:var(--red);}
+.badge{display:inline-block;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:700;}
+.badge-pending{background:rgba(247,183,49,0.15);color:var(--gold);}
+.badge-confirmed{background:rgba(0,230,118,0.15);color:var(--green);}
+.badge-bonus{background:rgba(0,212,255,0.15);color:var(--accent);}
+.empty-state{text-align:center;padding:36px;color:var(--muted);font-size:13px;}
+.admin-login{max-width:360px;margin:0 auto;padding:50px 16px;}
+.admin-login-card{background:var(--card);border:1px solid rgba(255,61,87,0.3);border-radius:22px;padding:32px;}
+.toast{position:fixed;bottom:80px;right:16px;z-index:300;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:11px 16px;display:flex;align-items:center;gap:8px;transform:translateY(100px);opacity:0;transition:all 0.3s;max-width:280px;box-shadow:0 8px 32px rgba(0,0,0,0.4);}
+.toast.show{transform:translateY(0);opacity:1;}
+.text-muted{color:var(--muted);}.text-accent{color:var(--accent);}.text-mono{font-family:var(--mono);}
+.av-blue{background:linear-gradient(135deg,#0066ff,#00d4ff);}
+.av-purple{background:linear-gradient(135deg,#7c3aed,#a855f7);}
+.av-green{background:linear-gradient(135deg,#059669,#10b981);}
+.av-orange{background:linear-gradient(135deg,#ea580c,#f97316);}
+.av-pink{background:linear-gradient(135deg,#db2777,#ec4899);}
+.av-gold{background:linear-gradient(135deg,#d97706,#f59e0b);}
 </style>
 </head>
 <body>
@@ -242,27 +192,49 @@
   <div class="logo">Block<span>mind</span></div>
   <div class="nav-right">
     <button class="lang-btn" onclick="toggleLang()" id="langBtn">EN</button>
-    <div id="navGuest" style="display:flex; gap:8px;">
-      <button class="btn btn-outline" onclick="openAuth('login')">Giriş</button>
-      <button class="btn btn-primary" onclick="openAuth('register')">Kayıt Ol</button>
+    <div id="navGuest" style="display:flex;gap:6px;">
+      <button class="btn btn-outline" style="font-size:12px;padding:6px 12px;" onclick="openAuth('login')">Giriş</button>
+      <button class="btn btn-primary" style="font-size:12px;padding:6px 12px;" onclick="openAuth('register')">Kayıt</button>
     </div>
-    <div id="navUser" style="display:none; align-items:center; gap:10px;">
-      <span id="navUsername" style="font-size:14px; color:var(--muted);"></span>
-      <button class="btn btn-outline" onclick="showPage('deposit')">Yatır</button>
-      <button class="btn btn-outline" onclick="showPage('dashboard')">Panel</button>
-      <button class="btn" style="background:var(--bg3); border:1px solid var(--border); color:var(--muted);" onclick="logout()">Çıkış</button>
+    <div id="navUser" style="display:none;">
+      <div class="profile-avatar" id="navAvatar" onclick="showPage('profile')"></div>
     </div>
   </div>
 </nav>
 <div class="ticker-bar"><div class="ticker-track" id="tickerTrack"></div></div>
+<div class="bottom-nav" id="bottomNav" style="display:none;">
+  <button class="bnav-item active" id="bn-home" onclick="showPage('home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+    <span>Ana Sayfa</span>
+  </button>
+  <button class="bnav-item" id="bn-markets" onclick="showPage('markets')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    <span>Piyasalar</span>
+  </button>
+  <button class="bnav-item" id="bn-trade" onclick="showPage('trade')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+    <span>Al/Sat</span>
+  </button>
+  <button class="bnav-item" id="bn-wallet" onclick="showPage('wallet')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12V7H5a2 2 0 010-4h14v4"/><path d="M3 5v14a2 2 0 002 2h16v-5"/><path d="M18 12a2 2 0 100 4 2 2 0 000-4z"/></svg>
+    <span>Cüzdan</span>
+  </button>
+  <button class="bnav-item" id="bn-profile" onclick="showPage('profile')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span>Profil</span>
+  </button>
+</div>
 
 <div class="page active" id="page-home">
   <div class="hero-section">
     <div class="hero-title">Kripto Piyasasına<br>Akıllıca <span>Yatırım Yap</span></div>
     <p class="hero-sub">Blockmind ile Bitcoin, Ethereum, BNB ve daha fazlasını güvenle takip edin.</p>
-    <div class="hero-btns">
+    <div class="hero-btns" id="heroBtns">
       <button class="btn btn-primary btn-lg" onclick="openAuth('register')">Hemen Başla</button>
       <button class="btn btn-outline btn-lg" onclick="openAuth('login')">Giriş Yap</button>
+    </div>
+    <div style="margin-top:16px;padding:14px;background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.2);border-radius:12px;font-size:13px;">
+      🎁 <strong style="color:var(--accent)">Davet Bonusu:</strong> Arkadaşını davet et, yatırım yaptığında %10 bonus kazan!
     </div>
     <div class="divider"></div>
     <div class="section-title"><span class="live-dot"></span>Canlı Fiyatlar</div>
@@ -270,17 +242,151 @@
   </div>
 </div>
 
+<div class="page" id="page-markets">
+  <div class="markets-wrap">
+    <div class="section-title"><span class="live-dot"></span>Piyasalar</div>
+    <input class="market-search" id="marketSearch" placeholder="Coin ara... (BTC, ETH...)" oninput="renderMarkets()" />
+    <div class="market-table">
+      <div class="market-head">
+        <div class="mth">Coin</div><div class="mth">Fiyat</div>
+        <div class="mth">24s %</div><div class="mth">İşlem</div>
+      </div>
+      <div id="marketList"></div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-trade">
+  <div class="trade-wrap">
+    <div class="section-title">Al / Sat / Dönüştür</div>
+    <div class="trade-tabs">
+      <button class="trade-tab active-buy" id="tt-buy" onclick="switchTradeTab('buy')">AL</button>
+      <button class="trade-tab" id="tt-sell" onclick="switchTradeTab('sell')">SAT</button>
+      <button class="trade-tab" id="tt-convert" onclick="switchTradeTab('convert')">DÖNÜŞTÜR</button>
+    </div>
+    <div id="tradePanel-buy" class="trade-card">
+      <div class="trade-label">Hangi coin almak istiyorsunuz?</div>
+      <select class="trade-coin-select" id="buyCoin" onchange="updateTradeInfo('buy')"><option value="">Coin seçin...</option></select>
+      <div class="trade-label">USDT Miktar</div>
+      <div class="trade-input-wrap">
+        <input class="trade-input" type="number" id="buyAmount" placeholder="100" oninput="updateTradeInfo('buy')" />
+        <span class="trade-coin-badge">USDT</span>
+      </div>
+      <div class="trade-info" id="buyInfo" style="display:none">
+        <div class="trade-info-row"><span class="trade-info-label">Coin Fiyatı</span><span class="trade-info-val" id="buyPrice">-</span></div>
+        <div class="trade-info-row"><span class="trade-info-label">Alınacak Miktar</span><span class="trade-info-val" id="buyQty">-</span></div>
+        <div class="trade-info-row"><span class="trade-info-label">Mevcut USDT</span><span class="trade-info-val" id="buyBalance">-</span></div>
+      </div>
+      <button class="btn btn-full btn-green" onclick="executeTrade('buy')">AL</button>
+      <div id="buyMsg"></div>
+    </div>
+    <div id="tradePanel-sell" class="trade-card" style="display:none">
+      <div class="trade-label">Hangi coin satmak istiyorsunuz?</div>
+      <select class="trade-coin-select" id="sellCoin" onchange="updateTradeInfo('sell')"><option value="">Coin seçin...</option></select>
+      <div class="trade-label">Satılacak Miktar</div>
+      <div class="trade-input-wrap">
+        <input class="trade-input" type="number" id="sellAmount" placeholder="0.001" oninput="updateTradeInfo('sell')" />
+        <span class="trade-coin-badge" id="sellCoinBadge">COIN</span>
+      </div>
+      <div class="trade-info" id="sellInfo" style="display:none">
+        <div class="trade-info-row"><span class="trade-info-label">Coin Fiyatı</span><span class="trade-info-val" id="sellPrice">-</span></div>
+        <div class="trade-info-row"><span class="trade-info-label">USDT Karşılığı</span><span class="trade-info-val" id="sellUSDT">-</span></div>
+        <div class="trade-info-row"><span class="trade-info-label">Mevcut Bakiye</span><span class="trade-info-val" id="sellBalance">-</span></div>
+      </div>
+      <button class="btn btn-full btn-red" onclick="executeTrade('sell')">SAT</button>
+      <div id="sellMsg"></div>
+    </div>
+    <div id="tradePanel-convert" class="trade-card" style="display:none">
+      <div class="trade-label">Dönüştürülecek Coin</div>
+      <select class="trade-coin-select" id="convertFrom" onchange="updateTradeInfo('convert')"><option value="">Coin seçin...</option></select>
+      <div class="trade-label">Miktar</div>
+      <div class="trade-input-wrap">
+        <input class="trade-input" type="number" id="convertAmount" placeholder="100" oninput="updateTradeInfo('convert')" />
+        <span class="trade-coin-badge" id="convertFromBadge">-</span>
+      </div>
+      <div class="convert-arrow" onclick="swapConvert()">⇅</div>
+      <div class="trade-label">Hedef Coin</div>
+      <select class="trade-coin-select" id="convertTo" onchange="updateTradeInfo('convert')"><option value="">Coin seçin...</option></select>
+      <div class="trade-info" id="convertInfo" style="display:none">
+        <div class="trade-info-row"><span class="trade-info-label">Dönüşüm Oranı</span><span class="trade-info-val" id="convertRate">-</span></div>
+        <div class="trade-info-row"><span class="trade-info-label">Alınacak</span><span class="trade-info-val" id="convertResult">-</span></div>
+      </div>
+      <button class="btn btn-full btn-primary" onclick="executeTrade('convert')">DÖNÜŞTÜR</button>
+      <div id="convertMsg"></div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-wallet">
+  <div class="wallet-wrap">
+    <div class="wallet-header">
+      <div class="wallet-total-label">Toplam Portföy Değeri</div>
+      <div class="wallet-total" id="walletTotal">$0.00</div>
+      <div class="wallet-btns">
+        <button class="wallet-btn" onclick="showPage('deposit')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Yatır
+        </button>
+        <button class="wallet-btn" onclick="showPage('trade')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+          Al/Sat
+        </button>
+      </div>
+    </div>
+    <div class="section-title">Varlıklarım</div>
+    <div class="coin-balance-list" id="walletList"></div>
+  </div>
+</div>
+
+<div class="page" id="page-profile">
+  <div class="profile-wrap">
+    <div class="profile-hero">
+      <div class="profile-avatar-big" id="profileAvatarBig"></div>
+      <div class="profile-name" id="profileName"></div>
+      <div class="profile-username" id="profileUsername"></div>
+      <div class="profile-joined" id="profileJoined"></div>
+      <div class="profile-stats" id="profileStats"></div>
+    </div>
+    <div class="profile-section">
+      <div class="profile-section-title">🔗 Davet Linkim</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">Arkadaşını davet et, ilk yatırımı 100 USDT+ olursa %10 bonus kazan!</div>
+      <div class="ref-link-box">
+        <span class="ref-link-text" id="profileRefLink"></span>
+        <button class="copy-btn" onclick="copyRefLink()">Kopyala</button>
+      </div>
+    </div>
+    <div class="profile-section">
+      <div class="profile-section-title">⚡ Hızlı Erişim</div>
+      <div class="profile-menu-item" onclick="showPage('deposit')">
+        <div class="pmi-left"><span class="pmi-icon">💰</span><div><div class="pmi-label">Yatırım Yap</div><div class="pmi-sub">Kripto yatır</div></div></div>
+        <span style="color:var(--muted)">›</span>
+      </div>
+      <div class="profile-menu-item" onclick="showPage('wallet')">
+        <div class="pmi-left"><span class="pmi-icon">👛</span><div><div class="pmi-label">Cüzdanım</div><div class="pmi-sub">Varlıklarımı görüntüle</div></div></div>
+        <span style="color:var(--muted)">›</span>
+      </div>
+      <div class="profile-menu-item" onclick="showPage('trade')">
+        <div class="pmi-left"><span class="pmi-icon">📊</span><div><div class="pmi-label">Al / Sat</div><div class="pmi-sub">İşlem yap</div></div></div>
+        <span style="color:var(--muted)">›</span>
+      </div>
+      <div class="profile-menu-item" onclick="logout()">
+        <div class="pmi-left"><span class="pmi-icon">🚪</span><div><div class="pmi-label" style="color:var(--red)">Çıkış Yap</div><div class="pmi-sub">Hesaptan çık</div></div></div>
+        <span style="color:var(--muted)">›</span>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="page" id="page-deposit">
   <div class="deposit-wrap">
-    <div class="deposit-title">Kripto Yatır</div>
-    <p class="deposit-sub">Ağı seçin, adrese gönderin, formu doldurun.</p>
+    <div style="font-size:24px;font-weight:800;margin-bottom:6px;">Kripto Yatır</div>
+    <p style="color:var(--muted);margin-bottom:20px;font-size:13px;">Ağı seçin, adrese gönderin, formu doldurun.</p>
     <div class="network-tabs">
       <button class="net-tab active" data-net="usdt_erc20" onclick="selectNet(this)">USDT (ERC20)</button>
       <button class="net-tab" data-net="usdt_trc20" onclick="selectNet(this)">USDT (TRC20)</button>
       <button class="net-tab" data-net="usdt_sol" onclick="selectNet(this)">USDT (Solana)</button>
-      <button class="net-tab" data-net="btc" onclick="selectNet(this)">Bitcoin (BTC)</button>
-      <button class="net-tab" data-net="eth" onclick="selectNet(this)">Ethereum (ETH)</button>
-      <button class="net-tab" data-net="bnb" onclick="selectNet(this)">BNB Smart Chain</button>
+      <button class="net-tab" data-net="btc" onclick="selectNet(this)">Bitcoin</button>
+      <button class="net-tab" data-net="eth" onclick="selectNet(this)">Ethereum</button>
+      <button class="net-tab" data-net="bnb" onclick="selectNet(this)">BNB</button>
     </div>
     <div class="address-card">
       <div class="addr-label">Gönderim Adresi</div>
@@ -288,53 +394,20 @@
         <span class="addr-text" id="addrText">0xe6b60bd4d6c00dd8b2814b9f7616e28c292dd41e</span>
         <button class="copy-btn" onclick="copyAddr()">Kopyala</button>
       </div>
-      <div style="margin-top:12px; font-size:13px; color:var(--muted);" id="addrNote">⚠️ Sadece bu ağ üzerinden gönderin.</div>
+      <div style="margin-top:9px;font-size:12px;color:var(--muted);" id="addrNote">⚠️ Sadece bu ağ üzerinden gönderin.</div>
     </div>
     <div class="confirm-section">
-      <div class="confirm-title">Gönderim Bildirimi</div>
-      <p class="confirm-sub">Transfer sonrası bilgileri girin. Onay sonrası bakiyeniz yüklenir.</p>
+      <div style="font-size:16px;font-weight:700;margin-bottom:5px;">Gönderim Bildirimi</div>
+      <p style="color:var(--muted);font-size:12px;margin-bottom:18px;">Transfer sonrası bilgileri girin.</p>
       <div class="confirm-grid">
-        <div class="form-group">
-          <label class="form-label">Kullanıcı Adı</label>
-          <input class="form-input" id="depUsername" placeholder="kullanici_adi" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Ad Soyad</label>
-          <input class="form-input" id="depName" placeholder="Ad Soyad" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Gönderilen Tutar</label>
-          <input class="form-input" id="depAmount" type="number" placeholder="100" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Ağ</label>
-          <input class="form-input" id="depNetwork" readonly style="color:var(--accent)" value="USDT (ERC20)" />
-        </div>
+        <div class="form-group"><label class="form-label">Kullanıcı Adı</label><input class="form-input" id="depUsername" placeholder="kullanici_adi" /></div>
+        <div class="form-group"><label class="form-label">Ad Soyad</label><input class="form-input" id="depName" placeholder="Ad Soyad" /></div>
+        <div class="form-group"><label class="form-label">Tutar (USDT)</label><input class="form-input" id="depAmount" type="number" placeholder="100" /></div>
+        <div class="form-group"><label class="form-label">Ağ</label><input class="form-input" id="depNetwork" readonly style="color:var(--accent)" value="USDT (ERC20)" /></div>
       </div>
-      <div class="form-group" style="margin-top:8px;">
-        <label class="form-label">TX Hash (opsiyonel)</label>
-        <input class="form-input" id="depTxHash" placeholder="0x..." />
-      </div>
+      <div class="form-group"><label class="form-label">TX Hash (opsiyonel)</label><input class="form-input" id="depTxHash" placeholder="0x..." /></div>
       <button class="btn btn-primary btn-full" onclick="submitDeposit()">Gönderimi Bildir</button>
       <div id="depMsg"></div>
-    </div>
-  </div>
-</div>
-
-<div class="page" id="page-dashboard">
-  <div class="dash-wrap">
-    <div class="dash-header">
-      <div class="dash-welcome">Hoş geldin, <span id="dashName2" style="color:var(--accent)"></span></div>
-      <button class="btn btn-primary" onclick="showPage('deposit')">+ Yatır</button>
-    </div>
-    <div class="stats-row" id="userStatsRow"></div>
-    <div class="section-title">Yatırım Geçmişi</div>
-    <div class="history-table">
-      <div class="table-head">
-        <div class="th">Ağ</div><div class="th">Tutar</div>
-        <div class="th">Tarih</div><div class="th">Durum</div>
-      </div>
-      <div id="userDepositHistory"></div>
     </div>
   </div>
 </div>
@@ -342,46 +415,56 @@
 <div class="page" id="page-admin">
   <div id="adminLoginSection" class="admin-login">
     <div class="admin-login-card">
-      <div class="admin-login-title">🔐 Admin Paneli</div>
-      <div class="admin-login-sub">Yönetici girişi gereklidir.</div>
-      <div class="form-group">
-        <label class="form-label">Şifre</label>
-        <input type="password" class="form-input" id="adminPassInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')adminLogin()" />
-      </div>
+      <div style="font-size:19px;font-weight:800;margin-bottom:4px;">🔐 Admin Paneli</div>
+      <div style="color:var(--muted);font-size:12px;margin-bottom:20px;">Yönetici girişi gereklidir.</div>
+      <div class="form-group"><label class="form-label">Şifre</label><input type="password" class="form-input" id="adminPassInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')adminLogin()" /></div>
       <button class="btn btn-primary btn-full" onclick="adminLogin()">Giriş</button>
       <div id="adminLoginMsg"></div>
     </div>
   </div>
   <div id="adminDashSection" style="display:none">
     <div class="admin-wrap">
-      <div class="admin-header">
-        <div>
-          <div class="admin-title">Admin Paneli <span class="admin-badge">YÖNETİCİ</span></div>
-          <div style="color:var(--muted);font-size:13px;margin-top:4px;">Blockmind Yönetim Merkezi</div>
-        </div>
-        <button class="btn" style="background:var(--bg3); border:1px solid var(--border); color:var(--muted);" onclick="adminLogout()">Çıkış</button>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+        <div><div class="admin-title">Admin <span class="admin-badge">YÖNETİCİ</span></div></div>
+        <button class="btn" style="background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-size:12px;" onclick="adminLogout()">Çıkış</button>
       </div>
       <div class="admin-stats" id="adminStats"></div>
       <div class="section-tabs">
         <button class="sec-tab active" onclick="switchAdminTab('users',this)">👥 Kullanıcılar</button>
         <button class="sec-tab" onclick="switchAdminTab('deposits',this)">💰 Yatırımlar</button>
+        <button class="sec-tab" onclick="switchAdminTab('bonuses',this)">🎁 Bonuslar</button>
+        <button class="sec-tab" onclick="switchAdminTab('trades',this)">📊 İşlemler</button>
       </div>
       <div id="adminUsersSection">
-        <div class="users-table">
-          <div class="users-head">
-            <div class="th">Kullanıcı Adı</div><div class="th">E-posta</div>
-            <div class="th">Bakiye</div><div class="th">Kayıt</div><div class="th">İşlem</div>
+        <div class="data-table">
+          <div class="data-head" style="grid-template-columns:1.5fr 1.5fr 1fr 1fr 1fr;">
+            <div class="th">Kullanıcı</div><div class="th">E-posta</div><div class="th">Bakiye</div><div class="th">Davet</div><div class="th">İşlem</div>
           </div>
           <div id="adminUsersList"></div>
         </div>
       </div>
       <div id="adminDepositsSection" style="display:none">
-        <div class="users-table">
-          <div class="deposits-head">
-            <div class="th">Kullanıcı</div><div class="th">Tutar</div>
-            <div class="th">Ağ</div><div class="th">Tarih</div><div class="th">Durum</div>
+        <div class="data-table">
+          <div class="data-head" style="grid-template-columns:1.5fr 1fr 1.5fr 1fr 1fr;">
+            <div class="th">Kullanıcı</div><div class="th">Tutar</div><div class="th">Ağ</div><div class="th">Tarih</div><div class="th">Durum</div>
           </div>
           <div id="adminDepositsList"></div>
+        </div>
+      </div>
+      <div id="adminBonusesSection" style="display:none">
+        <div class="data-table">
+          <div class="data-head" style="grid-template-columns:1fr 1fr 1fr 1fr;">
+            <div class="th">Bonus Alan</div><div class="th">Davet Edilen</div><div class="th">Bonus</div><div class="th">Tarih</div>
+          </div>
+          <div id="adminBonusesList"></div>
+        </div>
+      </div>
+      <div id="adminTradesSection" style="display:none">
+        <div class="data-table">
+          <div class="data-head" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr;">
+            <div class="th">Kullanıcı</div><div class="th">Tür</div><div class="th">Coin</div><div class="th">Tutar</div><div class="th">Tarih</div>
+          </div>
+          <div id="adminTradesList"></div>
         </div>
       </div>
     </div>
@@ -396,85 +479,42 @@
       <button class="modal-tab" id="tabRegister" onclick="switchTab('register')">Kayıt Ol</button>
     </div>
     <div id="formLogin">
-      <div class="modal-title">Tekrar Hoş Geldin</div>
+      <div class="modal-title">Hoş Geldin</div>
       <p class="modal-sub">Hesabınıza giriş yapın</p>
-      <div class="form-group">
-        <label class="form-label">Kullanıcı Adı</label>
-        <input class="form-input" id="loginUser" placeholder="kullanici_adi" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">Şifre</label>
-        <input class="form-input" type="password" id="loginPass" placeholder="••••••••" />
-      </div>
+      <div class="form-group"><label class="form-label">Kullanıcı Adı</label><input class="form-input" id="loginUser" placeholder="kullanici_adi" /></div>
+      <div class="form-group"><label class="form-label">Şifre</label><input class="form-input" type="password" id="loginPass" placeholder="••••••••" /></div>
       <button class="btn btn-primary btn-full" onclick="doLogin()">Giriş Yap</button>
       <div id="loginMsg"></div>
     </div>
     <div id="formRegister" style="display:none">
       <div class="modal-title">Hesap Oluştur</div>
       <p class="modal-sub">Blockmind'a katılın</p>
-      <div class="form-group">
-        <label class="form-label">Ad Soyad</label>
-        <input class="form-input" id="regName" placeholder="Ad Soyad" />
+      <div id="refBanner" style="display:none;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);border-radius:9px;padding:9px;margin-bottom:12px;font-size:12px;">
+        🎁 <span id="refBannerText"></span>
       </div>
-      <div class="form-group">
-        <label class="form-label">E-posta</label>
-        <input class="form-input" type="email" id="regEmail" placeholder="ornek@email.com" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">Kullanıcı Adı</label>
-        <input class="form-input" id="regUser" placeholder="kullanici_adi" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">Şifre</label>
-        <input class="form-input" type="password" id="regPass" placeholder="En az 6 karakter" />
-      </div>
+      <div class="form-group"><label class="form-label">Ad Soyad</label><input class="form-input" id="regName" placeholder="Ad Soyad" /></div>
+      <div class="form-group"><label class="form-label">E-posta</label><input class="form-input" type="email" id="regEmail" placeholder="ornek@email.com" /></div>
+      <div class="form-group"><label class="form-label">Kullanıcı Adı</label><input class="form-input" id="regUser" placeholder="kullanici_adi" /></div>
+      <div class="form-group"><label class="form-label">Şifre</label><input class="form-input" type="password" id="regPass" placeholder="En az 6 karakter" /></div>
+      <input type="hidden" id="refCode" value="" />
       <button class="btn btn-primary btn-full" onclick="doRegister()">Hesap Oluştur</button>
       <div id="registerMsg"></div>
     </div>
   </div>
 </div>
-
-<div class="toast" id="toast">
-  <span class="toast-icon" id="toastIcon"></span>
-  <span class="toast-text" id="toastText"></span>
-</div>
-
+<div class="toast" id="toast"><span id="toastIcon"></span><span style="margin-left:8px;font-size:12px;" id="toastText"></span></div>
 <script>
-const ADMIN_PASS = "Portakal357";
-const ADMIN_EMAIL = "ali3467799@gmail.com";
-const ADDRESSES = {
-  usdt_erc20: { addr: "0xe6b60bd4d6c00dd8b2814b9f7616e28c292dd41e", label: "USDT ERC20", note: "⚠️ Sadece ERC20 ağı." },
-  usdt_trc20: { addr: "TMtq8qrYSKzx6DyxgZbeCkSSFeDWUaVTic", label: "USDT TRC20", note: "⚠️ Sadece TRC20 (Tron) ağı." },
-  usdt_sol:   { addr: "PChjbUFEubr5Y2DQHL4kWxU4Npfw2ddipKsqegbBrWL", label: "USDT Solana", note: "⚠️ Sadece Solana ağı." },
-  btc:        { addr: "bc1qfd3j2k4htxra0k2566skk2q8m9eekchvtrwv8x", label: "Bitcoin (BTC)", note: "⚠️ Sadece Bitcoin ağı." },
-  eth:        { addr: "0xe6b60bd4d6c00dd8b2814b9f7616e28c292dd41e", label: "Ethereum (ETH)", note: "⚠️ Sadece ERC20 ağı." },
-  bnb:        { addr: "0xe6b60bd4d6c00dd8b2814b9f7616e28c292dd41e", label: "BNB Smart Chain", note: "⚠️ Sadece BEP20 ağı." },
+const ADMIN_PASS="Portakal357";
+const ADDRESSES={
+  usdt_erc20:{addr:"0xe6b60bd4d6c00dd8b2814b9f7616e28c292dd41e",label:"USDT ERC20",note:"⚠️ Sadece ERC20 ağı."},
+  usdt_trc20:{addr:"TMtq8qrYSKzx6DyxgZbeCkSSFeDWUaVTic",label:"USDT TRC20",note:"⚠️ Sadece TRC20 ağı."},
+  usdt_sol:{addr:"PChjbUFEubr5Y2DQHL4kWxU4Npfw2ddipKsqegbBrWL",label:"USDT Solana",note:"⚠️ Sadece Solana ağı."},
+  btc:{addr:"bc1qfd3j2k4htxra0k2566skk2q8m9eekchvtrwv8x",label:"Bitcoin BTC",note:"⚠️ Sadece Bitcoin ağı."},
+  eth:{addr:"0xe6b60bd4d6c00dd8b2814b9f7616e28c292dd41e",label:"Ethereum ETH",note:"⚠️ Sadece ERC20 ağı."},
+  bnb:{addr:"0xe6b60bd4d6c00dd8b2814b9f7616e28c292dd41e",label:"BNB Smart Chain",note:"⚠️ Sadece BEP20 ağı."},
 };
-let currentNet = "usdt_erc20";
-let lang = "tr";
-let currentUser = null;
-let adminLoggedIn = false;
-
-function getUsers() { try { return JSON.parse(localStorage.getItem("bm_users")||"[]"); } catch{return[];} }
-function saveUsers(u) { localStorage.setItem("bm_users", JSON.stringify(u)); }
-function getDeposits() { try { return JSON.parse(localStorage.getItem("bm_deposits")||"[]"); } catch{return[];} }
-function saveDeposits(d) { localStorage.setItem("bm_deposits", JSON.stringify(d)); }
-
-function toggleLang() {
-  lang = lang==="tr"?"en":"tr";
-  document.getElementById("langBtn").textContent = lang==="tr"?"EN":"TR";
-}
-
-function showPage(name) {
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.getElementById("page-"+name).classList.add("active");
-  if(name==="dashboard") renderDashboard();
-  if(name==="admin") renderAdmin();
-  if(name==="deposit" && currentUser) document.getElementById("depUsername").value = currentUser.username;
-  window.scrollTo(0,0);
-}
-
-const COINS = [
+const AVATAR_COLORS=['av-blue','av-purple','av-green','av-orange','av-pink','av-gold'];
+const COINS=[
   {sym:"BTC",name:"Bitcoin",icon:"₿",color:"#f7931a"},
   {sym:"ETH",name:"Ethereum",icon:"Ξ",color:"#627eea"},
   {sym:"BNB",name:"BNB",icon:"◈",color:"#f3ba2f"},
@@ -486,37 +526,72 @@ const COINS = [
   {sym:"DOT",name:"Polkadot",icon:"●",color:"#e6007a"},
   {sym:"LTC",name:"Litecoin",icon:"Ł",color:"#bfbbbb"},
 ];
-let coinPrices = {};
-
-async function fetchPrices() {
-  try {
-    const ids = "bitcoin,ethereum,binancecoin,tether,solana,ripple,cardano,dogecoin,polkadot,litecoin";
-    const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true`);
-    const data = await res.json();
-    const map = {BTC:"bitcoin",ETH:"ethereum",BNB:"binancecoin",USDT:"tether",SOL:"solana",XRP:"ripple",ADA:"cardano",DOGE:"dogecoin",DOT:"polkadot",LTC:"litecoin"};
-    COINS.forEach(c=>{const d=data[map[c.sym]];if(d) coinPrices[c.sym]={price:d.usd,change:d.usd_24h_change?.toFixed(2)||0,vol:d.usd_24h_vol};});
-  } catch(e) {
-    coinPrices={BTC:{price:82000,change:1.2,vol:28000000000},ETH:{price:3800,change:-0.5,vol:14000000000},BNB:{price:580,change:2.1,vol:2000000000},USDT:{price:1,change:0.01,vol:40000000000},SOL:{price:145,change:3.4,vol:3000000000},XRP:{price:0.51,change:-1.1,vol:1500000000},ADA:{price:0.42,change:0.8,vol:400000000},DOGE:{price:0.09,change:5.2,vol:600000000},DOT:{price:6.8,change:-2.0,vol:200000000},LTC:{price:75,change:0.4,vol:400000000}};
-  }
-  renderCoins(); renderTicker();
+let coinPrices={},lang="tr",currentUser=null,adminLoggedIn=false,currentNet="usdt_erc20",currentTradeTab="buy";
+function getUsers(){try{return JSON.parse(localStorage.getItem("bm_users")||"[]")}catch{return[]}}
+function saveUsers(u){localStorage.setItem("bm_users",JSON.stringify(u))}
+function getDeposits(){try{return JSON.parse(localStorage.getItem("bm_deposits")||"[]")}catch{return[]}}
+function saveDeposits(d){localStorage.setItem("bm_deposits",JSON.stringify(d))}
+function getBonuses(){try{return JSON.parse(localStorage.getItem("bm_bonuses")||"[]")}catch{return[]}}
+function saveBonuses(b){localStorage.setItem("bm_bonuses",JSON.stringify(b))}
+function getTrades(){try{return JSON.parse(localStorage.getItem("bm_trades")||"[]")}catch{return[]}}
+function saveTrades(t){localStorage.setItem("bm_trades",JSON.stringify(t))}
+function getAvatarColor(username){let hash=0;for(let c of username)hash=c.charCodeAt(0)+((hash<<5)-hash);return AVATAR_COLORS[Math.abs(hash)%AVATAR_COLORS.length];}
+function makeAvatar(user){const cls=getAvatarColor(user.username);const letter=(user.name||user.username)[0].toUpperCase();return`<div class="profile-avatar ${cls}" onclick="showPage('profile')">${letter}</div>`;}
+function toggleLang(){lang=lang==="tr"?"en":"tr";document.getElementById("langBtn").textContent=lang==="tr"?"EN":"TR";}
+function showPage(name){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById("page-"+name).classList.add("active");
+  document.querySelectorAll(".bnav-item").forEach(b=>b.classList.remove("active"));
+  const bn=document.getElementById("bn-"+name);if(bn)bn.classList.add("active");
+  if(name==="wallet")renderWallet();
+  if(name==="markets")renderMarkets();
+  if(name==="profile")renderProfile();
+  if(name==="trade")populateTradeCoinSelects();
+  if(name==="admin")renderAdmin();
+  if(name==="deposit"&&currentUser)document.getElementById("depUsername").value=currentUser.username;
+  window.scrollTo(0,0);
 }
-
-function fmt(n){if(!n)return"$0";if(n>=1000)return"$"+n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});if(n>=1)return"$"+n.toFixed(2);return"$"+n.toFixed(4);}
-function fmtVol(n){if(!n)return"";if(n>=1e9)return"Vol: $"+(n/1e9).toFixed(1)+"B";if(n>=1e6)return"Vol: $"+(n/1e6).toFixed(0)+"M";return"";}
-
+async function fetchPrices(){
+  try{
+    const ids="bitcoin,ethereum,binancecoin,tether,solana,ripple,cardano,dogecoin,polkadot,litecoin";
+    const res=await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true`);
+    const data=await res.json();
+    const map={BTC:"bitcoin",ETH:"ethereum",BNB:"binancecoin",USDT:"tether",SOL:"solana",XRP:"ripple",ADA:"cardano",DOGE:"dogecoin",DOT:"polkadot",LTC:"litecoin"};
+    COINS.forEach(c=>{const d=data[map[c.sym]];if(d)coinPrices[c.sym]={price:d.usd,change:d.usd_24h_change?.toFixed(2)||0,vol:d.usd_24h_vol};});
+  }catch(e){
+    coinPrices={BTC:{price:82000,change:1.2},ETH:{price:3800,change:-0.5},BNB:{price:580,change:2.1},USDT:{price:1,change:0.01},SOL:{price:145,change:3.4},XRP:{price:0.51,change:-1.1},ADA:{price:0.42,change:0.8},DOGE:{price:0.09,change:5.2},DOT:{price:6.8,change:-2.0},LTC:{price:75,change:0.4}};
+  }
+  renderCoins();renderTicker();renderMarkets();
+}
+function fmt(n){if(!n&&n!==0)return"$0";if(n>=1000)return"$"+n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});if(n>=1)return"$"+n.toFixed(2);return"$"+n.toFixed(4);}
+function fmtCoin(n,sym){if(!n)return"0";if(n>=1000)return n.toLocaleString("en-US",{maximumFractionDigits:4});if(n>=1)return n.toFixed(4);return n.toFixed(6);}
 function renderCoins(){
   document.getElementById("coinsGrid").innerHTML=COINS.map(c=>{
     const p=coinPrices[c.sym]||{};const ch=parseFloat(p.change||0);
-    return`<div class="coin-card"><div class="coin-header"><div class="coin-icon" style="background:${c.color}22;color:${c.color}">${c.icon}</div><div><div class="coin-name">${c.name}</div><div class="coin-sym">${c.sym}</div></div></div><div class="coin-price">${fmt(p.price)}</div><div class="coin-change ${ch>=0?'up':'down'}">${ch>=0?'▲':'▼'} ${Math.abs(ch)}%</div><div class="coin-vol">${fmtVol(p.vol)}</div></div>`;
+    return`<div class="coin-card" onclick="openTradeFromMarket('${c.sym}')"><div class="coin-header"><div class="coin-icon" style="background:${c.color}22;color:${c.color}">${c.icon}</div><div><div class="coin-name">${c.name}</div><div class="coin-sym">${c.sym}</div></div></div><div class="coin-price">${fmt(p.price)}</div><div class="coin-change ${ch>=0?'up':'down'}">${ch>=0?'▲':'▼'} ${Math.abs(ch)}%</div></div>`;
   }).join("");
 }
-
 function renderTicker(){
   const items=COINS.map(c=>{const p=coinPrices[c.sym]||{};const ch=parseFloat(p.change||0);return`<div class="ticker-item"><span class="ticker-sym">${c.sym}</span><span class="ticker-price">${fmt(p.price)}</span><span class="ticker-change ${ch>=0?'up':'down'}">${ch>=0?'▲':'▼'}${Math.abs(ch)}%</span></div>`;}).join("");
   document.getElementById("tickerTrack").innerHTML=items+items;
 }
-
-function openAuth(tab){document.getElementById("authModal").classList.add("open");switchTab(tab);}
+function renderMarkets(){
+  const q=(document.getElementById("marketSearch")?.value||"").toLowerCase();
+  const list=document.getElementById("marketList");if(!list)return;
+  const filtered=COINS.filter(c=>c.sym.toLowerCase().includes(q)||c.name.toLowerCase().includes(q));
+  if(!filtered.length){list.innerHTML=`<div class="empty-state">Coin bulunamadı</div>`;return;}
+  list.innerHTML=filtered.map(c=>{
+    const p=coinPrices[c.sym]||{};const ch=parseFloat(p.change||0);
+    return`<div class="market-row"><div style="display:flex;align-items:center;gap:10px;"><div class="coin-icon" style="background:${c.color}22;color:${c.color};width:32px;height:32px;font-size:14px;">${c.icon}</div><div><div style="font-weight:700;font-size:13px;">${c.name}</div><div style="font-family:var(--mono);font-size:11px;color:var(--muted)">${c.sym}</div></div></div><div class="mtd">${fmt(p.price)}</div><div class="mtd ${ch>=0?'up':'down'}">${ch>=0?'+':''}${ch}%</div><div><button class="trade-btn-sm" style="background:var(--accent);color:#000;" onclick="openTradeFromMarket('${c.sym}')">Al/Sat</button></div></div>`;
+  }).join("");
+}
+function openTradeFromMarket(sym){showPage('trade');switchTradeTab('buy');setTimeout(()=>{const sel=document.getElementById("buyCoin");if(sel){sel.value=sym;updateTradeInfo('buy');}},100);}
+function openAuth(tab){
+  const urlParams=new URLSearchParams(window.location.search);
+  const ref=urlParams.get("ref");
+  if(ref&&tab==="register"){document.getElementById("refCode").value=ref;document.getElementById("refBanner").style.display="block";document.getElementById("refBannerText").textContent=`${ref} tarafından davet edildiniz!`;}
+  document.getElementById("authModal").classList.add("open");switchTab(tab);
+}
 function closeAuth(){document.getElementById("authModal").classList.remove("open");}
 function switchTab(t){
   document.getElementById("formLogin").style.display=t==="login"?"block":"none";
@@ -524,44 +599,40 @@ function switchTab(t){
   document.getElementById("tabLogin").classList.toggle("active",t==="login");
   document.getElementById("tabRegister").classList.toggle("active",t==="register");
 }
-
 function doLogin(){
   const u=document.getElementById("loginUser").value.trim();
   const p=document.getElementById("loginPass").value;
   const msg=document.getElementById("loginMsg");
   if(!u||!p){showMsg(msg,"Tüm alanları doldurun","error");return;}
   const user=getUsers().find(x=>x.username===u&&x.password===p);
-  if(!user){showMsg(msg,"Kullanıcı adı veya şifre hatalı","error");return;}
+  if(!user){showMsg(msg,"Hatalı bilgi","error");return;}
   currentUser=user;localStorage.setItem("bm_session",JSON.stringify(user));
-  closeAuth();updateNav();showToast("✅",`Hoş geldin, ${user.name}!`);showPage("dashboard");
+  closeAuth();updateNav();showToast("✅",`Hoş geldin, ${user.name}!`);showPage("home");
 }
-
 function doRegister(){
   const name=document.getElementById("regName").value.trim();
   const email=document.getElementById("regEmail").value.trim();
   const username=document.getElementById("regUser").value.trim();
   const pass=document.getElementById("regPass").value;
+  const refCode=document.getElementById("refCode").value.trim();
   const msg=document.getElementById("registerMsg");
   if(!name||!email||!username||!pass){showMsg(msg,"Tüm alanları doldurun","error");return;}
   if(pass.length<6){showMsg(msg,"Şifre en az 6 karakter","error");return;}
   const users=getUsers();
   if(users.find(x=>x.username===username)){showMsg(msg,"Bu kullanıcı adı alınmış","error");return;}
-  if(users.find(x=>x.email===email)){showMsg(msg,"Bu e-posta zaten kayıtlı","error");return;}
-  const newUser={id:Date.now(),name,email,username,password:pass,balance:0,createdAt:new Date().toLocaleDateString("tr-TR")};
+  if(users.find(x=>x.email===email)){showMsg(msg,"E-posta zaten kayıtlı","error");return;}
+  const newUser={id:Date.now(),name,email,username,password:pass,balance:0,bonusBalance:0,wallet:{USDT:0},referredBy:refCode||null,firstDepositDone:false,createdAt:new Date().toLocaleDateString("tr-TR")};
   users.push(newUser);saveUsers(users);
-  showMsg(msg,"✅ Hesabınız oluşturuldu! Giriş yapabilirsiniz.","success");
+  showMsg(msg,"✅ Hesap oluşturuldu! Giriş yapabilirsiniz.","success");
   setTimeout(()=>switchTab("login"),1800);
 }
-
 function logout(){currentUser=null;localStorage.removeItem("bm_session");updateNav();showPage("home");showToast("👋","Çıkış yapıldı");}
-
 function updateNav(){
-  const g=document.getElementById("navGuest");
-  const u=document.getElementById("navUser");
-  if(currentUser){g.style.display="none";u.style.display="flex";document.getElementById("navUsername").textContent=currentUser.username;}
-  else{g.style.display="flex";u.style.display="none";}
+  const g=document.getElementById("navGuest"),u=document.getElementById("navUser");
+  const bn=document.getElementById("bottomNav");
+  if(currentUser){g.style.display="none";u.style.display="block";u.innerHTML=makeAvatar(currentUser);bn.style.display="flex";}
+  else{g.style.display="flex";u.style.display="none";bn.style.display="none";}
 }
-
 function selectNet(btn){
   document.querySelectorAll(".net-tab").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");currentNet=btn.dataset.net;
@@ -570,101 +641,306 @@ function selectNet(btn){
   document.getElementById("addrNote").textContent=a.note;
   document.getElementById("depNetwork").value=a.label;
 }
-
 function copyAddr(){navigator.clipboard.writeText(document.getElementById("addrText").textContent);showToast("📋","Adres kopyalandı!");}
-
 function submitDeposit(){
+  if(!currentUser){openAuth('login');return;}
   const username=document.getElementById("depUsername").value.trim();
   const fullname=document.getElementById("depName").value.trim();
   const amount=parseFloat(document.getElementById("depAmount").value);
   const network=document.getElementById("depNetwork").value;
   const txhash=document.getElementById("depTxHash").value.trim();
   const msg=document.getElementById("depMsg");
-  if(!username||!fullname||!amount||amount<=0){showMsg(msg,"Lütfen tüm alanları doldurun","error");return;}
-  const user=getUsers().find(u=>u.username===username);
+  if(!username||!fullname||!amount||amount<=0){showMsg(msg,"Tüm alanları doldurun","error");return;}
+  const users=getUsers();const user=users.find(u=>u.username===username);
   if(!user){showMsg(msg,"Kullanıcı bulunamadı","error");return;}
-  const dep={id:Date.now(),username,fullname,amount,network,txhash:txhash||"-",status:"pending",date:new Date().toLocaleString("tr-TR")};
+  const dep={id:Date.now(),username,fullname,amount,network,txhash:txhash||"-",status:"pending",date:new Date().toLocaleString("tr-TR"),type:"deposit"};
   const deposits=getDeposits();deposits.push(dep);saveDeposits(deposits);
-  showMsg(msg,"✅ Bildiriminiz alındı! Onay sonrası bakiyeniz güncellenir.","success");
+  showMsg(msg,"✅ Bildirim alındı! Onay sonrası bakiyeniz yüklenir.","success");
   document.getElementById("depAmount").value="";document.getElementById("depTxHash").value="";
   showToast("💰","Yatırım bildirimi gönderildi");
 }
-
-function renderDashboard(){
-  if(!currentUser){showPage("home");return;}
-  document.getElementById("dashName2").textContent=currentUser.name;
-  const deposits=getDeposits().filter(d=>d.username===currentUser.username);
-  const total=deposits.filter(d=>d.status==="confirmed").reduce((s,d)=>s+d.amount,0);
-  const pending=deposits.filter(d=>d.status==="pending").length;
-  document.getElementById("userStatsRow").innerHTML=`
-    <div class="stat-card"><div class="stat-label">Onaylı Bakiye</div><div class="stat-value green">$${total.toLocaleString()}</div></div>
-    <div class="stat-card"><div class="stat-label">Bekleyen</div><div class="stat-value" style="color:var(--gold)">${pending}</div></div>
-    <div class="stat-card"><div class="stat-label">Toplam İşlem</div><div class="stat-value">${deposits.length}</div></div>`;
-  const hist=document.getElementById("userDepositHistory");
-  if(!deposits.length){hist.innerHTML=`<div class="empty-state">Henüz yatırım yok</div>`;return;}
-  hist.innerHTML=deposits.slice().reverse().map(d=>`<div class="table-row"><div class="td text-accent">${d.network}</div><div class="td">$${d.amount}</div><div class="td text-muted" style="font-size:12px">${d.date}</div><div class="td"><span class="badge ${d.status==="confirmed"?"badge-confirmed":"badge-pending"}">${d.status==="confirmed"?"Onaylı":"Bekliyor"}</span></div></div>`).join("");
+function populateTradeCoinSelects(){
+  const tradeable=COINS.filter(c=>c.sym!=="USDT");
+  ["buyCoin","sellCoin","convertFrom","convertTo"].forEach(id=>{
+    const sel=document.getElementById(id);if(!sel)return;
+    const cur=sel.value;
+    sel.innerHTML=`<option value="">Coin seçin...</option>`+tradeable.map(c=>`<option value="${c.sym}">${c.sym} - ${c.name}</option>`).join("");
+    if(cur)sel.value=cur;
+  });
 }
-
+function switchTradeTab(tab){
+  currentTradeTab=tab;
+  ["buy","sell","convert"].forEach(t=>{document.getElementById(`tt-${t}`).className="trade-tab";document.getElementById(`tradePanel-${t}`).style.display="none";});
+  document.getElementById(`tt-${tab}`).className=`trade-tab active-${tab}`;
+  document.getElementById(`tradePanel-${tab}`).style.display="block";
+  updateTradeInfo(tab);
+}
+function getUserWallet(){if(!currentUser)return{USDT:0};const fresh=getUsers().find(u=>u.username===currentUser.username);return fresh?.wallet||{USDT:0};}
+function updateTradeInfo(type){
+  if(!currentUser)return;
+  const wallet=getUserWallet();
+  if(type==="buy"){
+    const sym=document.getElementById("buyCoin").value;
+    const amt=parseFloat(document.getElementById("buyAmount").value)||0;
+    const info=document.getElementById("buyInfo");
+    if(!sym){info.style.display="none";return;}
+    const price=coinPrices[sym]?.price||0;
+    info.style.display="block";
+    document.getElementById("buyPrice").textContent=fmt(price);
+    document.getElementById("buyQty").textContent=`${fmtCoin(price>0?amt/price:0,sym)} ${sym}`;
+    document.getElementById("buyBalance").textContent=`${(wallet.USDT||0).toFixed(2)} USDT`;
+  }
+  if(type==="sell"){
+    const sym=document.getElementById("sellCoin").value;
+    const amt=parseFloat(document.getElementById("sellAmount").value)||0;
+    document.getElementById("sellCoinBadge").textContent=sym||"COIN";
+    const info=document.getElementById("sellInfo");
+    if(!sym){info.style.display="none";return;}
+    const price=coinPrices[sym]?.price||0;
+    info.style.display="block";
+    document.getElementById("sellPrice").textContent=fmt(price);
+    document.getElementById("sellUSDT").textContent=`${(amt*price).toFixed(2)} USDT`;
+    document.getElementById("sellBalance").textContent=`${fmtCoin(wallet[sym]||0,sym)} ${sym}`;
+  }
+  if(type==="convert"){
+    const from=document.getElementById("convertFrom").value;
+    const to=document.getElementById("convertTo").value;
+    const amt=parseFloat(document.getElementById("convertAmount").value)||0;
+    document.getElementById("convertFromBadge").textContent=from||"-";
+    const info=document.getElementById("convertInfo");
+    if(!from||!to){info.style.display="none";return;}
+    const fromPrice=coinPrices[from]?.price||0;
+    const toPrice=coinPrices[to]?.price||0;
+    if(!fromPrice||!toPrice){info.style.display="none";return;}
+    const rate=fromPrice/toPrice;
+    info.style.display="block";
+    document.getElementById("convertRate").textContent=`1 ${from} = ${fmtCoin(rate,to)} ${to}`;
+    document.getElementById("convertResult").textContent=`${fmtCoin(amt*rate,to)} ${to}`;
+  }
+}
+function executeTrade(type){
+  if(!currentUser){openAuth('login');return;}
+  const users=getUsers();
+  const userIdx=users.findIndex(u=>u.username===currentUser.username);
+  if(userIdx===-1)return;
+  const user=users[userIdx];
+  if(!user.wallet)user.wallet={USDT:0};
+  if(type==="buy"){
+    const sym=document.getElementById("buyCoin").value;
+    const amt=parseFloat(document.getElementById("buyAmount").value)||0;
+    const msg=document.getElementById("buyMsg");
+    if(!sym){showMsg(msg,"Coin seçin","error");return;}
+    if(amt<=0){showMsg(msg,"Geçerli tutar girin","error");return;}
+    if((user.wallet.USDT||0)<amt){showMsg(msg,"Yetersiz USDT bakiye","error");return;}
+    const price=coinPrices[sym]?.price||0;
+    if(!price){showMsg(msg,"Fiyat bilgisi alınamadı","error");return;}
+    const qty=amt/price;
+    user.wallet.USDT=(user.wallet.USDT||0)-amt;
+    user.wallet[sym]=(user.wallet[sym]||0)+qty;
+    saveTrade(user.​​​​​​​​​​​​​​​​username,"Alış",sym,amt,qty);
+    saveUsers(users);
+    currentUser=user;localStorage.setItem("bm_session",JSON.stringify(user));
+    showMsg(document.getElementById("buyMsg"),`✅ ${fmtCoin(qty,sym)} ${sym} satın alındı!`,"success");
+    document.getElementById("buyAmount").value="";
+    updateTradeInfo('buy');
+    showToast("🟢",`${sym} alındı`);
+  }
+  if(type==="sell"){
+    const sym=document.getElementById("sellCoin").value;
+    const amt=parseFloat(document.getElementById("sellAmount").value)||0;
+    const msg=document.getElementById("sellMsg");
+    if(!sym){showMsg(msg,"Coin seçin","error");return;}
+    if(amt<=0){showMsg(msg,"Geçerli miktar girin","error");return;}
+    if((user.wallet[sym]||0)<amt){showMsg(msg,`Yetersiz ${sym} bakiye`,"error");return;}
+    const price=coinPrices[sym]?.price||0;
+    if(!price){showMsg(msg,"Fiyat bilgisi alınamadı","error");return;}
+    const usdt=amt*price;
+    user.wallet[sym]=(user.wallet[sym]||0)-amt;
+    user.wallet.USDT=(user.wallet.USDT||0)+usdt;
+    saveTrade(user.username,"Satış",sym,usdt,amt);
+    saveUsers(users);
+    currentUser=user;localStorage.setItem("bm_session",JSON.stringify(user));
+    showMsg(document.getElementById("sellMsg"),`✅ ${usdt.toFixed(2)} USDT alındı!`,"success");
+    document.getElementById("sellAmount").value="";
+    updateTradeInfo('sell');
+    showToast("🔴",`${sym} satıldı`);
+  }
+  if(type==="convert"){
+    const from=document.getElementById("convertFrom").value;
+    const to=document.getElementById("convertTo").value;
+    const amt=parseFloat(document.getElementById("convertAmount").value)||0;
+    const msg=document.getElementById("convertMsg");
+    if(!from||!to){showMsg(msg,"Coinleri seçin","error");return;}
+    if(from===to){showMsg(msg,"Farklı coinler seçin","error");return;}
+    if(amt<=0){showMsg(msg,"Geçerli miktar girin","error");return;}
+    if((user.wallet[from]||0)<amt){showMsg(msg,`Yetersiz ${from} bakiye`,"error");return;}
+    const fromPrice=coinPrices[from]?.price||0;
+    const toPrice=coinPrices[to]?.price||0;
+    if(!fromPrice||!toPrice){showMsg(msg,"Fiyat bilgisi alınamadı","error");return;}
+    const result=(amt*fromPrice)/toPrice;
+    user.wallet[from]=(user.wallet[from]||0)-amt;
+    user.wallet[to]=(user.wallet[to]||0)+result;
+    saveTrade(user.username,"Dönüşüm",`${from}→${to}`,amt,result);
+    saveUsers(users);
+    currentUser=user;localStorage.setItem("bm_session",JSON.stringify(user));
+    showMsg(document.getElementById("convertMsg"),`✅ ${fmtCoin(result,to)} ${to} alındı!`,"success");
+    document.getElementById("convertAmount").value="";
+    updateTradeInfo('convert');
+    showToast("🔄",`${from} → ${to} dönüştürüldü`);
+  }
+}
+function saveTrade(username,type,coin,amount,qty){
+  const trades=getTrades();
+  trades.push({id:Date.now(),username,type,coin,amount,qty,date:new Date().toLocaleString("tr-TR")});
+  saveTrades(trades);
+}
+function swapConvert(){
+  const f=document.getElementById("convertFrom").value;
+  const t=document.getElementById("convertTo").value;
+  document.getElementById("convertFrom").value=t;
+  document.getElementById("convertTo").value=f;
+  updateTradeInfo('convert');
+}
+function renderWallet(){
+  if(!currentUser){showPage("home");return;}
+  const fresh=getUsers().find(u=>u.username===currentUser.username);
+  if(fresh){currentUser=fresh;localStorage.setItem("bm_session",JSON.stringify(fresh));}
+  const wallet=JSON.parse(JSON.stringify(currentUser.wallet||{USDT:0}));
+  const deposits=getDeposits().filter(d=>d.username===currentUser.username&&d.status==="confirmed"&&d.type==="deposit");
+  const depositTotal=deposits.reduce((s,d)=>s+d.amount,0);
+  wallet.USDT=(wallet.USDT||0)+depositTotal+(currentUser.bonusBalance||0);
+  let total=0;const items=[];
+  if((wallet.USDT||0)>0){total+=wallet.USDT;items.push({sym:"USDT",name:"Tether",icon:"₮",color:"#26a17b",amount:wallet.USDT,usdVal:wallet.USDT});}
+  COINS.filter(c=>c.sym!=="USDT").forEach(c=>{
+    const amt=wallet[c.sym]||0;
+    if(amt>0){const price=coinPrices[c.sym]?.price||0;const usdVal=amt*price;total+=usdVal;items.push({...c,amount:amt,usdVal});}
+  });
+  document.getElementById("walletTotal").textContent=fmt(total);
+  const list=document.getElementById("walletList");
+  if(!items.length){list.innerHTML=`<div style="text-align:center;padding:40px;color:var(--muted)">Henüz varlık yok!</div>`;return;}
+  list.innerHTML=items.map(item=>`<div class="coin-balance-item"><div class="cbi-left"><div class="cbi-icon" style="background:${item.color}22;color:${item.color}">${item.icon}</div><div><div class="cbi-name">${item.name}</div><div class="cbi-sym">${item.sym}</div></div></div><div class="cbi-right"><div class="cbi-amount">${fmtCoin(item.amount,item.sym)} ${item.sym}</div><div class="cbi-usd">${fmt(item.usdVal)}</div></div></div>`).join("");
+}
+function getRefLink(){
+  if(!currentUser)return"";
+  const base=window.location.href.split("?")[0].split("#")[0];
+  return`${base}?ref=${currentUser.username}`;
+}
+function copyRefLink(){navigator.clipboard.writeText(getRefLink());showToast("🔗","Davet linki kopyalandı!");}
+function renderProfile(){
+  if(!currentUser){openAuth('login');return;}
+  const fresh=getUsers().find(u=>u.username===currentUser.username);
+  if(fresh){currentUser=fresh;localStorage.setItem("bm_session",JSON.stringify(fresh));}
+  const cls=getAvatarColor(currentUser.username);
+  const letter=(currentUser.name||currentUser.username)[0].toUpperCase();
+  document.getElementById("profileAvatarBig").className=`profile-avatar-big ${cls}`;
+  document.getElementById("profileAvatarBig").textContent=letter;
+  document.getElementById("profileName").textContent=currentUser.name;
+  document.getElementById("profileUsername").textContent=`@${currentUser.username}`;
+  document.getElementById("profileJoined").textContent=`Katılım: ${currentUser.createdAt}`;
+  const deposits=getDeposits().filter(d=>d.username===currentUser.username&&d.status==="confirmed"&&d.type==="deposit");
+  const depositTotal=deposits.reduce((s,d)=>s+d.amount,0);
+  const bonuses=getBonuses().filter(b=>b.referrer===currentUser.username);
+  const bonusTotal=bonuses.reduce((s,b)=>s+b.bonusAmount,0);
+  const invitedCount=getUsers().filter(u=>u.referredBy===currentUser.username).length;
+  document.getElementById("profileStats").innerHTML=`
+    <div class="profile-stat"><div class="profile-stat-val">$${(depositTotal+bonusTotal).toFixed(0)}</div><div class="profile-stat-label">Bakiye</div></div>
+    <div class="profile-stat"><div class="profile-stat-val">${invitedCount}</div><div class="profile-stat-label">Davet</div></div>
+    <div class="profile-stat"><div class="profile-stat-val">$${bonusTotal.toFixed(0)}</div><div class="profile-stat-label">Bonus</div></div>`;
+  document.getElementById("profileRefLink").textContent=getRefLink();
+}
+function processReferralBonus(dep){
+  const users=getUsers();
+  const depositor=users.find(u=>u.username===dep.username);
+  if(!depositor||!depositor.referredBy)return;
+  const referrer=users.find(u=>u.username===depositor.referredBy);
+  if(!referrer)return;
+  const allDeps=getDeposits().filter(d=>d.username===dep.username&&d.status==="confirmed"&&d.type==="deposit");
+  const isFirst=allDeps.length===1;
+  if(isFirst&&dep.amount<100)return;
+  const bonusAmt=dep.amount*0.10;
+  referrer.bonusBalance=(referrer.bonusBalance||0)+bonusAmt;
+  if(!referrer.wallet)referrer.wallet={USDT:0};
+  referrer.wallet.USDT=(referrer.wallet.USDT||0)+bonusAmt;
+  const bonuses=getBonuses();
+  bonuses.push({id:Date.now(),referrer:referrer.username,referred:dep.username,depositAmount:dep.amount,bonusAmount:bonusAmt,date:new Date().toLocaleString("tr-TR")});
+  saveBonuses(bonuses);
+  if(currentUser&&currentUser.username===referrer.username){currentUser=referrer;localStorage.setItem("bm_session",JSON.stringify(referrer));}
+  saveUsers(users);
+  showToast("🎁",`$${bonusAmt.toFixed(2)} bonus eklendi!`);
+}
 function renderAdmin(){
   if(!adminLoggedIn){document.getElementById("adminLoginSection").style.display="block";document.getElementById("adminDashSection").style.display="none";return;}
   document.getElementById("adminLoginSection").style.display="none";document.getElementById("adminDashSection").style.display="block";
-  const users=getUsers();const deposits=getDeposits();
-  const totalDep=deposits.filter(d=>d.status==="confirmed").reduce((s,d)=>s+d.amount,0);
+  const users=getUsers(),deposits=getDeposits(),bonuses=getBonuses(),trades=getTrades();
+  const totalDep=deposits.filter(d=>d.status==="confirmed"&&d.type==="deposit").reduce((s,d)=>s+d.amount,0);
   const pending=deposits.filter(d=>d.status==="pending").length;
+  const totalBonus=bonuses.reduce((s,b)=>s+b.bonusAmount,0);
   document.getElementById("adminStats").innerHTML=`
-    <div class="admin-card"><div class="admin-card-label">Toplam Kullanıcı</div><div class="admin-card-val">${users.length}</div></div>
-    <div class="admin-card"><div class="admin-card-label">Onaylı Yatırım</div><div class="admin-card-val">$${totalDep.toLocaleString()}</div></div>
+    <div class="admin-card"><div class="admin-card-label">Kullanıcılar</div><div class="admin-card-val">${users.length}</div></div>
+    <div class="admin-card"><div class="admin-card-label">Yatırım</div><div class="admin-card-val">$${totalDep.toLocaleString()}</div></div>
     <div class="admin-card"><div class="admin-card-label">Bekleyen</div><div class="admin-card-val" style="color:var(--gold)">${pending}</div></div>
-    <div class="admin-card"><div class="admin-card-label">Tüm İşlemler</div><div class="admin-card-val">${deposits.length}</div></div>`;
-  renderAdminUsers();renderAdminDeposits();
+    <div class="admin-card"><div class="admin-card-label">Bonus</div><div class="admin-card-val" style="color:var(--gold)">$${totalBonus.toFixed(2)}</div></div>
+    <div class="admin-card"><div class="admin-card-label">İşlemler</div><div class="admin-card-val">${trades.length}</div></div>`;
+  renderAdminUsers();renderAdminDeposits();renderAdminBonuses();renderAdminTrades();
 }
-
 function renderAdminUsers(){
-  const users=getUsers();const deposits=getDeposits();
+  const users=getUsers(),deposits=getDeposits();
   const list=document.getElementById("adminUsersList");
-  if(!users.length){list.innerHTML=`<div class="empty-state">Kayıtlı kullanıcı yok</div>`;return;}
-  const bal={};deposits.filter(d=>d.status==="confirmed").forEach(d=>{bal[d.username]=(bal[d.username]||0)+d.amount;});
-  list.innerHTML=users.map(u=>`<div class="users-row"><div class="td text-accent">${u.username}</div><div class="td text-muted" style="font-size:12px">${u.email}</div><div class="td"><span style="color:var(--green);font-family:var(--mono)">$${(bal[u.username]||0).toLocaleString()}</span></div><div class="td text-muted" style="font-size:12px">${u.createdAt}</div><div class="td"><button class="action-btn del" onclick="deleteUser('${u.username}')">Sil</button></div></div>`).join("");
+  if(!users.length){list.innerHTML=`<div class="empty-state">Kullanıcı yok</div>`;return;}
+  const bal={};deposits.filter(d=>d.status==="confirmed"&&d.type==="deposit").forEach(d=>{bal[d.username]=(bal[d.username]||0)+d.amount;});
+  const invCount={};users.forEach(u=>{if(u.referredBy)invCount[u.referredBy]=(invCount[u.referredBy]||0)+1;});
+  list.innerHTML=users.map(u=>`<div class="data-row" style="grid-template-columns:1.5fr 1.5fr 1fr 1fr 1fr;"><div class="td text-accent">${u.username}${u.referredBy?`<div style="font-size:10px;color:var(--muted)">ref:${u.referredBy}</div>`:''}</div><div class="td text-muted" style="font-size:10px">${u.email}</div><div class="td" style="color:var(--green)">$${((bal[u.username]||0)+(u.bonusBalance||0)).toFixed(0)}</div><div class="td text-accent">${invCount[u.username]||0}</div><div class="td"><button class="action-btn del" onclick="deleteUser('${u.username}')">Sil</button></div></div>`).join("");
 }
-
 function renderAdminDeposits(){
   const deposits=getDeposits();const list=document.getElementById("adminDepositsList");
   if(!deposits.length){list.innerHTML=`<div class="empty-state">Yatırım yok</div>`;return;}
-  list.innerHTML=deposits.slice().reverse().map(d=>`<div class="deposits-row"><div class="td"><div style="color:var(--accent)">${d.username}</div><div style="font-size:11px;color:var(--muted)">${d.fullname}</div></div><div class="td" style="color:var(--green);font-family:var(--mono)">$${d.amount}</div><div class="td text-muted" style="font-size:12px">${d.network}</div><div class="td text-muted" style="font-size:12px">${d.date}</div><div class="td" style="display:flex;gap:6px;flex-wrap:wrap">${d.status==="pending"?`<button class="action-btn approve" onclick="approveDeposit(${d.id})">Onayla</button>`:`<span class="badge badge-confirmed">Onaylı</span>`}<button class="action-btn del" onclick="deleteDeposit(${d.id})">Sil</button></div></div>`).join("");
+  list.innerHTML=deposits.slice().reverse().map(d=>`<div class="data-row" style="grid-template-columns:1.5fr 1fr 1.5fr 1fr 1fr;"><div class="td"><div style="color:var(--accent)">${d.username}</div><div style="font-size:10px;color:var(--muted)">${d.fullname}</div></div><div class="td" style="color:var(--green)">$${d.amount}</div><div class="td text-muted" style="font-size:10px">${d.network}</div><div class="td text-muted" style="font-size:10px">${d.date}</div><div class="td" style="display:flex;gap:5px;">${d.status==="pending"?`<button class="action-btn approve" onclick="approveDeposit(${d.id})">Onayla</button>`:`<span class="badge badge-confirmed">✓</span>`}<button class="action-btn del" onclick="deleteDeposit(${d.id})">Sil</button></div></div>`).join("");
 }
-
+function renderAdminBonuses(){
+  const bonuses=getBonuses();const list=document.getElementById("adminBonusesList");
+  if(!bonuses.length){list.innerHTML=`<div class="empty-state">Bonus yok</div>`;return;}
+  list.innerHTML=bonuses.slice().reverse().map(b=>`<div class="data-row" style="grid-template-columns:1fr 1fr 1fr 1fr;"><div class="td text-accent">${b.referrer}</div><div class="td text-muted">${b.referred}</div><div class="td" style="color:var(--gold)">$${b.bonusAmount.toFixed(2)}</div><div class="td text-muted" style="font-size:10px">${b.date}</div></div>`).join("");
+}
+function renderAdminTrades(){
+  const trades=getTrades();const list=document.getElementById("adminTradesList");
+  if(!trades.length){list.innerHTML=`<div class="empty-state">İşlem yok</div>`;return;}
+  list.innerHTML=trades.slice().reverse().map(t=>`<div class="data-row" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr;"><div class="td text-accent">${t.username}</div><div class="td" style="color:${t.type==='Alış'?'var(--green)':t.type==='Satış'?'var(--red)':'var(--accent)'}">${t.type}</div><div class="td text-muted">${t.coin}</div><div class="td">$${parseFloat(t.amount).toFixed(2)}</div><div class="td text-muted" style="font-size:10px">${t.date}</div></div>`).join("");
+}
 function approveDeposit(id){
   const deposits=getDeposits();const dep=deposits.find(d=>d.id===id);if(!dep)return;
   dep.status="confirmed";saveDeposits(deposits);
   const users=getUsers();const user=users.find(u=>u.username===dep.username);
-  if(user){user.balance=(user.balance||0)+dep.amount;saveUsers(users);}
-  showToast("✅",`${dep.username} için $${dep.amount} onaylandı`);renderAdmin();
+  if(user){
+    user.balance=(user.balance||0)+dep.amount;
+    if(!user.wallet)user.wallet={USDT:0};
+    user.wallet.USDT=(user.wallet.USDT||0)+dep.amount;
+    if(!user.firstDepositDone)user.firstDepositDone=true;
+    saveUsers(users);
+    if(currentUser&&currentUser.username===user.username){currentUser=user;localStorage.setItem("bm_session",JSON.stringify(user));}
+  }
+  processReferralBonus(dep);
+  showToast("✅",`$${dep.amount} onaylandı`);
+  renderAdmin();
 }
-
-function deleteDeposit(id){if(!confirm("Silmek istiyor musunuz?"))return;saveDeposits(getDeposits().filter(d=>d.id!==id));renderAdmin();}
-function deleteUser(username){if(!confirm(`${username} silinsin mi?`))return;saveUsers(getUsers().filter(u=>u.username!==username));renderAdmin();showToast("🗑️",`${username} silindi`);}
-
+function deleteDeposit(id){if(!confirm("Sil?"))return;saveDeposits(getDeposits().filter(d=>d.id!==id));renderAdmin();}
+function deleteUser(username){if(!confirm(`${username} silinsin mi?`))return;saveUsers(getUsers().filter(u=>u.username!==username));renderAdmin();showToast("🗑️","Silindi");}
 function switchAdminTab(tab,btn){
   document.querySelectorAll(".sec-tab").forEach(b=>b.classList.remove("active"));btn.classList.add("active");
-  document.getElementById("adminUsersSection").style.display=tab==="users"?"block":"none";
-  document.getElementById("adminDepositsSection").style.display=tab==="deposits"?"block":"none";
+  ["users","deposits","bonuses","trades"].forEach(t=>{document.getElementById(`admin${t.charAt(0).toUpperCase()+t.slice(1)}Section`).style.display=t===tab?"block":"none";});
 }
-
-function adminLogin(){
-  const pass=document.getElementById("adminPassInput").value;
-  if(pass===ADMIN_PASS){adminLoggedIn=true;renderAdmin();}
-  else showMsg(document.getElementById("adminLoginMsg"),"Hatalı şifre","error");
-}
+function adminLogin(){const pass=document.getElementById("adminPassInput").value;if(pass===ADMIN_PASS){adminLoggedIn=true;renderAdmin();}else showMsg(document.getElementById("adminLoginMsg"),"Hatalı şifre","error");}
 function adminLogout(){adminLoggedIn=false;renderAdmin();}
-
 function showMsg(el,text,type){el.innerHTML=`<div class="msg ${type}">${text}</div>`;setTimeout(()=>{if(el)el.innerHTML="";},4000);}
 function showToast(icon,text){const t=document.getElementById("toast");document.getElementById("toastIcon").textContent=icon;document.getElementById("toastText").textContent=text;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3500);}
-
 (function init(){
   try{const s=localStorage.getItem("bm_session");if(s){currentUser=JSON.parse(s);updateNav();}}catch(e){}
+  const urlParams=new URLSearchParams(window.location.search);
+  const ref=urlParams.get("ref");
+  if(ref){document.getElementById("refCode").value=ref;openAuth("register");}
   if(location.hash==="#admin")showPage("admin");
   fetchPrices();setInterval(fetchPrices,60000);
 })();
 </script>
 </body>
 </html>
+
