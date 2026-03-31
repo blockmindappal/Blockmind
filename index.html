@@ -1270,67 +1270,64 @@ function showPage(name){
   window.scrollTo(0,0);
 }
 
-// Base prices - updated periodically with small realistic movements
+// Realistic price simulation - always visible, no API needed
 const BASE_PRICES={BTC:83500,ETH:3180,BNB:595,USDT:1,SOL:152,XRP:0.53,ADA:0.45,DOGE:0.115,DOT:7.3,LTC:79};
-const BASE_CHANGES={BTC:1.2,ETH:-0.5,BNB:2.1,USDT:0.01,SOL:3.4,XRP:-1.1,ADA:0.8,DOGE:5.2,DOT:-2.0,LTC:0.4};
+const BASE_CHANGES={BTC:1.24,ETH:-0.52,BNB:2.18,USDT:0.00,SOL:3.41,XRP:-1.13,ADA:0.83,DOGE:5.21,DOT:-1.98,LTC:0.43};
 let priceIteration=0;
-
-async function fetchPrices(){
-  // Always initialize with base prices first so UI never shows $0
-  if(Object.keys(coinPrices).length===0){
-    initFallbackPrices();
-    renderCoins();renderTicker();renderMarkets();
-  }
-  
-  // Try to get real prices
-  let loaded=false;
-  
-  // Try CryptoCompare (CORS friendly, free)
-  try{
-    const syms="BTC,ETH,BNB,SOL,XRP,ADA,DOGE,DOT,LTC";
-    const res=await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${syms}&tsyms=USD`,{signal:AbortSignal.timeout(6000)});
-    const data=await res.json();
-    if(data.RAW){
-      Object.keys(data.RAW).forEach(sym=>{
-        const d=data.RAW[sym].USD;
-        if(d)coinPrices[sym]={price:d.PRICE,change:d.CHANGEPCT24HOUR?.toFixed(2)||0,vol:d.VOLUME24HOURTO||0};
-      });
-      coinPrices.USDT={price:1,change:0.01,vol:0};
-      loaded=true;
-    }
-  }catch(e){}
-  
-  if(!loaded){
-    // Animate prices realistically - small movements every refresh
-    priceIteration++;
-    COINS.forEach(c=>{
-      const base=BASE_PRICES[c.sym]||1;
-      const baseChange=BASE_CHANGES[c.sym]||0;
-      // Simulate realistic price drift
-      const drift=Math.sin(priceIteration*0.3+c.sym.charCodeAt(0))*0.002;
-      const noise=(Math.random()-0.5)*0.003;
-      const currentPrice=coinPrices[c.sym]?.price||base;
-      const newPrice=currentPrice*(1+drift+noise);
-      const changeVariation=(Math.random()-0.5)*0.2;
-      coinPrices[c.sym]={
-        price:Math.max(newPrice,base*0.9),
-        change:(parseFloat(coinPrices[c.sym]?.change||baseChange)+changeVariation).toFixed(2),
-        vol:coinPrices[c.sym]?.vol||0
-      };
-    });
-  }
-  
-  renderCoins();renderTicker();renderMarkets();
-}
 
 function initFallbackPrices(){
   COINS.forEach(c=>{
+    coinPrices[c.sym]={price:BASE_PRICES[c.sym]||1,change:BASE_CHANGES[c.sym]||0,vol:0};
+  });
+}
+
+function updateSimulatedPrices(){
+  priceIteration++;
+  COINS.forEach(c=>{
+    if(c.sym==="USDT"){coinPrices.USDT={price:1,change:0.00,vol:0};return;}
+    const cur=coinPrices[c.sym]||{price:BASE_PRICES[c.sym],change:BASE_CHANGES[c.sym]};
+    // Realistic micro-movement: sine wave + noise
+    const t=priceIteration*0.15+c.sym.charCodeAt(0)*0.7;
+    const drift=Math.sin(t)*0.0008+Math.cos(t*0.5)*0.0004;
+    const noise=(Math.random()-0.5)*0.0006;
+    const newPrice=cur.price*(1+drift+noise);
+    const newChange=parseFloat(cur.change)+((Math.random()-0.5)*0.04);
     coinPrices[c.sym]={
-      price:BASE_PRICES[c.sym]||1,
-      change:BASE_CHANGES[c.sym]||0,
-      vol:0
+      price:Math.max(newPrice, BASE_PRICES[c.sym]*0.85),
+      change:Math.max(-15,Math.min(15,newChange)).toFixed(2),
+      vol:cur.vol||0
     };
   });
+}
+
+async function fetchPrices(){
+  // First: always show prices immediately
+  if(!coinPrices.BTC||coinPrices.BTC.price===0){
+    initFallbackPrices();
+  } else {
+    updateSimulatedPrices();
+  }
+  renderCoins();renderTicker();renderMarkets();
+  
+  // Then try real API in background (won't block UI)
+  try{
+    const res=await fetch("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH,BNB,SOL,XRP,ADA,DOGE,DOT,LTC&tsyms=USD&extraParams=Blockmind");
+    if(res.ok){
+      const data=await res.json();
+      if(data&&data.RAW){
+        let updated=false;
+        Object.keys(data.RAW).forEach(sym=>{
+          const d=data.RAW[sym]?.USD;
+          if(d&&d.PRICE>0){
+            coinPrices[sym]={price:d.PRICE,change:(d.CHANGEPCT24HOUR||0).toFixed(2),vol:d.VOLUME24HOURTO||0};
+            updated=true;
+          }
+        });
+        coinPrices.USDT={price:1,change:0.00,vol:0};
+        if(updated){renderCoins();renderTicker();renderMarkets();}
+      }
+    }
+  }catch(e){/* silent fail, simulated prices already shown */}
 }
 
 function fmt(n){if(!n&&n!==0)return"$0";if(n>=1000)return"$"+n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});if(n>=1)return"$"+n.toFixed(2);return"$"+n.toFixed(4);}
@@ -2143,7 +2140,7 @@ function startLiveTrades(){
   const ref=urlParams.get("ref");
   if(ref){document.getElementById("refCode").value=ref;openAuth("register");}
   if(location.hash==="#admin")showPage("admin");
-  applyLang();initFallbackPrices();renderCoins();renderTicker();renderMarkets();fetchPrices();setInterval(fetchPrices,30000);renderSpinningCoins();startLiveTrades();
+  applyLang();initFallbackPrices();renderCoins();renderTicker();renderMarkets();fetchPrices();setInterval(fetchPrices,20000);renderSpinningCoins();startLiveTrades();
 })();
 </script>
 
