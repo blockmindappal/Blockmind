@@ -1270,44 +1270,67 @@ function showPage(name){
   window.scrollTo(0,0);
 }
 
+// Base prices - updated periodically with small realistic movements
+const BASE_PRICES={BTC:83500,ETH:3180,BNB:595,USDT:1,SOL:152,XRP:0.53,ADA:0.45,DOGE:0.115,DOT:7.3,LTC:79};
+const BASE_CHANGES={BTC:1.2,ETH:-0.5,BNB:2.1,USDT:0.01,SOL:3.4,XRP:-1.1,ADA:0.8,DOGE:5.2,DOT:-2.0,LTC:0.4};
+let priceIteration=0;
+
 async function fetchPrices(){
-  const fallback={BTC:{price:83000,change:1.2},ETH:{price:3150,change:-0.5},BNB:{price:590,change:2.1},USDT:{price:1,change:0.01},SOL:{price:148,change:3.4},XRP:{price:0.52,change:-1.1},ADA:{price:0.44,change:0.8},DOGE:{price:0.11,change:5.2},DOT:{price:7.1,change:-2.0},LTC:{price:78,change:0.4}};
-  let loaded=false;
-  // Try Binance API first (no CORS issues)
-  try{
-    const syms=["BTCUSDT","ETHUSDT","BNBUSDT","SOLUSDT","XRPUSDT","ADAUSDT","DOGEUSDT","DOTUSDT","LTCUSDT"];
-    const res=await fetch("https://api.binance.com/api/v3/ticker/24hr?symbols="+encodeURIComponent(JSON.stringify(syms)),{signal:AbortSignal.timeout(5000)});
-    const data=await res.json();
-    const map={BTCUSDT:"BTC",ETHUSDT:"ETH",BNBUSDT:"BNB",SOLUSDT:"SOL",XRPUSDT:"XRP",ADAUSDT:"ADA",DOGEUSDT:"DOGE",DOTUSDT:"DOT",LTCUSDT:"LTC"};
-    data.forEach(d=>{
-      const sym=map[d.symbol];
-      if(sym)coinPrices[sym]={price:parseFloat(d.lastPrice),change:parseFloat(d.priceChangePercent).toFixed(2),vol:parseFloat(d.quoteVolume)};
-    });
-    coinPrices.USDT={price:1,change:0.01,vol:0};
-    loaded=true;
-  }catch(e1){
-    // Try CoinGecko
-    try{
-      const ids="bitcoin,ethereum,binancecoin,tether,solana,ripple,cardano,dogecoin,polkadot,litecoin";
-      const res=await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`,{signal:AbortSignal.timeout(5000)});
-      const data=await res.json();
-      const map2={BTC:"bitcoin",ETH:"ethereum",BNB:"binancecoin",USDT:"tether",SOL:"solana",XRP:"ripple",ADA:"cardano",DOGE:"dogecoin",DOT:"polkadot",LTC:"litecoin"};
-      COINS.forEach(c=>{const d=data[map2[c.sym]];if(d)coinPrices[c.sym]={price:d.usd,change:(d.usd_24h_change||0).toFixed(2),vol:0};});
-      loaded=true;
-    }catch(e2){}
+  // Always initialize with base prices first so UI never shows $0
+  if(Object.keys(coinPrices).length===0){
+    initFallbackPrices();
+    renderCoins();renderTicker();renderMarkets();
   }
+  
+  // Try to get real prices
+  let loaded=false;
+  
+  // Try CryptoCompare (CORS friendly, free)
+  try{
+    const syms="BTC,ETH,BNB,SOL,XRP,ADA,DOGE,DOT,LTC";
+    const res=await fetch(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${syms}&tsyms=USD`,{signal:AbortSignal.timeout(6000)});
+    const data=await res.json();
+    if(data.RAW){
+      Object.keys(data.RAW).forEach(sym=>{
+        const d=data.RAW[sym].USD;
+        if(d)coinPrices[sym]={price:d.PRICE,change:d.CHANGEPCT24HOUR?.toFixed(2)||0,vol:d.VOLUME24HOURTO||0};
+      });
+      coinPrices.USDT={price:1,change:0.01,vol:0};
+      loaded=true;
+    }
+  }catch(e){}
+  
   if(!loaded){
-    // Use fallback with small random variation to look live
-    Object.keys(fallback).forEach(sym=>{
-      const variation=(Math.random()-0.5)*0.01;
-      coinPrices[sym]={
-        price:fallback[sym].price*(1+variation),
-        change:(fallback[sym].change+(Math.random()-0.5)*0.3).toFixed(2),
-        vol:0
+    // Animate prices realistically - small movements every refresh
+    priceIteration++;
+    COINS.forEach(c=>{
+      const base=BASE_PRICES[c.sym]||1;
+      const baseChange=BASE_CHANGES[c.sym]||0;
+      // Simulate realistic price drift
+      const drift=Math.sin(priceIteration*0.3+c.sym.charCodeAt(0))*0.002;
+      const noise=(Math.random()-0.5)*0.003;
+      const currentPrice=coinPrices[c.sym]?.price||base;
+      const newPrice=currentPrice*(1+drift+noise);
+      const changeVariation=(Math.random()-0.5)*0.2;
+      coinPrices[c.sym]={
+        price:Math.max(newPrice,base*0.9),
+        change:(parseFloat(coinPrices[c.sym]?.change||baseChange)+changeVariation).toFixed(2),
+        vol:coinPrices[c.sym]?.vol||0
       };
     });
   }
+  
   renderCoins();renderTicker();renderMarkets();
+}
+
+function initFallbackPrices(){
+  COINS.forEach(c=>{
+    coinPrices[c.sym]={
+      price:BASE_PRICES[c.sym]||1,
+      change:BASE_CHANGES[c.sym]||0,
+      vol:0
+    };
+  });
 }
 
 function fmt(n){if(!n&&n!==0)return"$0";if(n>=1000)return"$"+n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});if(n>=1)return"$"+n.toFixed(2);return"$"+n.toFixed(4);}
@@ -2120,7 +2143,7 @@ function startLiveTrades(){
   const ref=urlParams.get("ref");
   if(ref){document.getElementById("refCode").value=ref;openAuth("register");}
   if(location.hash==="#admin")showPage("admin");
-  applyLang();fetchPrices();setInterval(fetchPrices,60000);renderSpinningCoins();startLiveTrades();
+  applyLang();initFallbackPrices();renderCoins();renderTicker();renderMarkets();fetchPrices();setInterval(fetchPrices,30000);renderSpinningCoins();startLiveTrades();
 })();
 </script>
 
