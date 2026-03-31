@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blockmind — Crypto Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script><style>
+  :root {
+    --bg: #080b12;
+    --bg2: #0d1120;
+    --bg3: #111827;
+    --card: #0f1623;
+    --border: #1e2d45;
+    --accent: #00d4ff;
+    --accent2: #0099cc;
+    --green: #00e676;
+    --red: #ff3d57;
+    --gold: #f7b731;
+    --text: #e8f0fe;
+    --muted: #6b7fa3;
+    --font: 'Syne', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); min-height:100vh; overflow-x:hidden; }
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background-image: linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events:none; z-index:0;
+  }
+  ::-webkit-scrollbar { width:6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius:3px; }
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 32px; height:64px;
+    background: rgba(8,11,18,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo { font-size:22px; font-weight:800; letter-spacing:-0.5px; }
+  .logo span { color: var(--accent); }
+  .nav-right { display:flex; align-items:center; gap:12px; }
+  .lang-btn {
+    background: var(--bg3); border: 1px solid var(--border);
+    color: var(--muted); padding:6px 14px; border-radius:8px;
+    cursor:pointer; font-family:var(--font); font-size:13px;
+    transition: all 0.2s;
+  }
+  .lang-btn:hover { color:var(--accent); border-color:var(--accent); }
+  .btn {
+    padding:8px 20px; border-radius:10px; font-family:var(--font);
+    font-size:14px; font-weight:600; cursor:pointer; border:none;
+    transition: all 0.2s;
+  }
+  .btn-outline { background:transparent; border:1px solid var(--border); color:var(--text); }
+  .btn-outline:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-primary { background: var(--accent); color: #000; }
+  .btn-primary:hover { background: #00b8d9; transform:translateY(-1px); }
+  .ticker-bar {
+    position:fixed; top:64px; left:0; right:0; z-index:99;
+    background: var(--bg2); border-bottom:1px solid var(--border);
+    padding:8px 0; overflow:hidden;
+  }
+  .ticker-track {
+    display:flex; gap:40px; width:max-content;
+    animation: ticker 30s linear infinite;
+  }
+  .ticker-track:hover { animation-play-state:paused; }
+  @keyframes ticker {
+    from { transform:translateX(0); }
+    to { transform:translateX(-50%); }
+  }
+  .ticker-item { display:flex; align-items:center; gap:8px; white-space:nowrap; }
+  .ticker-sym { font-family:var(--mono); font-size:13px; font-weight:500; color:var(--accent); }
+  .ticker-price { font-family:var(--mono); font-size:13px; color:var(--text); }
+  .ticker-change { font-family:var(--mono); font-size:12px; }
+  .up { color: var(--green); }
+  .down { color: var(--red); }
+  .page { display:none; padding-top:130px; min-height:100vh; position:relative; z-index:1; }
+  .page.active { display:block; }
+  .hero-section { max-width:1200px; margin:0 auto; padding:40px 24px; }
+  .hero-title { font-size:clamp(36px,5vw,64px); font-weight:800; line-height:1.05; letter-spacing:-2px; }
+  .hero-title span { color:var(--accent); }
+  .hero-sub { color:var(--muted); font-size:18px; margin:16px 0 32px; max-width:520px; line-height:1.6; }
+  .hero-btns { display:flex; gap:12px; flex-wrap:wrap; }
+  .btn-lg { padding:14px 32px; font-size:16px; border-radius:14px; }
+  .section-title { font-size:20px; font-weight:700; margin-bottom:20px; }
+  .coins-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap:16px; margin-bottom:48px; }
+  .coin-card {
+    background: var(--card); border:1px solid var(--border);
+    border-radius:16px; padding:20px;
+    transition: all 0.3s; cursor:default;
+    position:relative; overflow:hidden;
+  }
+  .coin-card::before {
+    content:''; position:absolute; inset:0;
+    background: linear-gradient(135deg, transparent 60%, rgba(0,212,255,0.04));
+    border-radius:16px;
+  }
+  .coin-card:hover { border-color: var(--accent); transform:translateY(-3px); box-shadow:0 8px 30px rgba(0,212,255,0.1); }
+  .coin-header { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .coin-icon { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; }
+  .coin-name { font-weight:700; font-size:15px; }
+  .coin-sym { font-family:var(--mono); font-size:12px; color:var(--muted); }
+  .coin-price { font-family:var(--mono); font-size:22px; font-weight:500; margin-bottom:6px; }
+  .coin-change { font-family:var(--mono); font-size:13px; }
+  .coin-vol { font-family:var(--mono); font-size:11px; color:var(--muted); margin-top:8px; }
+  .modal-overlay {
+    display:none; position:fixed; inset:0; z-index:200;
+    background: rgba(0,0,0,0.7); backdrop-filter:blur(8px);
+    align-items:center; justify-content:center;
+  }
+  .modal-overlay.open { display:flex; }
+  .modal {
+    background: var(--bg2); border:1px solid var(--border);
+    border-radius:24px; padding:40px; width:100%; max-width:440px;
+    position:relative; animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp { from { transform:translateY(30px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+  .modal-close {
+    position:absolute; top:16px; right:16px;
+    background:var(--bg3); border:none; color:var(--muted);
+    width:32px; height:32px; border-radius:8px; cursor:pointer;
+    font-size:18px; display:flex; align-items:center; justify-content:center;
+  }
+  .modal-close:hover { color:var(--text); }
+  .modal-title { font-size:24px; font-weight:800; margin-bottom:6px; }
+  .modal-sub { color:var(--muted); font-size:14px; margin-bottom:28px; }
+  .form-group { margin-bottom:16px; }
+  .form-label { font-size:13px; color:var(--muted); margin-bottom:6px; display:block; }
+  .form-input {
+    width:100%; background:var(--bg3); border:1px solid var(--border);
+    border-radius:10px; padding:12px 14px; color:var(--text);
+    font-family:var(--font); font-size:14px; outline:none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus { border-color: var(--accent); }
+  .modal-tabs { display:flex; gap:0; margin-bottom:24px; background:var(--bg3); border-radius:12px; padding:4px; }
+  .modal-tab {
+    flex:1; padding:8px; border:none; background:transparent;
+    color:var(--muted); font-family:var(--font); font-size:14px; font-weight:600;
+    border-radius:9px; cursor:pointer; transition:all 0.2s;
+  }
+  .modal-tab.active { background:var(--accent); color:#000; }
+  .btn-full { width:100%; padding:14px; font-size:15px; border-radius:12px; margin-top:8px; }
+  .msg { font-size:13px; text-align:center; margin-top:12px; padding:10px; border-radius:8px; }
+  .msg.success { background:rgba(0,230,118,0.1); color:var(--green); border:1px solid rgba(0,230,118,0.2); }
+  .msg.error { background:rgba(255,61,87,0.1); color:var(--red); border:1px solid rgba(255,61,87,0.2); }
+  .deposit-wrap { max-width:900px; margin:0 auto; padding:40px 24px; }
+  .deposit-title { font-size:32px; font-weight:800; margin-bottom:8px; }
+  .deposit-sub { color:var(--muted); margin-bottom:32px; }
+  .network-tabs { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:32px; }
+  .net-tab {
+    padding:8px 18px; background:var(--card); border:1px solid var(--border);
+    border-radius:10px; cursor:pointer; font-family:var(--font); font-size:14px;
+    color:var(--muted); transition:all 0.2s;
+  }
+  .net-tab.active { background:rgba(0,212,255,0.1); border-color:var(--accent); color:var(--accent); }
+  .address-card { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:24px; }
+  .addr-label { font-size:13px; color:var(--muted); margin-bottom:8px; }
+  .addr-box { display:flex; align-items:center; gap:10px; background:var(--bg3); border:1px solid var(--border); border-radius:12px; padding:14px 16px; }
+  .addr-text { font-family:var(--mono); font-size:13px; flex:1; word-break:break-all; color:var(--accent); }
+  .copy-btn { background:var(--accent); color:#000; border:none; border-radius:8px; padding:8px 14px; font-size:12px; font-weight:700; cursor:pointer; font-family:var(--font); white-space:nowrap; transition:all 0.2s; }
+  .copy-btn:hover { background:#00b8d9; }
+  .confirm-section { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:32px; margin-top:32px; }
+  .confirm-title { font-size:18px; font-weight:700; margin-bottom:6px; }
+  .confirm-sub { color:var(--muted); font-size:14px; margin-bottom:24px; }
+  .confirm-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media(max-width:560px) { .confirm-grid { grid-template-columns:1fr; } }
+  .dash-wrap { max-width:1100px; margin:0 auto; padding:40px 24px; }
+  .dash-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:32px; flex-wrap:wrap; gap:16px; }
+  .dash-welcome { font-size:28px; font-weight:800; }
+  .stats-row { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; margin-bottom:32px; }
+  .stat-card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:24px; }
+  .stat-label { font-size:12px; color:var(--muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:1px; }
+  .stat-value { font-family:var(--mono); font-size:24px; font-weight:500; }
+  .stat-value.green { color:var(--green); }
+  .history-table { background:var(--card); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
+  .table-head { background:var(--bg3); padding:14px 20px; display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; }
+  .th { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+  .table-row { padding:14px 20px; display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; border-top:1px solid var(--border); }
+  .table-row:hover { background:rgba(0,212,255,0.02); }
+  .td { font-family:var(--mono); font-size:14px; }
+  .badge { display:inline-block; padding:3px 10px; border-radius:6px; font-size:11px; font-weight:700; }
+  .badge-pending { background:rgba(247,183,49,0.15); color:var(--gold); }
+  .badge-confirmed { background:rgba(0,230,118,0.15); color:var(--green); }
+  .admin-wrap { max-width:1100px; margin:0 auto; padding:40px 24px; }
+  .admin-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:32px; flex-wrap:wrap; gap:12px; }
+  .admin-title { font-size:28px; font-weight:800; }
+  .admin-badge { background:rgba(255,61,87,0.15); color:var(--red); border:1px solid rgba(255,61,87,0.2); padding:4px 14px; border-radius:8px; font-size:12px; font-weight:700; }
+  .admin-stats { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:14px; margin-bottom:28px; }
+  .admin-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:20px; }
+  .admin-card-label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .admin-card-val { font-family:var(--mono); font-size:22px; font-weight:500; color:var(--accent); }
+  .users-table { background:var(--card); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
+  .users-head { background:var(--bg3); padding:14px 20px; display:grid; grid-template-columns:2fr 2fr 1.5fr 1.5fr 1fr; gap:10px; }
+  .users-row { padding:14px 20px; display:grid; grid-template-columns:2fr 2fr 1.5fr 1.5fr 1fr; gap:10px; border-top:1px solid var(--border); align-items:center; }
+  .users-row:hover { background:rgba(0,212,255,0.02); }
+  .deposits-head { background:var(--bg3); padding:14px 20px; display:grid; grid-template-columns:2fr 1.5fr 2fr 1.5fr 1fr; gap:10px; }
+  .deposits-row { padding:14px 20px; display:grid; grid-template-columns:2fr 1.5fr 2fr 1.5fr 1fr; gap:10px; border-top:1px solid var(--border); align-items:center; }
+  .deposits-row:hover { background:rgba(0,212,255,0.02); }
+  .section-tabs { display:flex; gap:10px; margin-bottom:20px; }
+  .sec-tab { padding:8px 20px; background:var(--bg3); border:1px solid var(--border); border-radius:10px; cursor:pointer; font-family:var(--font); font-size:14px; font-weight:600; color:var(--muted); transition:all 0.2s; }
+  .sec-tab.active { background:rgba(0,212,255,0.1); border-color:var(--accent); color:var(--accent); }
+  .action-btn { background:transparent; border:1px solid var(--border); color:var(--muted); padding:5px 12px; border-radius:7px; cursor:pointer; font-size:12px; font-family:var(--font); transition:all 0.2s; }
+  .action-btn.approve { border-color:var(--green); color:var(--green); }
+  .action-btn.approve:hover { background:rgba(0,230,118,0.1); }
+  .action-btn.del { border-color:var(--red); color:var(--red); }
+  .action-btn.del:hover { background:rgba(255,61,87,0.1); }
+  .empty-state { text-align:center; padding:48px; color:var(--muted); font-size:15px; }
+  .admin-login { max-width:400px; margin:0 auto; padding:60px 24px; }
+  .admin-login-card { background:var(--card); border:1px solid rgba(255,61,87,0.3); border-radius:24px; padding:40px; }
+  .admin-login-title { font-size:22px; font-weight:800; margin-bottom:4px; }
+  .admin-login-sub { color:var(--muted); font-size:13px; margin-bottom:28px; }
+  .toast { position:fixed; bottom:24px; right:24px; z-index:300; background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:14px 20px; display:flex; align-items:center; gap:10px; transform:translateY(100px); opacity:0; transition:all 0.3s; max-width:320px; box-shadow:0 8px 32px rgba(0,0,0,0.4); }
+  .toast.show { transform:translateY(0); opacity:1; }
+  .toast-icon { font-size:18px; }
+  .toast-text { font-size:14px; }
+  .live-dot { display:inline-block; width:7px; height:7px; background:var(--green); border-radius:50%; margin-right:6px; animation:pulse2 1.5s ease infinite; }
+  @keyframes pulse2 { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.5)} }
+  .divider { height:1px; background:var(--border); margin:28px 0; }
+  .text-muted { color:var(--muted); }
+  .text-accent { color:var(--accent); }
+  .text-mono { font-family:var(--mono); }
+  @media(max-width:640px) {
+    nav { padding:0 16px; }
+    .users-head,.users-row,.deposits-head,.deposits-row { grid-template-columns:1fr 1fr; }
+    .table-head,.table-row { grid-template-columns:1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">Block<span>mind</span></div>
+  <div class="nav-right">
+    <button class="lang-btn" onclick="toggleLang()" id="langBtn">EN</button>
+    <div id="navGuest" style="display:flex; gap:8px;">
+      <button class="btn btn-outline" onclick="openAuth('login')">Giriş</button>
+      <button class="btn btn-primary" onclick="openAuth('register')">Kayıt Ol</button>
+    </div>
+    <div id="navUser" style="display:none; align-items:center; gap:10px;">
+      <span id="navUsername" style="font-size:14px; color:var(--muted);"></span>
+      <button class="btn btn-outline" onclick="showPage('deposit')">Yatır</button>
+      <button class="btn btn-outline" onclick="showPage('dashboard')">Panel</button>
+      <button class="btn" style="background:var(--bg3); border:1px solid var(--border); color:var(--muted);" onclick="logout()">Çıkış</button>
+    </div>
+  </div>
+</nav>
+<div class="ticker-bar"><div class="ticker-track" id="tickerTrack"></div></div>
+
+<div class="page active" id="page-home">
+  <div class="hero-section">
+    <div class="hero-title">Kripto Piyasasına<br>Akıllıca <span>Yatırım Yap</span></div>
+    <p class="hero-sub">Blockmind ile Bitcoin, Ethereum, BNB ve daha fazlasını güvenle takip edin.</p>
+    <div class="hero-btns">
+      <button class="btn btn-primary btn-lg" onclick="openAuth('register')">Hemen Başla</button>
+      <button class="btn btn-outline btn-lg" onclick="openAuth('login')">Giriş Yap</button>
+    </div>
+    <div class="divider"></div>
+    <div class="section-title"><span class="live-dot"></span>Canlı Fiyatlar</div>
+    <div class="coins-grid" id="coinsGrid"></div>
+  </div>
+</div>
+
+<div class="page" id="page-deposit">
+  <div class="deposit-wrap">
+    <div class="deposit-title">Kripto Yatır</div>
+    <p class="deposit-sub">Ağı seçin, adrese gönderin, formu doldurun.</p>
+    <div class="network-tabs">
+      <button class="net-tab active" data-net="usdt_erc20" onclick="selectNet(this)">USDT (ERC20)</button>
+      <button class="net-tab" data-net="usdt_trc20" onclick="selectNet(this)">USDT (TRC20)</button>
+      <button class="net-tab" data-net="usdt_sol" onclick="selectNet(this)">USDT (Solana)</button>
+      <button class="net-tab" data-net="btc" onclick="selectNet(this)">Bitcoin (BTC)</button>
+      <button class="net-tab" data-net="eth" onclick="selectNet(this)">Ethereum (ETH)</button>
+      <button class="net-tab" data-net="bnb" onclick="selectNet(this)">BNB Smart Chain</button>
+    </div>
+    <div class="address-card">
+      <div class="addr-label">Gönderim Adresi</div>
+      <div class="addr-box">
+        <span class="addr-text" id="addrText">0xe6b60bd4d6c00dd8b2814b9f7616e28c292dd41e</span>
+        <button class="copy-btn" onclick="copyAddr()">Kopyala</button>
+      </div>
+      <div style="margin-top:12px; font-size:13px; color:var(--muted);" id="addrNote">⚠️ Sadece bu ağ üzerinden gönderin.</div>
+    </div>
+    <div class="confirm-section">
+      <div class="confirm-title">Gönderim Bildirimi</div>
+      <p class="confirm-sub">Transfer sonrası bilgileri girin. Onay sonrası bakiyeniz yüklenir.</p>
+      <div class="confirm-grid">
+        <div class="form-group">
+          <label class="form-label">Kullanıcı Adı</label>
+          <input class="form-input" id="depUsername" placeholder="kullanici_adi" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ad Soyad</label>
+          <input class="form-input" id="depName" placeholder="Ad Soyad" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Gönderilen Tutar</label>
+          <input class="form-input" id="depAmount" type="number" placeholder="100" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ağ</label>
+          <input class="form-input" id="depNetwork" readonly style="color:var(--accent)" value="USDT (ERC20)" />
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:8px;">
+        <label class="form-label">TX Hash (opsiyonel)</label>
+        <input class="form-input" id="depTxHash" placeholder="0x..." />
+      </div>
+      <button class="btn btn-primary btn-full" onclick="submitDeposit()">Gönderimi Bildir</button>
+      <div id="depMsg"></div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-dashboard">
+  <div class="dash-wrap">
+    <div class="dash-header">
+      <div class="dash-welcome">Hoş geldin, <span id="dashName2" style="color:var(--accent)"></span></div>
+      <button class="btn btn-primary" onclick="showPage('deposit')">+ Yatır</button>
+    </div>
+    <div class="stats-row" id="userStatsRow"></div>
+    <div class="section-title">Yatırım Geçmişi</div>
+    <div class="history-table">
+      <div class="table-head">
+        <div class="th">Ağ</div><div class="th">Tutar</div>
+        <div class="th">Tarih</div><div class="th">Durum</div>
+      </div>
+      <div id="userDepositHistory"></div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-admin">
+  <div id="adminLoginSection" class="admin-login">
+    <div class="admin-login-card">
+      <div class="admin-login-title">🔐 Admin Paneli</div>
+      <div class="admin-login-sub">Yönetici girişi gereklidir.</div>
+      <div class="form-group">
+        <label class="form-label">Şifre</label>
+        <input type="password" class="form-input" id="adminPassInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')adminLogin()" />
+      </div>
+      <button class="btn btn-primary btn-full" onclick="adminLogin()">Giriş</button>
+      <div id="adminLoginMsg"></div>
+    </div>
+  </div>
+  <div id="adminDashSection" style="display:none">
+    <div class="admin-wrap">
+      <div class="admin-header">
+        <div>
+          <div class="admin-title">Admin Paneli <span class="admin-badge">YÖNETİCİ</span></div>
+          <div style="color:var(--muted);font-size:13px;margin-top:4px;">Blockmind Yönetim Merkezi</div>
+        </div>
+        <button class="btn" style="background:var(--bg3); border:1px solid var(--border); color:var(--muted);" onclick="adminLogout()">Çıkış</button>
+      </div>
+      <div class="admin-stats" id="adminStats"></div>
+      <div class="section-tabs">
+        <button class="sec-tab active" onclick="switchAdminTab('users',this)">👥 Kullanıcılar</button>
+        <button class="sec-tab" onclick="switchAdminTab('deposits',this)">💰 Yatırımlar</button>
+      </div>
+      <div id="adminUsersSection">
+        <div class="users-table">
+          <div class="users-head">
+            <div class="th">Kullanıcı Adı</div><div class="th">E-posta</div>
+            <div class="th">Bakiye</div><div class="th">Kayıt</div><div class="th">İşlem</div>
+          </div>
+          <div id="adminUsersList"></div>
+        </div>
+      </div>
+      <div id="adminDepositsSection" style="display:none">
+        <div class="users-table">
+          <div class="deposits-head">
+            <div class="th">Kullanıcı</div><div class="th">Tutar</div>
+            <div class="th">Ağ</div><div class="th">Tarih</div><div class="th">Durum</div>
+          </div>
+          <div id="adminDepositsList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAuth()">✕</button>
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tabLogin" onclick="switchTab('login')">Giriş Yap</button>
+      <button class="modal-tab" id="tabRegister" onclick="switchTab('register')">Kayıt Ol</button>
+    </div>
+    <div id="formLogin">
+      <div class="modal-title">Tekrar Hoş Geldin</div>
+      <p class="modal-sub">Hesabınıza giriş yapın</p>
+      <div class="form-group">
+        <label class="form-label">Kullanıcı Adı</label>
+        <input class="form-input" id="loginUser" placeholder="kullanici_adi" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Şifre</label>
+        <input class="form-input" type="password" id="loginPass" placeholder="••••••••" />
+      </div>
+      <button class="btn btn-primary btn-full" onclick="doLogin()">Giriş Yap</button>
+      <div id="loginMsg"></div>
+    </div>
+    <div id="formRegister" style="display:none">
+      <div class="modal-title">Hesap Oluştur</div>
+      <p class="modal-sub">Blockmind'a katılın</p>
+      <div class="form-group">
+        <label class="form-label">Ad Soyad</label>
+        <input class="form-input" id="regName" placeholder="Ad Soyad" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">E-posta</label>
+        <input class="form-input" type="email" id="regEmail" placeholder="ornek@email.com" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Kullanıcı Adı</label>
+        <input class="form-input" id="regUser" placeholder="kullanici_adi" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Şifre</label>
+        <input class="form-input" type="password" id="regPass" placeholder="En az 6 karakter" />
+      </div>
+      <button class="btn btn-primary btn-full" onclick="doRegister()">Hesap Oluştur</button>
+      <div id="registerMsg"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toastIcon"></span>
+  <span class="toast-text" id="toastText"></span>
+</div>
+
+<script>
+const ADMIN_PASS = "Portakal357";
+const ADMIN_EMAIL = "ali3467799@gmail.com";
+const ADDRESSES = {
+  usdt_erc20: { addr: "0xe6b60bd4d6c00dd8b2814b9f7616e28c292dd41e", label: "USDT ERC20", note: "⚠️ Sadece ERC20 ağı." },
+  usdt_trc20: { addr: "TMtq8qrYSKzx6DyxgZbeCkSSFeDWUaVTic", label: "USDT TRC20", note: "⚠️ Sadece TRC20 (Tron) ağı." },
+  usdt_sol:   { addr: "PChjbUFEubr5Y2DQHL4kWxU4Npfw2ddipKsqegbBrWL", label: "USDT Solana", note: "⚠️ Sadece Solana ağı." },
+  btc:        { addr: "bc1qfd3j2k4htxra0k2566skk2q8m9eekchvtrwv8x", label: "Bitcoin (BTC)", note: "⚠️ Sadece Bitcoin ağı." },
+  eth:        { addr: "0xe6b60bd4d6c00dd8b2814b9f7616e28c292dd41e", label: "Ethereum (ETH)", note: "⚠️ Sadece ERC20 ağı." },
+  bnb:        { addr: "0xe6b60bd4d6c00dd8b2814b9f7616e28c292dd41e", label: "BNB Smart Chain", note: "⚠️ Sadece BEP20 ağı." },
+};
+let currentNet = "usdt_erc20";
+let lang = "tr";
+let currentUser = null;
+let adminLoggedIn = false;
+
+function getUsers() { try { return JSON.parse(localStorage.getItem("bm_users")||"[]"); } catch{return[];} }
+function saveUsers(u) { localStorage.setItem("bm_users", JSON.stringify(u)); }
+function getDeposits() { try { return JSON.parse(localStorage.getItem("bm_deposits")||"[]"); } catch{return[];} }
+function saveDeposits(d) { localStorage.setItem("bm_deposits", JSON.stringify(d)); }
+
+function toggleLang() {
+  lang = lang==="tr"?"en":"tr";
+  document.getElementById("langBtn").textContent = lang==="tr"?"EN":"TR";
+}
+
+function showPage(name) {
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById("page-"+name).classList.add("active");
+  if(name==="dashboard") renderDashboard();
+  if(name==="admin") renderAdmin();
+  if(name==="deposit" && currentUser) document.getElementById("depUsername").value = currentUser.username;
+  window.scrollTo(0,0);
+}
+
+const COINS = [
+  {sym:"BTC",name:"Bitcoin",icon:"₿",color:"#f7931a"},
+  {sym:"ETH",name:"Ethereum",icon:"Ξ",color:"#627eea"},
+  {sym:"BNB",name:"BNB",icon:"◈",color:"#f3ba2f"},
+  {sym:"USDT",name:"Tether",icon:"₮",color:"#26a17b"},
+  {sym:"SOL",name:"Solana",icon:"◎",color:"#9945ff"},
+  {sym:"XRP",name:"Ripple",icon:"✕",color:"#00aae4"},
+  {sym:"ADA",name:"Cardano",icon:"₳",color:"#0033ad"},
+  {sym:"DOGE",name:"Dogecoin",icon:"Ð",color:"#c2a633"},
+  {sym:"DOT",name:"Polkadot",icon:"●",color:"#e6007a"},
+  {sym:"LTC",name:"Litecoin",icon:"Ł",color:"#bfbbbb"},
+];
+let coinPrices = {};
+
+async function fetchPrices() {
+  try {
+    const ids = "bitcoin,ethereum,binancecoin,tether,solana,ripple,cardano,dogecoin,polkadot,litecoin";
+    const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true`);
+    const data = await res.json();
+    const map = {BTC:"bitcoin",ETH:"ethereum",BNB:"binancecoin",USDT:"tether",SOL:"solana",XRP:"ripple",ADA:"cardano",DOGE:"dogecoin",DOT:"polkadot",LTC:"litecoin"};
+    COINS.forEach(c=>{const d=data[map[c.sym]];if(d) coinPrices[c.sym]={price:d.usd,change:d.usd_24h_change?.toFixed(2)||0,vol:d.usd_24h_vol};});
+  } catch(e) {
+    coinPrices={BTC:{price:82000,change:1.2,vol:28000000000},ETH:{price:3800,change:-0.5,vol:14000000000},BNB:{price:580,change:2.1,vol:2000000000},USDT:{price:1,change:0.01,vol:40000000000},SOL:{price:145,change:3.4,vol:3000000000},XRP:{price:0.51,change:-1.1,vol:1500000000},ADA:{price:0.42,change:0.8,vol:400000000},DOGE:{price:0.09,change:5.2,vol:600000000},DOT:{price:6.8,change:-2.0,vol:200000000},LTC:{price:75,change:0.4,vol:400000000}};
+  }
+  renderCoins(); renderTicker();
+}
+
+function fmt(n){if(!n)return"$0";if(n>=1000)return"$"+n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});if(n>=1)return"$"+n.toFixed(2);return"$"+n.toFixed(4);}
+function fmtVol(n){if(!n)return"";if(n>=1e9)return"Vol: $"+(n/1e9).toFixed(1)+"B";if(n>=1e6)return"Vol: $"+(n/1e6).toFixed(0)+"M";return"";}
+
+function renderCoins(){
+  document.getElementById("coinsGrid").innerHTML=COINS.map(c=>{
+    const p=coinPrices[c.sym]||{};const ch=parseFloat(p.change||0);
+    return`<div class="coin-card"><div class="coin-header"><div class="coin-icon" style="background:${c.color}22;color:${c.color}">${c.icon}</div><div><div class="coin-name">${c.name}</div><div class="coin-sym">${c.sym}</div></div></div><div class="coin-price">${fmt(p.price)}</div><div class="coin-change ${ch>=0?'up':'down'}">${ch>=0?'▲':'▼'} ${Math.abs(ch)}%</div><div class="coin-vol">${fmtVol(p.vol)}</div></div>`;
+  }).join("");
+}
+
+function renderTicker(){
+  const items=COINS.map(c=>{const p=coinPrices[c.sym]||{};const ch=parseFloat(p.change||0);return`<div class="ticker-item"><span class="ticker-sym">${c.sym}</span><span class="ticker-price">${fmt(p.price)}</span><span class="ticker-change ${ch>=0?'up':'down'}">${ch>=0?'▲':'▼'}${Math.abs(ch)}%</span></div>`;}).join("");
+  document.getElementById("tickerTrack").innerHTML=items+items;
+}
+
+function openAuth(tab){document.getElementById("authModal").classList.add("open");switchTab(tab);}
+function closeAuth(){document.getElementById("authModal").classList.remove("open");}
+function switchTab(t){
+  document.getElementById("formLogin").style.display=t==="login"?"block":"none";
+  document.getElementById("formRegister").style.display=t==="register"?"block":"none";
+  document.getElementById("tabLogin").classList.toggle("active",t==="login");
+  document.getElementById("tabRegister").classList.toggle("active",t==="register");
+}
+
+function doLogin(){
+  const u=document.getElementById("loginUser").value.trim();
+  const p=document.getElementById("loginPass").value;
+  const msg=document.getElementById("loginMsg");
+  if(!u||!p){showMsg(msg,"Tüm alanları doldurun","error");return;}
+  const user=getUsers().find(x=>x.username===u&&x.password===p);
+  if(!user){showMsg(msg,"Kullanıcı adı veya şifre hatalı","error");return;}
+  currentUser=user;localStorage.setItem("bm_session",JSON.stringify(user));
+  closeAuth();updateNav();showToast("✅",`Hoş geldin, ${user.name}!`);showPage("dashboard");
+}
+
+function doRegister(){
+  const name=document.getElementById("regName").value.trim();
+  const email=document.getElementById("regEmail").value.trim();
+  const username=document.getElementById("regUser").value.trim();
+  const pass=document.getElementById("regPass").value;
+  const msg=document.getElementById("registerMsg");
+  if(!name||!email||!username||!pass){showMsg(msg,"Tüm alanları doldurun","error");return;}
+  if(pass.length<6){showMsg(msg,"Şifre en az 6 karakter","error");return;}
+  const users=getUsers();
+  if(users.find(x=>x.username===username)){showMsg(msg,"Bu kullanıcı adı alınmış","error");return;}
+  if(users.find(x=>x.email===email)){showMsg(msg,"Bu e-posta zaten kayıtlı","error");return;}
+  const newUser={id:Date.now(),name,email,username,password:pass,balance:0,createdAt:new Date().toLocaleDateString("tr-TR")};
+  users.push(newUser);saveUsers(users);
+  showMsg(msg,"✅ Hesabınız oluşturuldu! Giriş yapabilirsiniz.","success");
+  setTimeout(()=>switchTab("login"),1800);
+}
+
+function logout(){currentUser=null;localStorage.removeItem("bm_session");updateNav();showPage("home");showToast("👋","Çıkış yapıldı");}
+
+function updateNav(){
+  const g=document.getElementById("navGuest");
+  const u=document.getElementById("navUser");
+  if(currentUser){g.style.display="none";u.style.display="flex";document.getElementById("navUsername").textContent=currentUser.username;}
+  else{g.style.display="flex";u.style.display="none";}
+}
+
+function selectNet(btn){
+  document.querySelectorAll(".net-tab").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");currentNet=btn.dataset.net;
+  const a=ADDRESSES[currentNet];
+  document.getElementById("addrText").textContent=a.addr;
+  document.getElementById("addrNote").textContent=a.note;
+  document.getElementById("depNetwork").value=a.label;
+}
+
+function copyAddr(){navigator.clipboard.writeText(document.getElementById("addrText").textContent);showToast("📋","Adres kopyalandı!");}
+
+function submitDeposit(){
+  const username=document.getElementById("depUsername").value.trim();
+  const fullname=document.getElementById("depName").value.trim();
+  const amount=parseFloat(document.getElementById("depAmount").value);
+  const network=document.getElementById("depNetwork").value;
+  const txhash=document.getElementById("depTxHash").value.trim();
+  const msg=document.getElementById("depMsg");
+  if(!username||!fullname||!amount||amount<=0){showMsg(msg,"Lütfen tüm alanları doldurun","error");return;}
+  const user=getUsers().find(u=>u.username===username);
+  if(!user){showMsg(msg,"Kullanıcı bulunamadı","error");return;}
+  const dep={id:Date.now(),username,fullname,amount,network,txhash:txhash||"-",status:"pending",date:new Date().toLocaleString("tr-TR")};
+  const deposits=getDeposits();deposits.push(dep);saveDeposits(deposits);
+  showMsg(msg,"✅ Bildiriminiz alındı! Onay sonrası bakiyeniz güncellenir.","success");
+  document.getElementById("depAmount").value="";document.getElementById("depTxHash").value="";
+  showToast("💰","Yatırım bildirimi gönderildi");
+}
+
+function renderDashboard(){
+  if(!currentUser){showPage("home");return;}
+  document.getElementById("dashName2").textContent=currentUser.name;
+  const deposits=getDeposits().filter(d=>d.username===currentUser.username);
+  const total=deposits.filter(d=>d.status==="confirmed").reduce((s,d)=>s+d.amount,0);
+  const pending=deposits.filter(d=>d.status==="pending").length;
+  document.getElementById("userStatsRow").innerHTML=`
+    <div class="stat-card"><div class="stat-label">Onaylı Bakiye</div><div class="stat-value green">$${total.toLocaleString()}</div></div>
+    <div class="stat-card"><div class="stat-label">Bekleyen</div><div class="stat-value" style="color:var(--gold)">${pending}</div></div>
+    <div class="stat-card"><div class="stat-label">Toplam İşlem</div><div class="stat-value">${deposits.length}</div></div>`;
+  const hist=document.getElementById("userDepositHistory");
+  if(!deposits.length){hist.innerHTML=`<div class="empty-state">Henüz yatırım yok</div>`;return;}
+  hist.innerHTML=deposits.slice().reverse().map(d=>`<div class="table-row"><div class="td text-accent">${d.network}</div><div class="td">$${d.amount}</div><div class="td text-muted" style="font-size:12px">${d.date}</div><div class="td"><span class="badge ${d.status==="confirmed"?"badge-confirmed":"badge-pending"}">${d.status==="confirmed"?"Onaylı":"Bekliyor"}</span></div></div>`).join("");
+}
+
+function renderAdmin(){
+  if(!adminLoggedIn){document.getElementById("adminLoginSection").style.display="block";document.getElementById("adminDashSection").style.display="none";return;}
+  document.getElementById("adminLoginSection").style.display="none";document.getElementById("adminDashSection").style.display="block";
+  const users=getUsers();const deposits=getDeposits();
+  const totalDep=deposits.filter(d=>d.status==="confirmed").reduce((s,d)=>s+d.amount,0);
+  const pending=deposits.filter(d=>d.status==="pending").length;
+  document.getElementById("adminStats").innerHTML=`
+    <div class="admin-card"><div class="admin-card-label">Toplam Kullanıcı</div><div class="admin-card-val">${users.length}</div></div>
+    <div class="admin-card"><div class="admin-card-label">Onaylı Yatırım</div><div class="admin-card-val">$${totalDep.toLocaleString()}</div></div>
+    <div class="admin-card"><div class="admin-card-label">Bekleyen</div><div class="admin-card-val" style="color:var(--gold)">${pending}</div></div>
+    <div class="admin-card"><div class="admin-card-label">Tüm İşlemler</div><div class="admin-card-val">${deposits.length}</div></div>`;
+  renderAdminUsers();renderAdminDeposits();
+}
+
+function renderAdminUsers(){
+  const users=getUsers();const deposits=getDeposits();
+  const list=document.getElementById("adminUsersList");
+  if(!users.length){list.innerHTML=`<div class="empty-state">Kayıtlı kullanıcı yok</div>`;return;}
+  const bal={};deposits.filter(d=>d.status==="confirmed").forEach(d=>{bal[d.username]=(bal[d.username]||0)+d.amount;});
+  list.innerHTML=users.map(u=>`<div class="users-row"><div class="td text-accent">${u.username}</div><div class="td text-muted" style="font-size:12px">${u.email}</div><div class="td"><span style="color:var(--green);font-family:var(--mono)">$${(bal[u.username]||0).toLocaleString()}</span></div><div class="td text-muted" style="font-size:12px">${u.createdAt}</div><div class="td"><button class="action-btn del" onclick="deleteUser('${u.username}')">Sil</button></div></div>`).join("");
+}
+
+function renderAdminDeposits(){
+  const deposits=getDeposits();const list=document.getElementById("adminDepositsList");
+  if(!deposits.length){list.innerHTML=`<div class="empty-state">Yatırım yok</div>`;return;}
+  list.innerHTML=deposits.slice().reverse().map(d=>`<div class="deposits-row"><div class="td"><div style="color:var(--accent)">${d.username}</div><div style="font-size:11px;color:var(--muted)">${d.fullname}</div></div><div class="td" style="color:var(--green);font-family:var(--mono)">$${d.amount}</div><div class="td text-muted" style="font-size:12px">${d.network}</div><div class="td text-muted" style="font-size:12px">${d.date}</div><div class="td" style="display:flex;gap:6px;flex-wrap:wrap">${d.status==="pending"?`<button class="action-btn approve" onclick="approveDeposit(${d.id})">Onayla</button>`:`<span class="badge badge-confirmed">Onaylı</span>`}<button class="action-btn del" onclick="deleteDeposit(${d.id})">Sil</button></div></div>`).join("");
+}
+
+function approveDeposit(id){
+  const deposits=getDeposits();const dep=deposits.find(d=>d.id===id);if(!dep)return;
+  dep.status="confirmed";saveDeposits(deposits);
+  const users=getUsers();const user=users.find(u=>u.username===dep.username);
+  if(user){user.balance=(user.balance||0)+dep.amount;saveUsers(users);}
+  showToast("✅",`${dep.username} için $${dep.amount} onaylandı`);renderAdmin();
+}
+
+function deleteDeposit(id){if(!confirm("Silmek istiyor musunuz?"))return;saveDeposits(getDeposits().filter(d=>d.id!==id));renderAdmin();}
+function deleteUser(username){if(!confirm(`${username} silinsin mi?`))return;saveUsers(getUsers().filter(u=>u.username!==username));renderAdmin();showToast("🗑️",`${username} silindi`);}
+
+function switchAdminTab(tab,btn){
+  document.querySelectorAll(".sec-tab").forEach(b=>b.classList.remove("active"));btn.classList.add("active");
+  document.getElementById("adminUsersSection").style.display=tab==="users"?"block":"none";
+  document.getElementById("adminDepositsSection").style.display=tab==="deposits"?"block":"none";
+}
+
+function adminLogin(){
+  const pass=document.getElementById("adminPassInput").value;
+  if(pass===ADMIN_PASS){adminLoggedIn=true;renderAdmin();}
+  else showMsg(document.getElementById("adminLoginMsg"),"Hatalı şifre","error");
+}
+function adminLogout(){adminLoggedIn=false;renderAdmin();}
+
+function showMsg(el,text,type){el.innerHTML=`<div class="msg ${type}">${text}</div>`;setTimeout(()=>{if(el)el.innerHTML="";},4000);}
+function showToast(icon,text){const t=document.getElementById("toast");document.getElementById("toastIcon").textContent=icon;document.getElementById("toastText").textContent=text;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3500);}
+
+(function init(){
+  try{const s=localStorage.getItem("bm_session");if(s){currentUser=JSON.parse(s);updateNav();}}catch(e){}
+  if(location.hash==="#admin")showPage("admin");
+  fetchPrices();setInterval(fetchPrices,60000);
+})();
+</script>
+</body>
+</html>
