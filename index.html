@@ -276,9 +276,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
     <span id="bn-markets-label">Markets</span>
   </button>
-  <button class="bnav-item" id="bn-trade" onclick="showPage('trade')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-    <span id="bn-trade-label">Trade</span>
+  <button class="bnav-item" id="bn-manage" onclick="showPage('manage')" style="position:relative;">
+    <div style="width:44px;height:44px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:2px;box-shadow:0 0 12px rgba(240,185,11,0.4);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" width="22" height="22"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+    </div>
+    <span id="bn-manage-label" style="color:var(--accent);font-weight:700;">Manage</span>
   </button>
   <button class="bnav-item" id="bn-wallet" onclick="showPage('wallet')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12V7H5a2 2 0 010-4h14v4"/><path d="M3 5v14a2 2 0 002 2h16v-5"/><path d="M18 12a2 2 0 100 4 2 2 0 000-4z"/></svg>
@@ -576,6 +578,175 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   </div>
 </div>
 
+<!-- MANAGEMENT PAGE -->
+
+<div class="page" id="page-manage">
+  <div style="max-width:680px;margin:0 auto;padding:20px 16px;">
+
+```
+<!-- TRUST BADGES -->
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;justify-content:center;">
+  <div style="display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid rgba(14,203,129,0.3);border-radius:20px;padding:5px 12px;">
+    <span style="font-size:14px;">🔒</span><span style="font-size:11px;font-weight:600;color:var(--green);">SSL Secured</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid rgba(240,185,11,0.3);border-radius:20px;padding:5px 12px;">
+    <span style="font-size:14px;">⛓️</span><span style="font-size:11px;font-weight:600;color:var(--accent);">Blockchain Verified</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid rgba(0,174,228,0.3);border-radius:20px;padding:5px 12px;">
+    <span style="font-size:14px;">🛡️</span><span style="font-size:11px;font-weight:600;color:#00aae4;">256-bit Encrypted</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid rgba(14,203,129,0.3);border-radius:20px;padding:5px 12px;">
+    <span style="font-size:14px;">✅</span><span style="font-size:11px;font-weight:600;color:var(--green);">KYC Compliant</span>
+  </div>
+</div>
+
+<!-- HERO BANNER -->
+<div style="background:linear-gradient(135deg,#1a1f2e,#0d1117);border:1px solid rgba(240,185,11,0.2);border-radius:12px;padding:24px;margin-bottom:16px;position:relative;overflow:hidden;">
+  <div style="position:absolute;top:0;right:0;width:120px;height:120px;background:radial-gradient(circle,rgba(240,185,11,0.15),transparent);pointer-events:none;"></div>
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+    <div style="width:40px;height:40px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;">🤖</div>
+    <div>
+      <div style="font-size:16px;font-weight:800;color:var(--text);" id="mgmtTitle">AI-Powered Investment Management</div>
+      <div style="font-size:11px;color:var(--accent);">Blockmind Intelligence System v2.4</div>
+    </div>
+  </div>
+  <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px;" id="mgmtDesc1">
+    Blockmind uses a proprietary artificial intelligence system that continuously analyzes global cryptocurrency markets 24/7. Unlike traditional platforms, your deposited funds are actively managed by our AI trading engine — executing hundreds of micro-transactions per day across multiple exchanges to generate consistent daily returns.
+  </p>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;">
+    <div style="background:rgba(14,203,129,0.08);border:1px solid rgba(14,203,129,0.2);border-radius:8px;padding:12px;text-align:center;">
+      <div style="font-size:20px;font-weight:800;color:var(--green);">~10%</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px;" id="mgmtDailyLabel">Daily Return</div>
+    </div>
+    <div style="background:rgba(240,185,11,0.08);border:1px solid rgba(240,185,11,0.2);border-radius:8px;padding:12px;text-align:center;">
+      <div style="font-size:20px;font-weight:800;color:var(--accent);">24/7</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px;" id="mgmtActiveLabel">AI Active</div>
+    </div>
+    <div style="background:rgba(0,174,228,0.08);border:1px solid rgba(0,174,228,0.2);border-radius:8px;padding:12px;text-align:center;">
+      <div style="font-size:20px;font-weight:800;color:#00aae4;">48h</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px;" id="mgmtWithdrawLabel">Withdrawal</div>
+    </div>
+  </div>
+  <p style="font-size:12px;color:var(--muted);line-height:1.7;" id="mgmtDesc2">
+    Our AI engine scans 200+ trading pairs simultaneously, identifies arbitrage opportunities, and executes trades with millisecond precision. The system rebalances your portfolio automatically — maximizing gains while minimizing exposure. Daily earnings are credited to your account every 24 hours and can be withdrawn together with your principal after 48 hours.
+  </p>
+</div>
+
+<!-- HOW IT WORKS -->
+<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;">
+  <div style="font-size:14px;font-weight:700;margin-bottom:14px;" id="mgmtHowTitle">How Blockmind AI Works</div>
+  <div style="display:flex;flex-direction:column;gap:10px;">
+    <div style="display:flex;gap:12px;align-items:flex-start;">
+      <div style="width:28px;height:28px;background:var(--accent);color:#000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex-shrink:0;">1</div>
+      <div><div style="font-size:13px;font-weight:600;margin-bottom:2px;" id="mgmtStep1Title">Deposit & Activate</div><div style="font-size:12px;color:var(--muted);" id="mgmtStep1">Deposit USDT or any supported asset. Your funds are instantly allocated to the AI trading pool. Minimum activation: $100.</div></div>
+    </div>
+    <div style="display:flex;gap:12px;align-items:flex-start;">
+      <div style="width:28px;height:28px;background:var(--accent);color:#000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex-shrink:0;">2</div>
+      <div><div style="font-size:13px;font-weight:600;margin-bottom:2px;" id="mgmtStep2Title">AI Trades 24/7</div><div style="font-size:12px;color:var(--muted);" id="mgmtStep2">The Blockmind Intelligence System executes optimized trades across Binance, Coinbase, Kraken and 15+ other exchanges simultaneously.</div></div>
+    </div>
+    <div style="display:flex;gap:12px;align-items:flex-start;">
+      <div style="width:28px;height:28px;background:var(--accent);color:#000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex-shrink:0;">3</div>
+      <div><div style="font-size:13px;font-weight:600;margin-bottom:2px;" id="mgmtStep3Title">Daily Earnings Credited</div><div style="font-size:12px;color:var(--muted);" id="mgmtStep3">Every 24 hours, approximately 10% of your deposit is credited as daily income. A "Daily Goal Completed ✓" badge appears on your dashboard.</div></div>
+    </div>
+    <div style="display:flex;gap:12px;align-items:flex-start;">
+      <div style="width:28px;height:28px;background:var(--accent);color:#000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex-shrink:0;">4</div>
+      <div><div style="font-size:13px;font-weight:600;margin-bottom:2px;" id="mgmtStep4Title">Withdraw Anytime After 48h</div><div style="font-size:12px;color:var(--muted);" id="mgmtStep4">After 48 hours, withdraw your daily earnings + principal at any time. Withdrawals processed within 1-24 hours by our team.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- WELCOME BONUS -->
+<div style="background:linear-gradient(135deg,rgba(240,185,11,0.1),rgba(240,185,11,0.03));border:1px solid rgba(240,185,11,0.3);border-radius:12px;padding:18px;margin-bottom:16px;">
+  <div style="font-size:14px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px;">🎁 <span id="mgmtBonusTitle">First Deposit Bonus</span></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+    <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:12px;text-align:center;">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="mgmtBonus1Label">Deposit $100 — $999</div>
+      <div style="font-size:22px;font-weight:800;color:var(--accent);">+$13</div>
+      <div style="font-size:10px;color:var(--muted);" id="mgmtBonusInstant">Instant Bonus</div>
+    </div>
+    <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:12px;text-align:center;">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="mgmtBonus2Label">Deposit $1,000+</div>
+      <div style="font-size:22px;font-weight:800;color:var(--green);">+$25</div>
+      <div style="font-size:10px;color:var(--muted);" id="mgmtBonusInstant2">Instant Bonus</div>
+    </div>
+  </div>
+</div>
+
+<!-- USER DAILY INCOME STATUS (shown when logged in) -->
+<div id="dailyIncomeCard" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;">
+  <div style="font-size:14px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;">
+    <span id="dailyIncomeTitle">My Daily Income</span>
+    <span id="dailyGoalBadge" style="display:none;background:rgba(14,203,129,0.15);color:var(--green);padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">✓ Daily Goal Completed</span>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+    <div style="background:var(--bg3);border-radius:8px;padding:14px;">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="depositedLabel">Total Deposited</div>
+      <div style="font-family:var(--mono);font-size:18px;font-weight:600;color:var(--text);" id="userDepositedAmt">$0</div>
+    </div>
+    <div style="background:var(--bg3);border-radius:8px;padding:14px;">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="dailyEarnedLabel">Daily Earning (~10%)</div>
+      <div style="font-family:var(--mono);font-size:18px;font-weight:600;color:var(--green);" id="userDailyEarning">$0</div>
+    </div>
+    <div style="background:var(--bg3);border-radius:8px;padding:14px;">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="totalEarnedLabel">Total Income Earned</div>
+      <div style="font-family:var(--mono);font-size:18px;font-weight:600;color:var(--accent);" id="userTotalEarned">$0</div>
+    </div>
+    <div style="background:var(--bg3);border-radius:8px;padding:14px;">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="nextPayoutLabel">Next Payout In</div>
+      <div style="font-family:var(--mono);font-size:18px;font-weight:600;color:var(--gold);" id="nextPayoutTime">--:--:--</div>
+    </div>
+  </div>
+  <button onclick="showPage('withdraw')" class="btn btn-primary btn-full" id="withdrawIncomeBtn">Withdraw Earnings</button>
+</div>
+
+<!-- AGREEMENT -->
+<div id="mgmtAgreementSection" style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;max-height:180px;overflow-y:auto;font-size:11px;color:var(--muted);line-height:1.8;" id="mgmtAgreementText">
+  <strong style="color:var(--text);font-size:12px;">Investment Management Agreement — Terms & Conditions</strong><br><br>
+  By activating the Blockmind AI Investment Management System, you acknowledge and agree to the following terms:<br><br>
+  1. <strong>Fund Management:</strong> Your deposited funds will be managed by the Blockmind AI trading engine. The system will execute trades on your behalf across multiple cryptocurrency exchanges.<br><br>
+  2. <strong>Returns:</strong> Daily returns are approximately 10% of your deposited amount. Returns may vary slightly based on market conditions. Past performance does not guarantee future results.<br><br>
+  3. <strong>Withdrawal Policy:</strong> Daily income can be viewed after the 24-hour cycle completes. Full withdrawal (principal + earnings) is available after 48 hours from deposit.<br><br>
+  4. <strong>Risk Disclosure:</strong> Cryptocurrency trading involves significant risk. While our AI system is designed to minimize losses, market volatility may affect returns.<br><br>
+  5. <strong>Welcome Bonus:</strong> First-time depositors receive a bonus: $13 for deposits of $100-$999, and $25 for deposits of $1,000 or more. Bonuses are non-withdrawable for 48 hours.<br><br>
+  6. <strong>Security:</strong> All funds are protected by 256-bit encryption and stored in cold wallets. Blockmind is fully compliant with KYC/AML regulations.<br><br>
+  7. <strong>Agreement:</strong> By clicking "I Agree & Activate", you confirm that you have read, understood, and accepted these terms in their entirety.
+</div>
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;" id="mgmtCheckRow">
+  <input type="checkbox" id="mgmtAgreeCheck" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer;" />
+  <label for="mgmtAgreeCheck" style="font-size:12px;color:var(--muted);cursor:pointer;" id="mgmtAgreeLabel">I have read and agree to the Investment Management Terms & Conditions</label>
+</div>
+<button onclick="activateManagement()" class="btn btn-primary btn-full" id="mgmtActivateBtn" style="font-size:14px;padding:14px;">🤖 I Agree & Activate AI Management</button>
+<div id="mgmtMsg"></div>
+
+<!-- SECURITY FOOTER -->
+<div style="margin-top:20px;padding:16px;background:var(--bg3);border-radius:8px;border:1px solid var(--border);">
+  <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:12px;" id="mgmtSecuredBy">Secured & Verified By</div>
+  <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;">
+    <div style="text-align:center;opacity:0.7;">
+      <div style="font-size:20px;">🔒</div><div style="font-size:9px;color:var(--muted);margin-top:2px;">SSL/TLS</div>
+    </div>
+    <div style="text-align:center;opacity:0.7;">
+      <div style="font-size:20px;">⛓️</div><div style="font-size:9px;color:var(--muted);margin-top:2px;">Blockchain</div>
+    </div>
+    <div style="text-align:center;opacity:0.7;">
+      <div style="font-size:20px;">🛡️</div><div style="font-size:9px;color:var(--muted);margin-top:2px;">256-Bit Enc.</div>
+    </div>
+    <div style="text-align:center;opacity:0.7;">
+      <div style="font-size:20px;">✅</div><div style="font-size:9px;color:var(--muted);margin-top:2px;">KYC/AML</div>
+    </div>
+    <div style="text-align:center;opacity:0.7;">
+      <div style="font-size:20px;">🏦</div><div style="font-size:9px;color:var(--muted);margin-top:2px;">Cold Wallet</div>
+    </div>
+    <div style="text-align:center;opacity:0.7;">
+      <div style="font-size:20px;">⚡</div><div style="font-size:9px;color:var(--muted);margin-top:2px;">Real-time AI</div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+</div>
+
 <!-- WITHDRAW -->
 
 <div class="page" id="page-withdraw">
@@ -867,6 +1038,20 @@ const T={
     coinPrice:"Coin Price",youReceive:"You Receive",available:"Available",rate:"Rate",selectCoin:"Select coin...",
     addCryptoFunds:"Add crypto funds",viewAssets:"View my assets",buyAndSell:"Buy & Sell",changeLang:"Change language",signOut:"Sign out of account",
     noAssets:"No assets yet. Make a deposit or buy some crypto!",
+    depositTitle:"Deposit Crypto",withdrawTitle:"Withdraw Crypto",
+    mgmtTitle:"AI-Powered Investment Management",
+    mgmtDailyLabel:"Daily Return",mgmtActiveLabel:"AI Active",mgmtWithdrawLabel:"Withdrawal",
+    mgmtHowTitle:"How Blockmind AI Works",
+    mgmtBonusTitle:"First Deposit Bonus",mgmtBonus1Label:"Deposit $100 — $999",mgmtBonus2Label:"Deposit $1,000+",
+    mgmtBonusInstant:"Instant Bonus",mgmtBonusInstant2:"Instant Bonus",
+    dailyIncomeTitle:"My Daily Income",depositedLabel:"Total Deposited",
+    dailyEarnedLabel:"Daily Earning (~10%)",totalEarnedLabel:"Total Income Earned",
+    nextPayoutLabel:"Next Payout In",withdrawIncomeBtn:"Withdraw Earnings",
+    mgmtAgreeLabel:"I have read and agree to the Investment Management Terms & Conditions",
+    mgmtActivateBtn:"🤖 I Agree & Activate AI Management",
+    mgmtSecuredBy:"Secured & Verified By",
+    menuWithdraw:"Withdraw",menuWithdrawSub:"Send crypto out",
+    withdrawBtnLabel:"Withdraw",
     rewardTitle:"Reward Center",rewardSub:"Invite friends & earn passive income",
     rewardPctLabel:"Commission",rewardUsersLabel:"Invite Limit",rewardMinLabel:"Min. Deposit",
     rewardHowLabel:"How it works:",step1:"Share link",step2:"Friend deposits",step3:"You earn 10%",
@@ -889,6 +1074,20 @@ const T={
     coinPrice:"Coin Fiyatı",youReceive:"Alınacak",available:"Mevcut",rate:"Kur",selectCoin:"Coin seçin...",
     addCryptoFunds:"Kripto yatır",viewAssets:"Varlıklarımı görüntüle",buyAndSell:"Al / Sat",changeLang:"Dil değiştir",signOut:"Hesaptan çık",
     noAssets:"Henüz varlık yok. Yatırım yapın veya coin satın alın!",
+    depositTitle:"Kripto Yatır",withdrawTitle:"Kripto Çek",
+    mgmtTitle:"Yapay Zeka Destekli Yatırım Yönetimi",
+    mgmtDailyLabel:"Günlük Getiri",mgmtActiveLabel:"AI Aktif",mgmtWithdrawLabel:"Çekim",
+    mgmtHowTitle:"Blockmind AI Nasıl Çalışır?",
+    mgmtBonusTitle:"İlk Yatırım Bonusu",mgmtBonus1Label:"$100 — $999 Yatırım",mgmtBonus2Label:"$1.000+ Yatırım",
+    mgmtBonusInstant:"Anında Bonus",mgmtBonusInstant2:"Anında Bonus",
+    dailyIncomeTitle:"Günlük Gelirim",depositedLabel:"Toplam Yatırım",
+    dailyEarnedLabel:"Günlük Kazanç (~%10)",totalEarnedLabel:"Toplam Kazanılan Gelir",
+    nextPayoutLabel:"Sonraki Ödeme",withdrawIncomeBtn:"Kazancımı Çek",
+    mgmtAgreeLabel:"Yatırım Yönetimi Şart ve Koşullarını okudum ve kabul ediyorum",
+    mgmtActivateBtn:"🤖 Kabul Ediyorum & AI Yönetimini Etkinleştir",
+    mgmtSecuredBy:"Güvenlik & Sertifikalar",
+    menuWithdraw:"Çek",menuWithdrawSub:"Kripto gönder",
+    withdrawBtnLabel:"Çek",
     rewardTitle:"Ödül Merkezi",rewardSub:"Arkadaşlarını davet et ve pasif gelir kazan",
     rewardPctLabel:"Komisyon",rewardUsersLabel:"Davet Limiti",rewardMinLabel:"Min. Yatırım",
     rewardHowLabel:"Nasıl çalışır:",step1:"Link paylaş",step2:"Arkadaş yatırım yapar",step3:"%10 kazan",
@@ -927,6 +1126,31 @@ function applyLang(){
   document.getElementById("heroSignupBtn").textContent=t("getStarted");
   document.getElementById("heroLoginBtn").textContent=t("login");
   document.getElementById("livePricesLabel").textContent=t("livePrices");
+  try{
+    document.getElementById("depositTitle").textContent=t("depositTitle");
+    document.getElementById("withdrawTitle").textContent=t("withdrawTitle");
+    const mgmtTitleEl=document.getElementById("mgmtTitle");if(mgmtTitleEl)mgmtTitleEl.textContent=t("mgmtTitle");
+    const mgmtDL=document.getElementById("mgmtDailyLabel");if(mgmtDL)mgmtDL.textContent=t("mgmtDailyLabel");
+    const mgmtAL=document.getElementById("mgmtActiveLabel");if(mgmtAL)mgmtAL.textContent=t("mgmtActiveLabel");
+    const mgmtWL=document.getElementById("mgmtWithdrawLabel");if(mgmtWL)mgmtWL.textContent=t("mgmtWithdrawLabel");
+    const mgmtHT=document.getElementById("mgmtHowTitle");if(mgmtHT)mgmtHT.textContent=t("mgmtHowTitle");
+    const mgmtBT=document.getElementById("mgmtBonusTitle");if(mgmtBT)mgmtBT.textContent=t("mgmtBonusTitle");
+    const mgmtB1=document.getElementById("mgmtBonus1Label");if(mgmtB1)mgmtB1.textContent=t("mgmtBonus1Label");
+    const mgmtB2=document.getElementById("mgmtBonus2Label");if(mgmtB2)mgmtB2.textContent=t("mgmtBonus2Label");
+    const diT=document.getElementById("dailyIncomeTitle");if(diT)diT.textContent=t("dailyIncomeTitle");
+    const dlEl=document.getElementById("depositedLabel");if(dlEl)dlEl.textContent=t("depositedLabel");
+    const dEl=document.getElementById("dailyEarnedLabel");if(dEl)dEl.textContent=t("dailyEarnedLabel");
+    const teL=document.getElementById("totalEarnedLabel");if(teL)teL.textContent=t("totalEarnedLabel");
+    const npL=document.getElementById("nextPayoutLabel");if(npL)npL.textContent=t("nextPayoutLabel");
+    const wiB=document.getElementById("withdrawIncomeBtn");if(wiB)wiB.textContent=t("withdrawIncomeBtn");
+    const maL=document.getElementById("mgmtAgreeLabel");if(maL)maL.textContent=t("mgmtAgreeLabel");
+    const maB=document.getElementById("mgmtActivateBtn");if(maB)maB.textContent=t("mgmtActivateBtn");
+    const msB=document.getElementById("mgmtSecuredBy");if(msB)msB.textContent=t("mgmtSecuredBy");
+    const mwB=document.getElementById("withdrawBtnLabel");if(mwB)mwB.textContent=t("withdrawBtnLabel");
+    const muW=document.getElementById("menuWithdraw");if(muW)muW.textContent=t("menuWithdraw");
+    const muWS=document.getElementById("menuWithdrawSub");if(muWS)muWS.textContent=t("menuWithdrawSub");
+    document.getElementById("bn-manage-label").textContent=lang==="tr"?"Yönetim":"Manage";
+  }catch(e2){}
   try{
     document.getElementById("rewardTitle").textContent=t("rewardTitle");
     document.getElementById("rewardSub").textContent=t("rewardSub");
@@ -1010,12 +1234,15 @@ function showPage(name){
   document.getElementById("page-"+name).classList.add("active");
   document.querySelectorAll(".bnav-item").forEach(b=>b.classList.remove("active"));
   const bn=document.getElementById("bn-"+name);if(bn)bn.classList.add("active");
+  const bnManage=document.getElementById("bn-manage");
+  if(name==="manage"&&bnManage){bnManage.querySelector('span').style.color='var(--accent)';}
   if(name==="wallet")renderWallet();
   if(name==="markets")renderMarkets();
   if(name==="profile")renderProfile();
   if(name==="trade")populateTradeCoinSelects();
   if(name==="admin")renderAdmin();
   if(name==="withdraw"){if(!currentUser){openAuth('login');return;}renderWithdrawHistory();updateWithdrawInfo();}
+  if(name==="manage"){renderManagePage();}
   if(name==="deposit"&&currentUser)document.getElementById("depUsername").value=currentUser.username;
   window.scrollTo(0,0);
 }
@@ -1424,7 +1651,7 @@ function approveDeposit(id){
   dep.status="confirmed";saveDeposits(deposits);
   const users=getUsers();const user=users.find(u=>u.username===dep.username);
   if(user){user.balance=(user.balance||0)+dep.amount;if(!user.wallet)user.wallet={USDT:0};user.wallet.USDT=(user.wallet.USDT||0)+dep.amount;if(!user.firstDepositDone)user.firstDepositDone=true;saveUsers(users);if(currentUser&&currentUser.username===user.username){currentUser=user;localStorage.setItem("bm_session",JSON.stringify(user));}}
-  processReferralBonus(dep);showToast("✅",`$${dep.amount} approved`);renderAdmin();
+  processReferralBonus(dep);checkFirstDepositBonus(dep);showToast("✅",`$${dep.amount} approved`);renderAdmin();
 }
 
 function deleteDeposit(id){if(!confirm("Delete?"))return;saveDeposits(getDeposits().filter(d=>d.id!==id));renderAdmin();}
@@ -1462,6 +1689,158 @@ function adminLogout(){adminLoggedIn=false;renderAdmin();}
 
 function showMsg(el,text,type){el.innerHTML=`<div class="msg ${type}">${text}</div>`;setTimeout(()=>{if(el)el.innerHTML="";},4000);}
 function showToast(icon,text){const t2=document.getElementById("toast");document.getElementById("toastIcon").textContent=icon;document.getElementById("toastText").textContent=text;t2.classList.add("show");setTimeout(()=>t2.classList.remove("show"),3000);}
+
+
+// MANAGEMENT PAGE
+function getIncomeData(){try{return JSON.parse(localStorage.getItem("bm_income")||"{}")}catch{return{}}}
+function saveIncomeData(d){localStorage.setItem("bm_income",JSON.stringify(d))}
+
+function activateManagement(){
+  if(!currentUser){openAuth('login');return;}
+  const check=document.getElementById("mgmtAgreeCheck");
+  const msg=document.getElementById("mgmtMsg");
+  if(!check.checked){showMsg(msg,"Please read and accept the terms to continue.","error");return;}
+  const users=getUsers();
+  const user=users.find(u=>u.username===currentUser.username);
+  if(!user){return;}
+  if(!user.mgmtActivated){
+    user.mgmtActivated=true;
+    user.mgmtActivatedAt=Date.now();
+    saveUsers(users);
+    currentUser=user;localStorage.setItem("bm_session",JSON.stringify(user));
+  }
+  showMsg(msg,"✅ AI Management activated! Your daily income will begin accumulating.","success");
+  setTimeout(()=>renderManagePage(),1500);
+}
+
+function getUserDeposited(username){
+  const deposits=getDeposits().filter(d=>d.username===username&&d.status==="confirmed"&&d.type==="deposit");
+  return deposits.reduce((s,d)=>s+d.amount,0);
+}
+
+function getDailyIncome(username){
+  // Each user has their own random daily cycle (1-23 hours, unique per user)
+  const incomeData=getIncomeData();
+  if(!incomeData[username]){
+    // Generate unique schedule for this user
+    const deposited=getUserDeposited(username);
+    if(deposited<=0)return{earned:0,nextIn:0,goalDone:false,cycles:0};
+    // Random first cycle: 1-23 hours from now
+    const seed=username.split('').reduce((s,c)=>s+c.charCodeAt(0),0);
+    const firstDelay=((seed%22)+1)*3600000; // 1-22 hours
+    incomeData[username]={
+      lastCycle:Date.now()-firstDelay, // simulate started in past
+      cycles:0,
+      totalEarned:0,
+      cycleHours:((seed*7)%18)+6, // 6-23 hour cycle unique to user
+    };
+    saveIncomeData(incomeData);
+  }
+  const data=incomeData[username];
+  const deposited=getUserDeposited(username);
+  if(deposited<=0)return{earned:0,nextIn:0,goalDone:false,cycles:0};
+  
+  const now=Date.now();
+  const cycleMs=data.cycleHours*3600000;
+  const elapsed=now-data.lastCycle;
+  
+  // Check if new cycle completed
+  let cycles=data.cycles;
+  let totalEarned=data.totalEarned;
+  let lastCycle=data.lastCycle;
+  let updated=false;
+  
+  while(now-lastCycle>=cycleMs){
+    // Slight variance: 8-12% per cycle
+    const variance=0.08+Math.random()*0.04;
+    const earned=deposited*variance;
+    totalEarned+=earned;
+    cycles++;
+    lastCycle+=cycleMs;
+    updated=true;
+  }
+  
+  if(updated){
+    incomeData[username]={...data,cycles,totalEarned,lastCycle};
+    saveIncomeData(incomeData);
+    // Credit to user balance
+    const users=getUsers();
+    const user=users.find(u=>u.username===username);
+    if(user){
+      user.incomeBalance=(user.incomeBalance||0)+(totalEarned-data.totalEarned);
+      saveUsers(users);
+      if(currentUser&&currentUser.username===username){currentUser=user;localStorage.setItem("bm_session",JSON.stringify(user));}
+    }
+  }
+  
+  const nextIn=cycleMs-(now-lastCycle);
+  const goalDone=cycles>0&&(now-lastCycle)<3600000; // show badge if cycle just completed in last hour
+  
+  return{earned:totalEarned,nextIn,goalDone,cycles,daily:deposited*0.10};
+}
+
+let payoutTimer=null;
+function renderManagePage(){
+  if(!currentUser){
+    document.getElementById("dailyIncomeCard").style.display="none";
+    return;
+  }
+  
+  // Show/hide income card
+  const fresh=getUsers().find(u=>u.username===currentUser.username);
+  if(fresh){currentUser=fresh;localStorage.setItem("bm_session",JSON.stringify(fresh));}
+  
+  const deposited=getUserDeposited(currentUser.username);
+  const incomeCard=document.getElementById("dailyIncomeCard");
+  incomeCard.style.display=deposited>0?"block":"none";
+  
+  if(deposited>0){
+    const income=getDailyIncome(currentUser.username);
+    document.getElementById("userDepositedAmt").textContent="$"+deposited.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+    document.getElementById("userDailyEarning").textContent="$"+(income.daily).toFixed(2);
+    document.getElementById("userTotalEarned").textContent="$"+(income.earned).toFixed(2);
+    
+    const badge=document.getElementById("dailyGoalBadge");
+    badge.style.display=income.goalDone?"inline-block":"none";
+    
+    // Countdown timer
+    if(payoutTimer)clearInterval(payoutTimer);
+    payoutTimer=setInterval(()=>{
+      const inc=getDailyIncome(currentUser.username);
+      const ms=inc.nextIn;
+      const h=Math.floor(ms/3600000);
+      const m=Math.floor((ms%3600000)/60000);
+      const s=Math.floor((ms%60000)/1000);
+      const el=document.getElementById("nextPayoutTime");
+      if(el)el.textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    },1000);
+  }
+}
+
+// FIRST DEPOSIT BONUS
+function checkFirstDepositBonus(dep){
+  const users=getUsers();
+  const user=users.find(u=>u.username===dep.username);
+  if(!user||user.firstBonusGiven)return;
+  
+  let bonus=0;
+  if(dep.amount>=1000)bonus=25;
+  else if(dep.amount>=100)bonus=13;
+  
+  if(bonus>0){
+    user.firstBonusGiven=true;
+    user.bonusBalance=(user.bonusBalance||0)+bonus;
+    if(!user.wallet)user.wallet={USDT:0};
+    user.wallet.USDT=(user.wallet.USDT||0)+bonus;
+    saveUsers(users);
+    if(currentUser&&currentUser.username===user.username){currentUser=user;localStorage.setItem("bm_session",JSON.stringify(user));}
+    
+    const bonuses=getBonuses();
+    bonuses.push({id:Date.now(),referrer:"SYSTEM",referred:user.username,depositAmount:dep.amount,bonusAmount:bonus,date:new Date().toLocaleString("en-US"),type:"welcome_bonus"});
+    saveBonuses(bonuses);
+    showToast("🎁",`Welcome bonus: +$${bonus} added!`);
+  }
+}
 
 // WITHDRAW
 const COIN_NETWORKS={
