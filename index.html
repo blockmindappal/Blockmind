@@ -243,6 +243,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .av-purple{background:linear-gradient(135deg,#9945ff,#c580ff);}
 .av-red{background:linear-gradient(135deg,#f6465d,#ff8a96);}
 .av-teal{background:linear-gradient(135deg,#00b8a9,#5de8df);}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes fadeInUp{from{transform:translateY(8px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes countUp{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}
 </style>
 
 </head>
@@ -297,9 +300,84 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <button class="btn btn-primary btn-lg" onclick="openAuth('register')" id="heroSignupBtn">Get Started</button>
       <button class="btn btn-outline btn-lg" onclick="openAuth('login')" id="heroLoginBtn">Log In</button>
     </div>
-    <div class="divider"></div>
-    <div class="section-title"><span class="live-dot"></span><span id="livePricesLabel">Live Prices</span></div>
-    <div class="coins-grid" id="coinsGrid"></div>
+    <div id="heroLoggedIn" style="display:none">
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:16px;margin-top:8px;">
+        <div style="font-size:13px;color:var(--muted);margin-bottom:12px;" id="heroWelcomeText">Welcome back! What would you like to do?</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="showPage('deposit')" id="heroDepBtn">Deposit</button>
+          <button class="btn btn-outline" onclick="showPage('trade')" id="heroTradeBtn">Trade</button>
+          <button class="btn btn-outline" onclick="showPage('wallet')" id="heroWalletBtn">Wallet</button>
+        </div>
+      </div>
+    </div>
+
+```
+<!-- SPINNING COINS -->
+<div style="overflow:hidden;margin:20px 0 8px;position:relative;">
+  <div id="spinningCoins" style="display:flex;gap:16px;width:max-content;animation:ticker 20s linear infinite;">
+  </div>
+</div>
+
+<!-- REWARD CENTER -->
+<div style="background:linear-gradient(135deg,rgba(240,185,11,0.12),rgba(240,185,11,0.04));border:1px solid rgba(240,185,11,0.3);border-radius:12px;padding:20px;margin:16px 0;overflow:hidden;position:relative;">
+  <div style="position:absolute;top:-20px;right:-20px;font-size:80px;opacity:0.06;animation:spin 20s linear infinite;">🏆</div>
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+    <div style="background:var(--accent);color:#000;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;flex-shrink:0;">%</div>
+    <div>
+      <div style="font-size:15px;font-weight:700;color:var(--text);" id="rewardTitle">Reward Center</div>
+      <div style="font-size:11px;color:var(--muted);" id="rewardSub">Invite friends & earn passive income</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;">
+    <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:12px;text-align:center;">
+      <div style="font-size:22px;font-weight:800;color:var(--accent);animation:countUp 2s ease;" id="rewardPct">10%</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px;" id="rewardPctLabel">Commission</div>
+    </div>
+    <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:12px;text-align:center;">
+      <div style="font-size:22px;font-weight:800;color:var(--green);" id="rewardUsers">∞</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px;" id="rewardUsersLabel">Invite Limit</div>
+    </div>
+    <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:12px;text-align:center;">
+      <div style="font-size:22px;font-weight:800;color:var(--text);" id="rewardMin">$100</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px;" id="rewardMinLabel">Min. Deposit</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.3);border-radius:6px;padding:10px 12px;margin-bottom:12px;">
+    <div style="font-size:11px;color:var(--muted);flex:1;" id="rewardHowLabel">How it works:</div>
+  </div>
+  <div style="display:flex;gap:6px;align-items:center;font-size:12px;flex-wrap:wrap;">
+    <div style="display:flex;align-items:center;gap:5px;background:rgba(0,0,0,0.3);padding:6px 10px;border-radius:6px;">
+      <span style="color:var(--accent);font-weight:700;">1</span>
+      <span style="color:var(--muted);" id="step1">Share link</span>
+    </div>
+    <div style="color:var(--muted);">→</div>
+    <div style="display:flex;align-items:center;gap:5px;background:rgba(0,0,0,0.3);padding:6px 10px;border-radius:6px;">
+      <span style="color:var(--accent);font-weight:700;">2</span>
+      <span style="color:var(--muted);" id="step2">Friend deposits</span>
+    </div>
+    <div style="color:var(--muted);">→</div>
+    <div style="display:flex;align-items:center;gap:5px;background:rgba(0,0,0,0.3);padding:6px 10px;border-radius:6px;">
+      <span style="color:var(--accent);font-weight:700;">3</span>
+      <span style="color:var(--muted);" id="step3">You earn 10%</span>
+    </div>
+  </div>
+  <button onclick="currentUser?showPage('profile'):openAuth('register')" class="btn btn-primary" style="width:100%;margin-top:14px;font-size:13px;" id="rewardBtn">Get My Referral Link</button>
+</div>
+
+<!-- LIVE TRADES -->
+<div style="margin:16px 0;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+    <div style="font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;"><span class="live-dot"></span><span id="liveTradesLabel">Live Trades</span></div>
+    <div style="font-size:11px;color:var(--muted);" id="liveTradesWorldLabel">Global Market Activity</div>
+  </div>
+  <div id="liveTradesFeed" style="display:flex;flex-direction:column;gap:6px;"></div>
+</div>
+
+<div class="divider"></div>
+<div class="section-title"><span class="live-dot"></span><span id="livePricesLabel">Live Prices</span></div>
+<div class="coins-grid" id="coinsGrid"></div>
+```
+
   </div>
 </div>
 
@@ -400,6 +478,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
           <span id="tradeBtnLabel">Trade</span>
         </button>
+        <button class="wallet-btn" onclick="showPage('withdraw')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <span id="withdrawBtnLabel">Withdraw</span>
+        </button>
       </div>
     </div>
     <div class="section-title" id="assetsLabel">My Assets</div>
@@ -430,6 +512,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="profile-section-title" id="quickAccessTitle">Quick Access</div>
       <div class="profile-menu-item" onclick="showPage('deposit')">
         <div class="pmi-left"><span class="pmi-icon">💰</span><div><div class="pmi-label" id="menuDeposit">Deposit</div><div class="pmi-sub" id="menuDepositSub">Add crypto funds</div></div></div>
+        <span style="color:var(--muted)">›</span>
+      </div>
+      <div class="profile-menu-item" onclick="showPage('withdraw')">
+        <div class="pmi-left"><span class="pmi-icon">📤</span><div><div class="pmi-label" id="menuWithdraw">Withdraw</div><div class="pmi-sub" id="menuWithdrawSub">Send crypto out</div></div></div>
         <span style="color:var(--muted)">›</span>
       </div>
       <div class="profile-menu-item" onclick="showPage('wallet')">
@@ -490,6 +576,85 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   </div>
 </div>
 
+<!-- WITHDRAW -->
+
+<div class="page" id="page-withdraw">
+  <div class="deposit-wrap">
+    <div style="font-size:20px;font-weight:700;margin-bottom:4px;" id="withdrawTitle">Withdraw Crypto</div>
+    <p style="color:var(--muted);margin-bottom:18px;font-size:13px;" id="withdrawSub">Submit a withdrawal request. Processing time: 1-24 hours.</p>
+    <div style="background:rgba(246,70,93,0.08);border:1px solid rgba(246,70,93,0.2);border-radius:6px;padding:12px;margin-bottom:18px;font-size:12px;color:var(--red);" id="withdrawWarning">
+      ⚠️ Always double-check the withdrawal address. Incorrect addresses result in permanent loss of funds.
+    </div>
+    <div class="confirm-section">
+      <div style="font-size:15px;font-weight:600;margin-bottom:16px;" id="withdrawFormTitle">Withdrawal Details</div>
+      <div class="form-group">
+        <label class="form-label" id="wCoinLabel">Select Coin</label>
+        <select class="form-input" id="wCoin" onchange="updateWithdrawInfo()" style="cursor:pointer;">
+          <option value="">Select coin...</option>
+          <option value="USDT">USDT — Tether</option>
+          <option value="BTC">BTC — Bitcoin</option>
+          <option value="ETH">ETH — Ethereum</option>
+          <option value="BNB">BNB — BNB Smart Chain</option>
+          <option value="SOL">SOL — Solana</option>
+          <option value="XRP">XRP — Ripple</option>
+          <option value="ADA">ADA — Cardano</option>
+          <option value="DOGE">DOGE — Dogecoin</option>
+          <option value="DOT">DOT — Polkadot</option>
+          <option value="LTC">LTC — Litecoin</option>
+        </select>
+      </div>
+      <div class="form-group" id="wNetworkGroup" style="display:none">
+        <label class="form-label" id="wNetworkLabel">Select Network</label>
+        <select class="form-input" id="wNetwork" style="cursor:pointer;"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" id="wAddrLabel">Withdrawal Address</label>
+        <input class="form-input" id="wAddress" placeholder="Enter wallet address" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" id="wAmtLabel">Amount</label>
+        <div style="position:relative;">
+          <input class="form-input" type="number" id="wAmount" placeholder="0.00" oninput="updateWithdrawInfo()" style="padding-right:70px;" />
+          <span id="wCoinBadge" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:600;color:var(--muted);">COIN</span>
+        </div>
+      </div>
+      <div id="wInfoBox" style="display:none;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:12px;margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;"><span style="color:var(--muted);" id="wAvailLabel">Available Balance</span><span style="font-family:var(--mono);" id="wAvailBal">-</span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;"><span style="color:var(--muted);" id="wUsdLabel">USD Value</span><span style="font-family:var(--mono);" id="wUsdVal">-</span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;border-top:1px solid var(--border);margin-top:4px;padding-top:8px;"><span style="color:var(--muted);">Network Fee</span><span style="font-family:var(--mono);color:var(--gold);">~0.1%</span></div>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="submitWithdraw()" id="wSubmitBtn">Submit Withdrawal Request</button>
+      <div id="wMsg"></div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:16px;margin-top:16px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px;" id="wHistTitle">Withdrawal History</div>
+      <div id="wHistList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- LIVE CHAT -->
+
+<div id="chatWidget" style="position:fixed;bottom:76px;right:12px;z-index:250;">
+  <div id="chatBox" style="display:none;width:310px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.5);flex-direction:column;margin-bottom:10px;">
+    <div style="padding:12px 16px;background:var(--bg3);border-bottom:1px solid var(--border);border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:7px;height:7px;background:var(--green);border-radius:50%;"></div>
+        <span style="font-size:13px;font-weight:600;">Blockmind Support</span>
+      </div>
+      <button onclick="toggleChat()" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:15px;">✕</button>
+    </div>
+    <div id="chatMessages" style="height:300px;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;">
+      <div style="background:var(--bg3);border-radius:8px 8px 8px 2px;padding:10px 12px;font-size:13px;max-width:85%;">👋 Hello! I'm the Blockmind AI assistant. How can I help you today?</div>
+    </div>
+    <div style="padding:10px;border-top:1px solid var(--border);display:flex;gap:8px;">
+      <input id="chatInput" style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);font-size:12px;outline:none;font-family:var(--font);" placeholder="Ask anything..." onkeydown="if(event.key==='Enter')sendChat()" />
+      <button onclick="sendChat()" style="background:var(--accent);color:#000;border:none;border-radius:6px;padding:8px 12px;font-weight:700;cursor:pointer;">→</button>
+    </div>
+  </div>
+  <button onclick="toggleChat()" style="width:46px;height:46px;background:var(--accent);color:#000;border:none;border-radius:50%;cursor:pointer;font-size:20px;box-shadow:0 4px 16px rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;margin-left:auto;">💬</button>
+</div>
+
 <!-- ADMIN -->
 
 <div class="page" id="page-admin">
@@ -512,6 +677,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="section-tabs">
         <button class="sec-tab active" onclick="switchAdminTab('users',this)">👥 Users</button>
         <button class="sec-tab" onclick="switchAdminTab('deposits',this)">💰 Deposits</button>
+        <button class="sec-tab" onclick="switchAdminTab('withdrawals',this)">📤 Withdrawals</button>
         <button class="sec-tab" onclick="switchAdminTab('bonuses',this)">🎁 Bonuses</button>
         <button class="sec-tab" onclick="switchAdminTab('trades',this)">📊 Trades</button>
       </div>
@@ -529,6 +695,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
             <div class="th">User</div><div class="th">Amount</div><div class="th">Network</div><div class="th">Date</div><div class="th">Status</div>
           </div>
           <div id="adminDepositsList"></div>
+        </div>
+      </div>
+      <div id="adminWithdrawalsSection" style="display:none">
+        <div class="data-table">
+          <div class="data-head" style="grid-template-columns:1.5fr 1fr 1fr 1.5fr 1fr;">
+            <div class="th">User</div><div class="th">Amount</div><div class="th">Coin</div><div class="th">Address</div><div class="th">Status</div>
+          </div>
+          <div id="adminWithdrawalsList"></div>
         </div>
       </div>
       <div id="adminBonusesSection" style="display:none">
@@ -693,6 +867,10 @@ const T={
     coinPrice:"Coin Price",youReceive:"You Receive",available:"Available",rate:"Rate",selectCoin:"Select coin...",
     addCryptoFunds:"Add crypto funds",viewAssets:"View my assets",buyAndSell:"Buy & Sell",changeLang:"Change language",signOut:"Sign out of account",
     noAssets:"No assets yet. Make a deposit or buy some crypto!",
+    rewardTitle:"Reward Center",rewardSub:"Invite friends & earn passive income",
+    rewardPctLabel:"Commission",rewardUsersLabel:"Invite Limit",rewardMinLabel:"Min. Deposit",
+    rewardHowLabel:"How it works:",step1:"Share link",step2:"Friend deposits",step3:"You earn 10%",
+    rewardBtn:"Get My Referral Link",liveTradesLabel:"Live Trades",liveTradesWorldLabel:"Global Market Activity",
     invitedBy:"You were invited by",termsText:"By continuing, you agree to our Terms of Service and Privacy Policy.",
   },
   tr:{
@@ -711,6 +889,10 @@ const T={
     coinPrice:"Coin Fiyatı",youReceive:"Alınacak",available:"Mevcut",rate:"Kur",selectCoin:"Coin seçin...",
     addCryptoFunds:"Kripto yatır",viewAssets:"Varlıklarımı görüntüle",buyAndSell:"Al / Sat",changeLang:"Dil değiştir",signOut:"Hesaptan çık",
     noAssets:"Henüz varlık yok. Yatırım yapın veya coin satın alın!",
+    rewardTitle:"Ödül Merkezi",rewardSub:"Arkadaşlarını davet et ve pasif gelir kazan",
+    rewardPctLabel:"Komisyon",rewardUsersLabel:"Davet Limiti",rewardMinLabel:"Min. Yatırım",
+    rewardHowLabel:"Nasıl çalışır:",step1:"Link paylaş",step2:"Arkadaş yatırım yapar",step3:"%10 kazan",
+    rewardBtn:"Davet Linkimi Al",liveTradesLabel:"Canlı İşlemler",liveTradesWorldLabel:"Küresel Piyasa Aktivitesi",
     invitedBy:"Sizi davet etti:",termsText:"Devam ederek Hizmet Şartlarımızı ve Gizlilik Politikamızı kabul etmiş olursunuz.",
   }
 };
@@ -745,6 +927,20 @@ function applyLang(){
   document.getElementById("heroSignupBtn").textContent=t("getStarted");
   document.getElementById("heroLoginBtn").textContent=t("login");
   document.getElementById("livePricesLabel").textContent=t("livePrices");
+  try{
+    document.getElementById("rewardTitle").textContent=t("rewardTitle");
+    document.getElementById("rewardSub").textContent=t("rewardSub");
+    document.getElementById("rewardPctLabel").textContent=t("rewardPctLabel");
+    document.getElementById("rewardUsersLabel").textContent=t("rewardUsersLabel");
+    document.getElementById("rewardMinLabel").textContent=t("rewardMinLabel");
+    document.getElementById("rewardHowLabel").textContent=t("rewardHowLabel");
+    document.getElementById("step1").textContent=t("step1");
+    document.getElementById("step2").textContent=t("step2");
+    document.getElementById("step3").textContent=t("step3");
+    document.getElementById("rewardBtn").textContent=t("rewardBtn");
+    document.getElementById("liveTradesLabel").textContent=t("liveTradesLabel");
+    document.getElementById("liveTradesWorldLabel").textContent=t("liveTradesWorldLabel");
+  }catch(e){}
   document.getElementById("marketsLabel").textContent=t("markets");
   document.getElementById("marketSearch").placeholder=lang==="tr"?"Coin ara... (BTC, ETH...)":"Search coin... (BTC, ETH...)";
   document.getElementById("mth-coin").textContent="Coin";
@@ -819,6 +1015,7 @@ function showPage(name){
   if(name==="profile")renderProfile();
   if(name==="trade")populateTradeCoinSelects();
   if(name==="admin")renderAdmin();
+  if(name==="withdraw"){if(!currentUser){openAuth('login');return;}renderWithdrawHistory();updateWithdrawInfo();}
   if(name==="deposit"&&currentUser)document.getElementById("depUsername").value=currentUser.username;
   window.scrollTo(0,0);
 }
@@ -927,8 +1124,19 @@ function logout(){currentUser=null;localStorage.removeItem("bm_session");updateN
 
 function updateNav(){
   const g=document.getElementById("navGuest"),u=document.getElementById("navUser"),bn=document.getElementById("bottomNav");
-  if(currentUser){g.style.display="none";u.style.display="block";u.innerHTML=makeAvatar(currentUser);bn.style.display="flex";}
-  else{g.style.display="flex";u.style.display="none";bn.style.display="none";}
+  const heroBtns=document.getElementById("heroBtns"),heroLoggedIn=document.getElementById("heroLoggedIn");
+  const chatWidget=document.getElementById("chatWidget");
+  if(currentUser){
+    g.style.display="none";u.style.display="block";u.innerHTML=makeAvatar(currentUser);bn.style.display="flex";
+    if(heroBtns)heroBtns.style.display="none";
+    if(heroLoggedIn)heroLoggedIn.style.display="block";
+    if(chatWidget)chatWidget.style.display="block";
+  }else{
+    g.style.display="flex";u.style.display="none";bn.style.display="none";
+    if(heroBtns)heroBtns.style.display="flex";
+    if(heroLoggedIn)heroLoggedIn.style.display="none";
+    if(chatWidget)chatWidget.style.display="none";
+  }
 }
 
 function selectNet(btn){
@@ -1178,10 +1386,11 @@ function renderAdmin(){
   document.getElementById("adminStats").innerHTML=`
     <div class="admin-card"><div class="admin-card-label">Users</div><div class="admin-card-val">${users.length}</div></div>
     <div class="admin-card"><div class="admin-card-label">Deposits</div><div class="admin-card-val">$${totalDep.toLocaleString()}</div></div>
-    <div class="admin-card"><div class="admin-card-label">Pending</div><div class="admin-card-val" style="color:var(--gold)">${pending}</div></div>
+    <div class="admin-card"><div class="admin-card-label">Pending Dep.</div><div class="admin-card-val" style="color:var(--gold)">${pending}</div></div>
+    <div class="admin-card"><div class="admin-card-label">Pending Wtd.</div><div class="admin-card-val" style="color:var(--red)">${getWithdrawals().filter(w=>w.status==="pending").length}</div></div>
     <div class="admin-card"><div class="admin-card-label">Bonuses</div><div class="admin-card-val" style="color:var(--gold)">$${totalBonus.toFixed(2)}</div></div>
     <div class="admin-card"><div class="admin-card-label">Trades</div><div class="admin-card-val">${trades.length}</div></div>`;
-  renderAdminUsers();renderAdminDeposits();renderAdminBonuses();renderAdminTrades();
+  renderAdminUsers();renderAdminDeposits();renderAdminWithdrawals();renderAdminBonuses();renderAdminTrades();
 }
 
 function renderAdminUsers(){
@@ -1221,15 +1430,232 @@ function approveDeposit(id){
 function deleteDeposit(id){if(!confirm("Delete?"))return;saveDeposits(getDeposits().filter(d=>d.id!==id));renderAdmin();}
 function deleteUser(username){if(!confirm(`Delete ${username}?`))return;saveUsers(getUsers().filter(u=>u.username!==username));renderAdmin();showToast("🗑️","Deleted");}
 
+function renderAdminWithdrawals(){
+  const withdrawals=getWithdrawals();const list=document.getElementById("adminWithdrawalsList");
+  if(!withdrawals.length){list.innerHTML=`<div class="empty-state">No withdrawals</div>`;return;}
+  list.innerHTML=withdrawals.slice().reverse().map(w=>`<div class="data-row" style="grid-template-columns:1.5fr 1fr 1fr 1.5fr 1fr;"><div class="td" style="color:var(--accent)">${w.username}</div><div class="td" style="color:var(--red)">-${fmtCoin(w.amount)}</div><div class="td" style="color:var(--muted)">${w.coin}</div><div class="td" style="color:var(--muted);font-size:10px">${w.address.substring(0,14)}...</div><div class="td" style="display:flex;gap:4px;">${w.status==="pending"?`<button class="action-btn approve" onclick="approveWithdrawal(${w.id})">Approve</button>`:`<span class="badge badge-confirmed">✓</span>`}<button class="action-btn del" onclick="deleteWithdrawal(${w.id})">Del</button></div></div>`).join("");
+}
+function approveWithdrawal(id){
+  const withdrawals=getWithdrawals();const w=withdrawals.find(x=>x.id===id);if(!w)return;
+  w.status="confirmed";saveWithdrawals(withdrawals);
+  const users=getUsers();const user=users.find(u=>u.username===w.username);
+  if(user){
+    if(!user.wallet)user.wallet={USDT:0};
+    user.wallet[w.coin]=(user.wallet[w.coin]||0)-w.amount;
+    if(user.wallet[w.coin]<0)user.wallet[w.coin]=0;
+    saveUsers(users);
+    if(currentUser&&currentUser.username===user.username){currentUser=user;localStorage.setItem("bm_session",JSON.stringify(user));}
+  }
+  showToast("✅",`Withdrawal approved`);renderAdmin();
+}
+function deleteWithdrawal(id){if(!confirm("Delete?"))return;saveWithdrawals(getWithdrawals().filter(w=>w.id!==id));renderAdmin();}
+
 function switchAdminTab(tab,btn){
   document.querySelectorAll(".sec-tab").forEach(b=>b.classList.remove("active"));btn.classList.add("active");
-  ["users","deposits","bonuses","trades"].forEach(tp=>{document.getElementById(`admin${tp.charAt(0).toUpperCase()+tp.slice(1)}Section`).style.display=tp===tab?"block":"none";});
+  ["users","deposits","withdrawals","bonuses","trades"].forEach(tp=>{
+    const el=document.getElementById(`admin${tp.charAt(0).toUpperCase()+tp.slice(1)}Section`);
+    if(el)el.style.display=tp===tab?"block":"none";
+  });
 }
 function adminLogin(){const pass=document.getElementById("adminPassInput").value;if(pass===ADMIN_PASS){adminLoggedIn=true;renderAdmin();}else showMsg(document.getElementById("adminLoginMsg"),"Invalid password","error");}
 function adminLogout(){adminLoggedIn=false;renderAdmin();}
 
 function showMsg(el,text,type){el.innerHTML=`<div class="msg ${type}">${text}</div>`;setTimeout(()=>{if(el)el.innerHTML="";},4000);}
 function showToast(icon,text){const t2=document.getElementById("toast");document.getElementById("toastIcon").textContent=icon;document.getElementById("toastText").textContent=text;t2.classList.add("show");setTimeout(()=>t2.classList.remove("show"),3000);}
+
+// WITHDRAW
+const COIN_NETWORKS={
+  USDT:["ERC20 (Ethereum)","TRC20 (Tron)","BEP20 (BSC)","SOL (Solana)"],
+  BTC:["Bitcoin Network"],ETH:["ERC20 (Ethereum)","BEP20 (BSC)"],
+  BNB:["BEP20 (BSC)"],SOL:["Solana Network"],XRP:["XRP Ledger"],
+  ADA:["Cardano Network"],DOGE:["Dogecoin Network"],DOT:["Polkadot Network"],LTC:["Litecoin Network"],
+};
+function getWithdrawals(){try{return JSON.parse(localStorage.getItem("bm_withdrawals")||"[]")}catch{return[]}}
+function saveWithdrawals(w){localStorage.setItem("bm_withdrawals",JSON.stringify(w))}
+
+function updateWithdrawInfo(){
+  const coin=document.getElementById("wCoin").value;
+  const amt=parseFloat(document.getElementById("wAmount").value)||0;
+  document.getElementById("wCoinBadge").textContent=coin||"COIN";
+  const netGroup=document.getElementById("wNetworkGroup");
+  if(coin&&COIN_NETWORKS[coin]){
+    netGroup.style.display="block";
+    const netSel=document.getElementById("wNetwork");
+    netSel.innerHTML=`<option value="">Select network...</option>`+COIN_NETWORKS[coin].map(n=>`<option value="${n}">${n}</option>`).join("");
+  }else{netGroup.style.display="none";}
+  const infoBox=document.getElementById("wInfoBox");
+  if(coin&&currentUser){
+    const wallet=getUserWallet();
+    const bal=coin==="USDT"?(wallet.USDT||0)+(getDeposits().filter(d=>d.username===currentUser.username&&d.status==="confirmed"&&d.type==="deposit").reduce((s,d)=>s+d.amount,0))+(currentUser.bonusBalance||0):(wallet[coin]||0);
+    const price=coinPrices[coin]?.price||0;
+    infoBox.style.display="block";
+    document.getElementById("wAvailBal").textContent=`${fmtCoin(bal)} ${coin}`;
+    document.getElementById("wUsdVal").textContent=amt>0?fmt(amt*(coin==="USDT"?1:price)):"—";
+  }else{infoBox.style.display="none";}
+}
+
+function submitWithdraw(){
+  if(!currentUser){openAuth('login');return;}
+  const coin=document.getElementById("wCoin").value;
+  const network=document.getElementById("wNetwork").value;
+  const address=document.getElementById("wAddress").value.trim();
+  const amount=parseFloat(document.getElementById("wAmount").value);
+  const msg=document.getElementById("wMsg");
+  if(!coin||!network||!address||!amount||amount<=0){showMsg(msg,t("fillAll"),"error");return;}
+  if(address.length<10){showMsg(msg,"Please enter a valid wallet address","error");return;}
+  const users=getUsers();const user=users.find(u=>u.username===currentUser.username);
+  const wallet=user.wallet||{USDT:0};
+  const deposits=getDeposits().filter(d=>d.username===currentUser.username&&d.status==="confirmed"&&d.type==="deposit");
+  const effectiveUSDT=(wallet.USDT||0)+deposits.reduce((s,d)=>s+d.amount,0)+(user.bonusBalance||0);
+  const bal=coin==="USDT"?effectiveUSDT:(wallet[coin]||0);
+  if(amount>bal){showMsg(msg,"Insufficient balance","error");return;}
+  const wd={id:Date.now(),username:currentUser.username,coin,network,address,amount,status:"pending",date:new Date().toLocaleString("en-US")};
+  const withdrawals=getWithdrawals();withdrawals.push(wd);saveWithdrawals(withdrawals);
+  showMsg(msg,"✅ Withdrawal request submitted! Processing time: 1-24 hours.","success");
+  document.getElementById("wAmount").value="";document.getElementById("wAddress").value="";
+  renderWithdrawHistory();showToast("📤","Withdrawal request submitted");
+}
+
+function renderWithdrawHistory(){
+  if(!currentUser)return;
+  const withdrawals=getWithdrawals().filter(w=>w.username===currentUser.username);
+  const list=document.getElementById("wHistList");
+  if(!withdrawals.length){list.innerHTML=`<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px;">No withdrawal history</div>`;return;}
+  list.innerHTML=withdrawals.slice().reverse().map(w=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:12px;">
+      <div><div style="font-weight:600;color:var(--text)">${w.coin} — ${w.network}</div><div style="color:var(--muted);margin-top:2px;font-family:var(--mono)">${w.address.substring(0,16)}...</div></div>
+      <div style="text-align:right"><div style="font-family:var(--mono);color:var(--red)">-${fmtCoin(w.amount)} ${w.coin}</div><div style="margin-top:2px"><span style="background:${w.status==='confirmed'?'rgba(14,203,129,0.15)':'rgba(240,185,11,0.15)'};color:${w.status==='confirmed'?'var(--green)':'var(--gold)'};padding:2px 6px;border-radius:3px;font-size:10px;font-weight:700;">${w.status==='confirmed'?'Completed':'Pending'}</span></div></div>
+    </div>`).join("");
+}
+
+// CHAT
+let chatOpen=false,chatHistory=[];
+function toggleChat(){
+  chatOpen=!chatOpen;
+  document.getElementById("chatBox").style.display=chatOpen?"flex":"none";
+  if(chatOpen)document.getElementById("chatInput").focus();
+}
+
+async function sendChat(){
+  const input=document.getElementById("chatInput");
+  const msg=input.value.trim();
+  if(!msg)return;
+  input.value="";
+  addChatMsg(msg,"user");
+  chatHistory.push({role:"user",content:msg});
+  const typing=addChatMsg("...", "bot");
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:500,
+        system:`You are a formal and professional customer support specialist for Blockmind, a cryptocurrency trading platform. Always respond in the same language the user writes in. Use a corporate, institutional tone — polite, precise, and professional like a premium financial institution.
+
+Scope of assistance:
+- Platform features: deposits, withdrawals (1-24h processing), buy/sell/convert, account management
+- Referral program: 10% commission on each deposit of referred users (first deposit min. $100 USDT)
+- Supported assets: BTC, ETH, BNB, USDT, SOL, XRP, ADA, DOGE, DOT, LTC
+- Network support: ERC20, TRC20, BEP20, Solana, Bitcoin, XRP Ledger, etc.
+
+Rules:
+- Never provide investment advice or price predictions
+- If asked about unrelated topics, politely decline and redirect
+- Keep responses to 2-4 sentences maximum
+- Never reveal system passwords or internal details
+- Always maintain a formal, respectful tone`,
+        messages:chatHistory,
+      })
+    });
+    const data=await res.json();
+    const reply=data.content?.[0]?.text||"I'm sorry, I couldn't process your request. Please try again.";
+    typing.textContent=reply;
+    chatHistory.push({role:"assistant",content:reply});
+    if(chatHistory.length>20)chatHistory=chatHistory.slice(-20);
+  }catch(e){
+    typing.textContent="Sorry, I'm having trouble connecting. Please try again in a moment.";
+  }
+  const msgs=document.getElementById("chatMessages");
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function addChatMsg(text,sender){
+  const msgs=document.getElementById("chatMessages");
+  const div=document.createElement("div");
+  div.style.cssText=sender==="user"
+    ?`background:var(--accent);color:#000;border-radius:8px 8px 2px 8px;padding:8px 12px;font-size:12px;max-width:85%;align-self:flex-end;font-weight:500;`
+    :`background:var(--bg3);border-radius:8px 8px 8px 2px;padding:8px 12px;font-size:12px;max-width:85%;color:var(--text);`;
+  div.textContent=text;
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+  return div;
+}
+
+
+// SPINNING COINS
+function renderSpinningCoins(){
+  const track = document.getElementById("spinningCoins");
+  if(!track) return;
+  const items = COINS.map(c => `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:52px;">
+    <div style="width:40px;height:40px;border-radius:50%;background:${c.color}22;color:${c.color};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;border:1px solid ${c.color}44;">${c.icon}</div>
+    <div style="font-size:10px;font-weight:600;color:var(--muted);">${c.sym}</div>
+  </div>`).join("");
+  track.innerHTML = items + items;
+}
+
+// LIVE TRADES FEED
+const FAKE_USERS = ["ali***","ber***","can***","den***","ege***","fat***","giz***","hak***","ibo***","jen***","kar***","ley***","mur***","naz***","oms***","pir***","ral***","sel***","tan***","umb***","val***","yas***","zey***","ace***","bur***","cev***","dil***","elk***"];
+const TRADE_TYPES = ["Buy","Sell","Buy","Buy","Sell","Buy","Convert","Buy","Sell","Buy"];
+let liveTradeInterval = null;
+
+function generateFakeTrade(){
+  const coin = COINS[Math.floor(Math.random()*COINS.length)];
+  const type = TRADE_TYPES[Math.floor(Math.random()*TRADE_TYPES.length)];
+  const user = FAKE_USERS[Math.floor(Math.random()*FAKE_USERS.length)];
+  // Mix of small and large amounts
+  const rand = Math.random();
+  let amount;
+  if(rand < 0.3) amount = (Math.random()*50+10).toFixed(0); // small 10-60
+  else if(rand < 0.6) amount = (Math.random()*500+100).toFixed(0); // medium 100-600
+  else if(rand < 0.85) amount = (Math.random()*5000+1000).toFixed(0); // large 1k-6k
+  else amount = (Math.random()*50000+10000).toFixed(0); // whale 10k-60k
+  return {coin, type, user, amount};
+}
+
+function addLiveTrade(){
+  const feed = document.getElementById("liveTradesFeed");
+  if(!feed) return;
+  const {coin, type, user, amount} = generateFakeTrade();
+  const isBuy = type === "Buy";
+  const color = isBuy ? "var(--green)" : "var(--red)";
+  const div = document.createElement("div");
+  div.style.cssText = `display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--border);border-left:2px solid ${color};border-radius:6px;padding:8px 12px;font-size:12px;animation:fadeInUp 0.3s ease;`;
+  div.innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div style="width:24px;height:24px;border-radius:50%;background:${coin.color}22;color:${coin.color};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">${coin.icon}</div>
+      <div>
+        <span style="font-weight:600;color:${color};">${type}</span>
+        <span style="color:var(--text);margin:0 4px;">${coin.sym}</span>
+        <span style="color:var(--muted);">${user}</span>
+      </div>
+    </div>
+    <div style="font-family:var(--mono);font-weight:600;color:var(--text);">$${parseInt(amount).toLocaleString()}</div>`;
+  feed.insertBefore(div, feed.firstChild);
+  // Keep only 5 visible
+  while(feed.children.length > 5) feed.removeChild(feed.lastChild);
+}
+
+function startLiveTrades(){
+  // Add 3 initial trades
+  for(let i=0;i<3;i++) setTimeout(()=>addLiveTrade(), i*400);
+  // Random intervals between 3-15 seconds
+  function scheduleNext(){
+    const delay = (Math.random()*12+3)*1000;
+    liveTradeInterval = setTimeout(()=>{addLiveTrade();scheduleNext();}, delay);
+  }
+  scheduleNext();
+}
 
 (function init(){
   try{const s=localStorage.getItem("bm_session");if(s){currentUser=JSON.parse(s);updateNav();}}catch(e){}
@@ -1238,7 +1664,7 @@ function showToast(icon,text){const t2=document.getElementById("toast");document
   const ref=urlParams.get("ref");
   if(ref){document.getElementById("refCode").value=ref;openAuth("register");}
   if(location.hash==="#admin")showPage("admin");
-  applyLang();fetchPrices();setInterval(fetchPrices,60000);
+  applyLang();fetchPrices();setInterval(fetchPrices,60000);renderSpinningCoins();startLiveTrades();
 })();
 </script>
 
