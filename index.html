@@ -1242,6 +1242,10 @@ function makeAvatar(user){const cls=getAvatarColor(user.username);const l=(user.
 
 function applyLang(){
   try{
+
+  }catch(e){console.warn("applyLang:",e);}
+}unction applyLang(){
+  try{
   try{
   document.getElementById("langBtn").textContent=lang.toUpperCase();
   document.getElementById("navLoginBtn").textContent=t("login");
@@ -1326,7 +1330,7 @@ function applyLang(){
   document.getElementById("depositTitle").textContent=t("depositTitle");
   document.getElementById("addrLabelText").textContent=lang==="tr"?"Gönderim Adresi":"Deposit Address";
   document.getElementById("copyAddrBtn").textContent=t("copy");
-  document.getElementById("confirmTitle").textContent=t("confirmDeposit");
+  try{var _x=document.getElementById("confirmTitle");if(_x)_x.textContent=t("confirmDeposit");}catch(e){}
   document.getElementById("confirmSub").textContent=t("confirmSub");
   document.getElementById("depUserLabel").textContent=t("username");
   document.getElementById("depNameLabel").textContent=t("fullName");
