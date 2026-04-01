@@ -1241,6 +1241,8 @@ function getAvatarColor(u){let h=0;for(let c of u)h=c.charCodeAt(0)+((h<<5)-h);r
 function makeAvatar(user){const cls=getAvatarColor(user.username);const l=(user.name||user.username)[0].toUpperCase();return`<div class="profile-avatar ${cls}" onclick="showPage('profile')" style="color:#000">${l}</div>`;}
 
 function applyLang(){
+  try{
+  try{
   document.getElementById("langBtn").textContent=lang.toUpperCase();
   document.getElementById("navLoginBtn").textContent=t("login");
   document.getElementById("navRegBtn").textContent=t("signup");
@@ -1329,7 +1331,7 @@ function applyLang(){
   document.getElementById("depUserLabel").textContent=t("username");
   document.getElementById("depNameLabel").textContent=t("fullName");
   document.getElementById("depAmtLabel").textContent=lang==="tr"?"Tutar (USDT)":"Amount (USDT)";
-  document.getElementById("depNetLabel").textContent=lang==="tr"?"Ağ":"Network";
+  try{const _dn=document.getElementById("depNetLabel");if(_dn)_dn.textContent=lang==="tr"?"Ağ":"Network";}catch(e){}
   document.getElementById("depTxLabel").textContent=t("txHash");
   document.getElementById("depSubmitBtn").textContent=t("submitDeposit");
   document.getElementById("loginUserLabel").textContent=t("username");
@@ -1355,8 +1357,8 @@ function applyLang(){
   document.getElementById("langModalSub").textContent=t("langSub");
   ["buyCoin","sellCoin","convertFrom","convertTo"].forEach(id=>{const s=document.getElementById(id);if(s&&s.options[0])s.options[0].text=t("selectCoin");});
   renderLangGrid();
+  }catch(e){console.log("applyLang error:",e);}
 }
-
 function showPage(name){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.getElementById("page-"+name).classList.add("active");
