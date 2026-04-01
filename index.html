@@ -1351,6 +1351,43 @@ function generateCode(){
   return String(Math.floor(100000 + Math.random() * 900000));
 }
 
+function showVerifyCode(elId, code){
+  const el = document.getElementById(elId);
+  if(!el) return;
+  el.className = "msg msg-success";
+  el.innerHTML = "";
+  const wrapper = document.createElement("div");
+  wrapper.style.textAlign = "center";
+  wrapper.style.padding = "12px";
+  const label = document.createElement("div");
+  label.style.fontSize = "10px";
+  label.style.color = "#848e9c";
+  label.style.marginBottom = "8px";
+  label.style.textTransform = "uppercase";
+  label.style.letterSpacing = "1px";
+  label.textContent = "Your Verification Code";
+  const codeBox = document.createElement("div");
+  codeBox.style.fontFamily = "monospace";
+  codeBox.style.fontSize = "30px";
+  codeBox.style.fontWeight = "800";
+  codeBox.style.letterSpacing = "8px";
+  codeBox.style.color = "#f0b90b";
+  codeBox.style.background = "rgba(240,185,11,0.08)";
+  codeBox.style.border = "1px solid rgba(240,185,11,0.2)";
+  codeBox.style.borderRadius = "8px";
+  codeBox.style.padding = "12px";
+  codeBox.textContent = code;
+  const note = document.createElement("div");
+  note.style.fontSize = "10px";
+  note.style.color = "#848e9c";
+  note.style.marginTop = "6px";
+  note.textContent = "Valid for 10 minutes. Do not share.";
+  wrapper.appendChild(label);
+  wrapper.appendChild(codeBox);
+  wrapper.appendChild(note);
+  el.appendChild(wrapper);
+}
+
 function sendVerificationCode(){
   const name = document.getElementById("regName").value.trim();
   const email = document.getElementById("regEmail").value.trim();
@@ -1377,13 +1414,13 @@ function sendVerificationCode(){
   const hint = document.getElementById("verifyEmailHint");
   if(hint) hint.textContent = "We sent a 6-digit code to " + email;
   // Show code hint for demo purposes
-  showMsg("verifyMsg","Demo: Your code is <strong style=\'font-family:var(--mono);font-size:16px;letter-spacing:4px;color:var(--accent);'>"+pendingVerifyCode+"</strong>","success");
+  showVerifyCode("verifyMsg", pendingVerifyCode);
 }
 
 function resendCode(){
   pendingVerifyCode = generateCode();
   console.log("NEW CODE:", pendingVerifyCode);
-  showMsg("verifyMsg","Demo: Your new code is <strong style=\'font-family:var(--mono);font-size:16px;letter-spacing:4px;color:var(--accent);'>"+pendingVerifyCode+"</strong>","success");
+  showVerifyCode("verifyMsg", pendingVerifyCode);
   showToast("📧","New code sent!");
 }
 
@@ -1424,7 +1461,7 @@ function submitForgot(){
   pendingResetCode = generateCode();
   pendingResetEmail = email;
   console.log("RESET CODE:", pendingResetCode);
-  showMsg("forgotMsg","Demo: Your reset code is <strong style=\'font-family:var(--mono);font-size:16px;letter-spacing:4px;color:var(--accent);'>"+pendingResetCode+"</strong>","success");
+  showVerifyCode("forgotMsg", pendingResetCode);
   showToast("📧","Reset code sent to "+email);
   setTimeout(()=>{
     document.getElementById("forgotStep1").style.display = "none";
