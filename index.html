@@ -731,48 +731,196 @@ select.form-input{cursor:pointer;}
 <!-- Auth -->
 
 <div class="modal-bg" id="authModal">
-  <div class="modal">
+  <div class="modal" style="max-width:420px;">
     <button class="modal-close" onclick="closeAuth()">✕</button>
-    <div class="modal-logo">Block<span>mind</span></div>
-    <div class="modal-tabs">
-      <button class="modal-tab active" id="tabLogin" onclick="switchAuthTab('login')">Log In</button>
-      <button class="modal-tab" id="tabRegister" onclick="switchAuthTab('register')">Sign Up</button>
+
+```
+<!-- Logo -->
+<div style="text-align:center;margin-bottom:20px;">
+  <div style="font-size:22px;font-weight:800;margin-bottom:4px;">Block<span style="color:var(--accent);">mind</span></div>
+  <div style="font-size:11px;color:var(--muted);">AI-Powered Crypto Platform</div>
+</div>
+
+<!-- Tabs -->
+<div class="modal-tabs">
+  <button class="modal-tab active" id="tabLogin" onclick="switchAuthTab('login')">Log In</button>
+  <button class="modal-tab" id="tabRegister" onclick="switchAuthTab('register')">Sign Up</button>
+</div>
+
+<!-- LOGIN FORM -->
+<div id="loginForm">
+  <div class="form-group">
+    <label class="form-label">Email or Username</label>
+    <div style="position:relative;">
+      <input class="form-input" id="loginUser" placeholder="Enter email or username" style="padding-left:38px;">
+      <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;">👤</span>
     </div>
-    <!-- Login -->
-    <div id="loginForm">
-      <div class="form-group"><label class="form-label">Username</label><input class="form-input" id="loginUser" placeholder="Enter username"></div>
-      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="loginPass" placeholder="Enter password"></div>
-      <div style="text-align:right;margin-bottom:12px;"><span style="font-size:12px;color:var(--accent);cursor:pointer;" onclick="openForgot()">Forgot password?</span></div>
-      <button class="btn btn-primary btn-full" onclick="doLogin()">Log In</button>
-      <div id="loginMsg"></div>
-      <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:12px;">By logging in you agree to our Terms of Service.</div>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Password</label>
+    <div style="position:relative;">
+      <input class="form-input" type="password" id="loginPass" placeholder="Enter password" style="padding-left:38px;padding-right:40px;" onkeydown="if(event.key==='Enter')doLogin()">
+      <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;">🔒</span>
+      <button onclick="togglePassVis('loginPass',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:13px;">👁</button>
     </div>
-    <!-- Register -->
-    <div id="registerForm" style="display:none;">
-      <div id="refBanner" style="display:none;background:rgba(240,185,11,0.08);border:1px solid rgba(240,185,11,0.2);border-radius:5px;padding:8px 10px;margin-bottom:10px;font-size:12px;color:var(--accent);"></div>
-      <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="regName" placeholder="Enter your full name"></div>
-      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="regEmail" placeholder="Enter your email"></div>
-      <div class="form-group"><label class="form-label">Username</label><input class="form-input" id="regUser" placeholder="Choose a username"></div>
-      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="regPass" placeholder="Min. 6 characters"></div>
-      <input type="hidden" id="refCode">
-      <button class="btn btn-primary btn-full" onclick="doRegister()">Create Account</button>
-      <div id="registerMsg"></div>
-      <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:12px;">By registering you agree to our Terms of Service.</div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+      <input type="checkbox" id="rememberMe" style="width:14px;height:14px;accent-color:var(--accent);">
+      <span style="font-size:12px;color:var(--muted);">Remember me</span>
+    </label>
+    <span style="font-size:12px;color:var(--accent);cursor:pointer;font-weight:500;" onclick="openForgot()">Forgot password?</span>
+  </div>
+  <button class="btn btn-primary btn-full" onclick="doLogin()" style="padding:13px;font-size:14px;">Log In</button>
+  <div id="loginMsg"></div>
+  <div style="display:flex;align-items:center;gap:10px;margin:14px 0;">
+    <div style="flex:1;height:1px;background:var(--border);"></div>
+    <span style="font-size:11px;color:var(--muted);">Secure Login</span>
+    <div style="flex:1;height:1px;background:var(--border);"></div>
+  </div>
+  <div style="display:flex;justify-content:center;gap:16px;margin-bottom:14px;">
+    <div style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);"><span>🔒</span> SSL Secured</div>
+    <div style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);"><span>🛡️</span> 256-bit Encrypted</div>
+    <div style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);"><span>✅</span> KYC Verified</div>
+  </div>
+  <div style="font-size:11px;color:var(--muted);text-align:center;">By logging in you agree to our <span style="color:var(--accent);">Terms of Service</span> and <span style="color:var(--accent);">Privacy Policy</span>.</div>
+</div>
+
+<!-- REGISTER FORM -->
+<div id="registerForm" style="display:none;">
+  <div id="refBanner" style="display:none;background:rgba(240,185,11,0.08);border:1px solid rgba(240,185,11,0.2);border-radius:6px;padding:9px 12px;margin-bottom:12px;font-size:12px;color:var(--accent);">🎁 <span id="refBannerText"></span></div>
+  
+  <!-- Step 1: Basic info -->
+  <div id="regStep1">
+    <div class="form-group">
+      <label class="form-label">Full Name</label>
+      <div style="position:relative;">
+        <input class="form-input" id="regName" placeholder="Enter your full name" style="padding-left:38px;">
+        <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;">👤</span>
+      </div>
     </div>
+    <div class="form-group">
+      <label class="form-label">Email Address</label>
+      <div style="position:relative;">
+        <input class="form-input" type="email" id="regEmail" placeholder="Enter your email" style="padding-left:38px;">
+        <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;">✉️</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Username</label>
+      <div style="position:relative;">
+        <input class="form-input" id="regUser" placeholder="Choose a username" style="padding-left:38px;" oninput="checkUsername()">
+        <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;">@</span>
+        <span id="userCheckIcon" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:13px;"></span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <div style="position:relative;">
+        <input class="form-input" type="password" id="regPass" placeholder="Min. 8 characters" style="padding-left:38px;padding-right:40px;" oninput="checkPassStrength()">
+        <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;">🔒</span>
+        <button onclick="togglePassVis('regPass',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:13px;">👁</button>
+      </div>
+      <!-- Password strength -->
+      <div id="passStrengthBar" style="display:none;margin-top:6px;">
+        <div style="display:flex;gap:4px;margin-bottom:4px;">
+          <div id="ps1" style="flex:1;height:3px;border-radius:2px;background:var(--border);transition:background 0.3s;"></div>
+          <div id="ps2" style="flex:1;height:3px;border-radius:2px;background:var(--border);transition:background 0.3s;"></div>
+          <div id="ps3" style="flex:1;height:3px;border-radius:2px;background:var(--border);transition:background 0.3s;"></div>
+          <div id="ps4" style="flex:1;height:3px;border-radius:2px;background:var(--border);transition:background 0.3s;"></div>
+        </div>
+        <div id="passStrengthLabel" style="font-size:11px;color:var(--muted);"></div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Confirm Password</label>
+      <div style="position:relative;">
+        <input class="form-input" type="password" id="regPassConfirm" placeholder="Re-enter password" style="padding-left:38px;padding-right:40px;" oninput="checkPassMatch()">
+        <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;">🔒</span>
+        <span id="passMatchIcon" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:13px;"></span>
+      </div>
+    </div>
+    <input type="hidden" id="refCode">
+    <button class="btn btn-primary btn-full" onclick="sendVerificationCode()" style="padding:13px;font-size:14px;">Continue →</button>
+    <div id="registerMsg"></div>
+  </div>
+
+  <!-- Step 2: Email verification -->
+  <div id="regStep2" style="display:none;">
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-size:32px;margin-bottom:8px;">✉️</div>
+      <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Verify Your Email</div>
+      <div style="font-size:12px;color:var(--muted);" id="verifyEmailHint">We sent a 6-digit code to your email</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Verification Code</label>
+      <input class="form-input" id="verifyCode" placeholder="Enter 6-digit code" maxlength="6" style="text-align:center;font-size:22px;font-family:var(--mono);letter-spacing:8px;font-weight:700;" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+    </div>
+    <div style="text-align:center;margin-bottom:14px;">
+      <span style="font-size:12px;color:var(--muted);">Didn't receive it? </span>
+      <span style="font-size:12px;color:var(--accent);cursor:pointer;" onclick="resendCode()">Resend code</span>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="verifyAndRegister()" style="padding:13px;font-size:14px;">Create Account</button>
+    <button onclick="backToStep1()" style="width:100%;background:transparent;border:none;color:var(--muted);font-size:12px;cursor:pointer;margin-top:10px;">← Go back</button>
+    <div id="verifyMsg"></div>
+  </div>
+
+  <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:12px;">By registering you agree to our <span style="color:var(--accent);">Terms of Service</span>.</div>
+</div>
+```
+
   </div>
 </div>
 
 <!-- Forgot password -->
 
 <div class="modal-bg" id="forgotModal">
-  <div class="modal">
+  <div class="modal" style="max-width:400px;">
     <button class="modal-close" onclick="closeForgot()">✕</button>
-    <div class="modal-logo">Block<span>mind</span></div>
-    <div style="font-size:18px;font-weight:700;margin-bottom:6px;">Reset Password</div>
-    <p style="color:var(--muted);font-size:13px;margin-bottom:18px;">Enter your email and we'll send a reset link.</p>
-    <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" type="email" id="forgotEmail" placeholder="Enter your email"></div>
-    <button class="btn btn-primary btn-full" onclick="submitForgot()">Send Reset Link</button>
-    <div id="forgotMsg"></div>
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-size:32px;margin-bottom:8px;">🔑</div>
+      <div style="font-size:18px;font-weight:700;margin-bottom:4px;">Reset Password</div>
+      <p style="color:var(--muted);font-size:12px;">Enter your email and we'll send you a 6-digit reset code.</p>
+    </div>
+
+```
+<!-- Step 1: Email -->
+<div id="forgotStep1">
+  <div class="form-group">
+    <label class="form-label">Email Address</label>
+    <div style="position:relative;">
+      <input class="form-input" type="email" id="forgotEmail" placeholder="Enter your email" style="padding-left:38px;">
+      <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;">✉️</span>
+    </div>
+  </div>
+  <button class="btn btn-primary btn-full" onclick="submitForgot()" style="padding:13px;">Send Reset Code</button>
+  <div id="forgotMsg"></div>
+</div>
+
+<!-- Step 2: Code + new password -->
+<div id="forgotStep2" style="display:none;">
+  <div class="form-group">
+    <label class="form-label">Reset Code</label>
+    <input class="form-input" id="forgotCode" placeholder="Enter 6-digit code" maxlength="6" style="text-align:center;font-size:20px;font-family:var(--mono);letter-spacing:6px;font-weight:700;" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+  </div>
+  <div class="form-group">
+    <label class="form-label">New Password</label>
+    <input class="form-input" type="password" id="forgotNewPass" placeholder="Min. 8 characters">
+  </div>
+  <div class="form-group">
+    <label class="form-label">Confirm New Password</label>
+    <input class="form-input" type="password" id="forgotConfirmPass" placeholder="Re-enter new password">
+  </div>
+  <button class="btn btn-primary btn-full" onclick="confirmReset()" style="padding:13px;">Reset Password</button>
+  <div id="forgotMsg2"></div>
+</div>
+
+<div style="text-align:center;margin-top:14px;">
+  <span style="font-size:12px;color:var(--muted);">Remember your password? </span>
+  <span style="font-size:12px;color:var(--accent);cursor:pointer;font-weight:500;" onclick="closeForgot();openAuth('login')">Log In</span>
+</div>
+```
+
   </div>
 </div>
 
@@ -1124,16 +1272,182 @@ function updateNav(){
   }
 }
 
+
+// ============================================================
+// AUTH ENHANCEMENTS
+// ============================================================
+let pendingRegData = null;
+let pendingVerifyCode = null;
+let pendingResetCode = null;
+let pendingResetEmail = null;
+
+function togglePassVis(inputId, btn){
+  const inp = document.getElementById(inputId);
+  if(!inp) return;
+  if(inp.type === "password"){inp.type = "text"; btn.textContent = "🙈";}
+  else{inp.type = "password"; btn.textContent = "👁";}
+}
+
+function checkUsername(){
+  const val = document.getElementById("regUser").value.trim();
+  const icon = document.getElementById("userCheckIcon");
+  if(!icon) return;
+  if(val.length < 3){icon.textContent = "";return;}
+  const users = getUsers();
+  if(users.find(u=>u.username===val)){icon.textContent = "❌";}
+  else{icon.textContent = "✅";}
+}
+
+function checkPassStrength(){
+  const pass = document.getElementById("regPass").value;
+  const bar = document.getElementById("passStrengthBar");
+  const label = document.getElementById("passStrengthLabel");
+  if(!bar||!label) return;
+  if(!pass){bar.style.display="none";return;}
+  bar.style.display = "block";
+  let score = 0;
+  if(pass.length >= 8) score++;
+  if(/[A-Z]/.test(pass)) score++;
+  if(/[0-9]/.test(pass)) score++;
+  if(/[^A-Za-z0-9]/.test(pass)) score++;
+  const colors = ["var(--red)","var(--red)","var(--gold)","var(--green)"];
+  const labels = ["Weak","Weak","Good","Strong"];
+  const labelColors = ["var(--red)","var(--red)","var(--gold)","var(--green)"];
+  for(let i=1;i<=4;i++){
+    const el = document.getElementById("ps"+i);
+    if(el) el.style.background = i<=score ? colors[score-1] : "var(--border)";
+  }
+  label.textContent = labels[score-1]||"";
+  label.style.color = labelColors[score-1]||"var(--muted)";
+}
+
+function checkPassMatch(){
+  const p1 = document.getElementById("regPass").value;
+  const p2 = document.getElementById("regPassConfirm").value;
+  const icon = document.getElementById("passMatchIcon");
+  if(!icon||!p2) return;
+  icon.textContent = p1===p2 ? "✅" : "❌";
+}
+
+function generateCode(){
+  return String(Math.floor(100000 + Math.random() * 900000));
+}
+
+function sendVerificationCode(){
+  const name = document.getElementById("regName").value.trim();
+  const email = document.getElementById("regEmail").value.trim();
+  const username = document.getElementById("regUser").value.trim();
+  const pass = document.getElementById("regPass").value;
+  const passConfirm = document.getElementById("regPassConfirm").value;
+  const refCode = document.getElementById("refCode").value.trim();
+  if(!name||!email||!username||!pass){showMsg("registerMsg","Please fill in all fields","error");return;}
+  if(!email.includes("@")){showMsg("registerMsg","Please enter a valid email","error");return;}
+  if(pass.length < 6){showMsg("registerMsg","Password must be at least 6 characters","error");return;}
+  if(pass !== passConfirm){showMsg("registerMsg","Passwords do not match","error");return;}
+  const users = getUsers();
+  if(users.find(u=>u.username===username)){showMsg("registerMsg","Username already taken","error");return;}
+  if(users.find(u=>u.email===email)){showMsg("registerMsg","Email already registered","error");return;}
+  pendingVerifyCode = generateCode();
+  pendingRegData = {name,email,username,pass,refCode};
+  // Show code in toast (simulated - in production would send real email)
+  showToast("📧","Verification code sent to "+email);
+  // For demo: show code in console and brief hint
+  console.log("VERIFICATION CODE:", pendingVerifyCode);
+  // Show step 2
+  document.getElementById("regStep1").style.display = "none";
+  document.getElementById("regStep2").style.display = "block";
+  const hint = document.getElementById("verifyEmailHint");
+  if(hint) hint.textContent = "We sent a 6-digit code to " + email;
+  // Show code hint for demo purposes
+  showMsg("verifyMsg","Demo: Your code is <strong style='font-family:var(--mono);font-size:16px;letter-spacing:4px;color:var(--accent);'>"+pendingVerifyCode+"</strong>","success");
+}
+
+function resendCode(){
+  pendingVerifyCode = generateCode();
+  console.log("NEW CODE:", pendingVerifyCode);
+  showMsg("verifyMsg","Demo: Your new code is <strong style='font-family:var(--mono);font-size:16px;letter-spacing:4px;color:var(--accent);'>"+pendingVerifyCode+"</strong>","success");
+  showToast("📧","New code sent!");
+}
+
+function backToStep1(){
+  document.getElementById("regStep1").style.display = "block";
+  document.getElementById("regStep2").style.display = "none";
+}
+
+function verifyAndRegister(){
+  const code = document.getElementById("verifyCode").value.trim();
+  if(!code){showMsg("verifyMsg","Please enter the verification code","error");return;}
+  if(code !== pendingVerifyCode){showMsg("verifyMsg","Incorrect code. Please try again.","error");return;}
+  if(!pendingRegData){showMsg("verifyMsg","Session expired. Please start over.","error");return;}
+  const {name,email,username,pass,refCode} = pendingRegData;
+  const newUser = {
+    id:Date.now(),name,email,username,password:pass,
+    balance:0,bonusBalance:0,wallet:{USDT:0},
+    referredBy:refCode||null,firstDepositDone:false,
+    mgmtActivated:false,emailVerified:true,
+    createdAt:new Date().toLocaleDateString("en-US")
+  };
+  const users = getUsers();
+  users.push(newUser); saveUsers(users);
+  pendingRegData = null; pendingVerifyCode = null;
+  closeAuth();
+  currentUser = newUser;
+  localStorage.setItem("bm_session", JSON.stringify(newUser));
+  updateNav();
+  showToast("🎉","Welcome to Blockmind, "+name+"!");
+  showPage("home");
+}
+
+function submitForgot(){
+  const email = document.getElementById("forgotEmail").value.trim();
+  if(!email){showMsg("forgotMsg","Please enter your email","error");return;}
+  const user = getUsers().find(u=>u.email===email);
+  if(!user){showMsg("forgotMsg","No account found with this email","error");return;}
+  pendingResetCode = generateCode();
+  pendingResetEmail = email;
+  console.log("RESET CODE:", pendingResetCode);
+  showMsg("forgotMsg","Demo: Your reset code is <strong style='font-family:var(--mono);font-size:16px;letter-spacing:4px;color:var(--accent);'>"+pendingResetCode+"</strong>","success");
+  showToast("📧","Reset code sent to "+email);
+  setTimeout(()=>{
+    document.getElementById("forgotStep1").style.display = "none";
+    document.getElementById("forgotStep2").style.display = "block";
+  },1500);
+}
+
+function confirmReset(){
+  const code = document.getElementById("forgotCode").value.trim();
+  const newPass = document.getElementById("forgotNewPass").value;
+  const confirmPass = document.getElementById("forgotConfirmPass").value;
+  if(!code||!newPass||!confirmPass){showMsg("forgotMsg2","Please fill in all fields","error");return;}
+  if(code !== pendingResetCode){showMsg("forgotMsg2","Incorrect reset code","error");return;}
+  if(newPass !== confirmPass){showMsg("forgotMsg2","Passwords do not match","error");return;}
+  if(newPass.length < 6){showMsg("forgotMsg2","Password must be at least 6 characters","error");return;}
+  const users = getUsers();
+  const user = users.find(u=>u.email===pendingResetEmail);
+  if(!user){showMsg("forgotMsg2","User not found","error");return;}
+  user.password = newPass;
+  saveUsers(users);
+  pendingResetCode = null; pendingResetEmail = null;
+  showMsg("forgotMsg2","✅ Password reset successfully!","success");
+  setTimeout(()=>{closeForgot();openAuth("login");},1800);
+}
+
+function closeForgot(){
+  document.getElementById("forgotModal").classList.remove("open");
+  document.getElementById("forgotStep1").style.display = "block";
+  document.getElementById("forgotStep2").style.display = "none";
+  document.getElementById("forgotMsg").innerHTML = "";
+}
+
 // ============================================================
 // AUTH
 // ============================================================
 function openAuth(tab){
   const ref = new URLSearchParams(window.location.search).get("ref");
   if(ref&&tab==="register"){
-    document.getElementById("refCode").value=ref;
-    const rb=document.getElementById("refBanner");
-    rb.style.display="block";
-    rb.textContent="🎁 You were invited by "+ref;
+    const rc=document.getElementById("refCode"); if(rc) rc.value=ref;
+    const rb=document.getElementById("refBanner"); if(rb) rb.style.display="block";
+    const rt=document.getElementById("refBannerText"); if(rt) rt.textContent="You were invited by "+ref+" — join and get bonuses!";
   }
   document.getElementById("authModal").classList.add("open");
   switchAuthTab(tab);
@@ -1147,40 +1461,22 @@ function switchAuthTab(tab){
 }
 
 function doLogin(){
-  const username = document.getElementById("loginUser").value.trim();
+  const identifier = document.getElementById("loginUser").value.trim();
   const password = document.getElementById("loginPass").value;
-  if(!username||!password){showMsg("loginMsg","Please fill in all fields","error");return;}
-  const user = getUsers().find(u=>u.username===username&&u.password===password);
-  if(!user){showMsg("loginMsg","Invalid username or password","error");return;}
-  currentUser=user; localStorage.setItem("bm_session",JSON.stringify(user));
+  const remember = document.getElementById("rememberMe")?.checked;
+  if(!identifier||!password){showMsg("loginMsg","Please fill in all fields","error");return;}
+  const users = getUsers();
+  const user = users.find(u=>(u.username===identifier||u.email===identifier)&&u.password===password);
+  if(!user){showMsg("loginMsg","Invalid credentials. Please try again.","error");return;}
+  currentUser=user;
+  localStorage.setItem("bm_session",JSON.stringify(user));
+  if(remember) localStorage.setItem("bm_remember","1");
   closeAuth(); updateNav();
   showToast("✅","Welcome back, "+user.name+"!");
   showPage("home");
 }
 
-function doRegister(){
-  const name=document.getElementById("regName").value.trim();
-  const email=document.getElementById("regEmail").value.trim();
-  const username=document.getElementById("regUser").value.trim();
-  const pass=document.getElementById("regPass").value;
-  const refCode=document.getElementById("refCode").value.trim();
-  if(!name||!email||!username||!pass){showMsg("registerMsg","Please fill in all fields","error");return;}
-  if(pass.length<6){showMsg("registerMsg","Password must be at least 6 characters","error");return;}
-  if(!email.includes("@")){showMsg("registerMsg","Please enter a valid email","error");return;}
-  const users=getUsers();
-  if(users.find(u=>u.username===username)){showMsg("registerMsg","Username already taken","error");return;}
-  if(users.find(u=>u.email===email)){showMsg("registerMsg","Email already registered","error");return;}
-  const newUser={
-    id:Date.now(),name,email,username,password:pass,
-    balance:0,bonusBalance:0,wallet:{USDT:0},
-    referredBy:refCode||null,firstDepositDone:false,
-    mgmtActivated:false,
-    createdAt:new Date().toLocaleDateString("en-US")
-  };
-  users.push(newUser); saveUsers(users);
-  showMsg("registerMsg","✅ Account created! You can now log in.","success");
-  setTimeout(()=>switchAuthTab("login"),1800);
-}
+// doRegister replaced by sendVerificationCode + verifyAndRegister
 
 function doLogout(){
   currentUser=null;
@@ -1189,16 +1485,9 @@ function doLogout(){
   showToast("👋","Logged out");
 }
 
-function openForgot(){closeAuth();document.getElementById("forgotModal").classList.add("open");}
-function closeForgot(){document.getElementById("forgotModal").classList.remove("open");}
-function submitForgot(){
-  const email=document.getElementById("forgotEmail").value.trim();
-  if(!email){showMsg("forgotMsg","Please enter your email","error");return;}
-  const user=getUsers().find(u=>u.email===email);
-  if(!user){showMsg("forgotMsg","No account found with this email","error");return;}
-  showMsg("forgotMsg","✅ Reset link sent! Check your email.","success");
-  setTimeout(()=>{closeForgot();openAuth("login");},2500);
-}
+function openForgot(){closeAuth();document.getElementById("forgotStep1").style.display="block";document.getElementById("forgotStep2").style.display="none";document.getElementById("forgotModal").classList.add("open");}
+// closeForgot moved to AUTH ENHANCEMENTS section
+// submitForgot moved to AUTH ENHANCEMENTS section
 
 // ============================================================
 // LANGUAGE
