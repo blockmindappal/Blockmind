@@ -72,7 +72,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:56px;background:var(�
 .form-input:focus{border-color:var(–accent);background:#1e2530;}
 .form-input::placeholder{color:#4a5568;}
 .form-input:hover{border-color:#3d4755;}
-select.form-input{cursor:pointer;background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘12’ height=‘12’ viewBox=‘0 0 24 24’ fill=‘none’ stroke=’%23848e9c’ stroke-width=‘2’%3E%3Cpolyline points=‘6 9 12 15 18 9’%3E%3C/polyline%3E%3C/svg%3E”);background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+select.form-input{cursor:pointer;padding-right:12px;}
 
 /* SECTION TITLE */
 .sec-title{font-size:14px;font-weight:700;color:var(–text);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
@@ -254,11 +254,26 @@ select.form-input{cursor:pointer;background-image:url(“data:image/svg+xml,%3Cs
   <div class="wrap">
     <!-- Hero -->
     <div id="heroGuest">
-      <div style="font-size:clamp(22px,5vw,38px);font-weight:800;line-height:1.1;margin-bottom:8px;">Buy & Sell Crypto<br>on <span style="color:var(--accent);">Blockmind</span></div>
-      <p style="color:var(--muted);font-size:13px;margin-bottom:18px;line-height:1.6;">Trade Bitcoin, Ethereum, BNB and hundreds of cryptocurrencies with AI-powered management.</p>
+      <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(240,185,11,0.08);border:1px solid rgba(240,185,11,0.2);border-radius:20px;padding:4px 12px;margin-bottom:14px;">
+        <div style="width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;"></div>
+        <span style="font-size:11px;color:var(--accent);font-weight:600;">AI Systems Online · 24/7 Active</span>
+      </div>
+      <div style="font-size:clamp(24px,5vw,40px);font-weight:800;line-height:1.1;margin-bottom:12px;">Intelligent Crypto<br>Asset Management<br><span style="color:var(--accent);">by Blockmind AI</span></div>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:16px;line-height:1.8;">Blockmind continuously monitors global crypto markets 24/7, analyzing thousands of trading pairs and executing optimized strategies to grow your portfolio automatically.</p>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:var(--muted);line-height:1.8;">
+        📊 <strong style="color:var(--text);">Market Intelligence</strong> — Real-time analysis of BTC, ETH, BNB and 100+ assets<br>
+        🤖 <strong style="color:var(--text);">AI Trading Engine</strong> — Automated execution across 15+ major exchanges<br>
+        💰 <strong style="color:var(--text);">Daily Returns</strong> — Approximately 10% daily on your deposited balance<br>
+        🔒 <strong style="color:var(--text);">Secure & Verified</strong> — AES-256 encryption, KYC compliant, cold wallet storage
+      </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <button class="btn btn-primary" style="padding:12px 24px;font-size:14px;" onclick="openAuth('register')" id="heroStartBtn">Get Started</button>
+        <button class="btn btn-primary" style="padding:12px 24px;font-size:14px;" onclick="openAuth('register')" id="heroStartBtn">Start Earning Now</button>
         <button class="btn btn-outline" style="padding:12px 24px;font-size:14px;" onclick="openAuth('login')" id="heroLoginBtn">Log In</button>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:14px;flex-wrap:wrap;">
+        <div style="font-size:11px;color:var(--muted);display:flex;align-items:center;gap:4px;"><span style="color:var(--green);">✓</span> No trading experience needed</div>
+        <div style="font-size:11px;color:var(--muted);display:flex;align-items:center;gap:4px;"><span style="color:var(--green);">✓</span> Withdraw anytime after 48h</div>
+        <div style="font-size:11px;color:var(--muted);display:flex;align-items:center;gap:4px;"><span style="color:var(--green);">✓</span> Welcome bonus up to $25</div>
       </div>
     </div>
     <div id="heroUser" style="display:none;">
