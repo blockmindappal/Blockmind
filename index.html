@@ -755,6 +755,7 @@ select.form-input{cursor:pointer;padding-right:12px;}
         <div style="margin-bottom:8px;"><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Note (optional)</label>
         <input class="form-input" id="adminBalNote" placeholder="e.g. Bonus, Correction..." style="padding:8px 10px;font-size:12px;"></div>
         <button onclick="adminAddBalance()" style="width:100%;background:var(--accent);color:#000;border:none;border-radius:6px;padding:9px;font-weight:700;cursor:pointer;font-size:13px;">Add Balance</button>
+        <button onclick="adminFixDuplicates()" style="width:100%;background:transparent;color:var(--red);border:1px solid var(--red);border-radius:6px;padding:7px;font-size:11px;cursor:pointer;margin-top:6px;">🔧 Fix Duplicate Deposits (username above)</button>
         <div id="adminBalMsg" style="margin-top:6px;"></div>
       </div>
 
@@ -2009,7 +2010,7 @@ function renderWallet(){
   // Update UI
   document.getElementById("walletTotal").textContent=grandTotal.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
   document.getElementById("wDepTotal").textContent=fmt(depositTotal);
-  document.getElementById("wIncomeTotal").textContent=income.earned>0?fmt(income.earned):"$0.00";
+  document.getElementById("wIncomeTotal").textContent=income.earned>0?fmt(income.earned):"$0.00 (accumulating...)";
   document.getElementById("wBonusTotal").textContent=bonusTotal>0?fmt(bonusTotal):"$0.00";
   document.getElementById("wPendingTotal").textContent=pendingTotal>0?fmt(pendingTotal):"$0.00";
   document.getElementById("wRefCount").textContent=invitedCount;
@@ -2017,7 +2018,10 @@ function renderWallet(){
   
   // Update breakdown labels with extra info
   const incLabel=document.getElementById("incomeBalLabel");
-  if(incLabel&&income.cycles>0){incLabel.textContent="AI Income ("+income.cycles+" cycles)";}
+  if(incLabel){
+    if(income.paidCount>0){incLabel.textContent="AI Income ("+income.paidCount+"/"+income.totalPayments+" payments)";}
+    else{incLabel.textContent="AI Income (~10% daily)";}
+  }
   
   // Assets list
   const wallet=JSON.parse(JSON.stringify(currentUser.wallet||{USDT:0}));
@@ -2140,40 +2144,95 @@ function getUserDepositTotal(username){
 function calcIncome(username){
   const data=getIncomeData();
   const deposited=getUserDepositTotal(username);
-  if(deposited<=0)return{earned:0,nextIn:0,goalDone:false,daily:0};
+  if(deposited<=0)return{earned:0,nextIn:0,goalDone:false,daily:0,progress:0,liveEarned:0,target:0,paidCount:0,totalPayments:10};
+  
+  const now=Date.now();
+  const dayMs=24*3600000;
+  const targetDaily=deposited*0.10; // Exactly 10% per day - never more
+  
   if(!data[username]){
     const seed=username.split("").reduce((s,c)=>s+c.charCodeAt(0),0);
-    const cycleHours=((seed*7)%18)+6;
-    const firstDelay=((seed%22)+1)*3600000;
-    data[username]={lastCycle:Date.now()-firstDelay,cycles:0,totalEarned:0,cycleHours};
+    const numPayments=8+Math.floor((seed*13)%8);
+    const payments=[];
+    for(let i=0;i<numPayments;i++){
+      payments.push(Math.floor(((seed*(i+3)*7919)%dayMs)));
+    }
+    payments.sort((a,b)=>a-b);
+    data[username]={dayStart:now,payments,totalEarned:0,paidPayments:[],dayCount:0};
     saveIncomeData(data);
   }
+  
   const d=data[username];
-  const cycleMs=d.cycleHours*3600000;
-  const now=Date.now();
-  let {lastCycle,cycles,totalEarned}=d;
+  let {dayStart,payments,totalEarned,paidPayments,dayCount}=d;
+  
+  if(!payments||!payments.length){
+    const seed=username.split("").reduce((s,c)=>s+c.charCodeAt(0),0);
+    const numPayments=10;
+    payments=[];
+    for(let i=0;i<numPayments;i++) payments.push(Math.floor(((seed*(i+3)*7919)%dayMs)));
+    payments.sort((a,b)=>a-b);
+    paidPayments=[];
+  }
+  
+  // Reset for new day
   let updated=false;
-  while(now-lastCycle>=cycleMs){
-    const variance=0.08+(Math.random()*0.04);
-    totalEarned+=deposited*variance;
-    cycles++;
-    lastCycle+=cycleMs;
+  while(now-dayStart>=dayMs){
+    dayStart+=dayMs;
+    paidPayments=[];
+    dayCount++;
     updated=true;
   }
+  
+  // Calculate today's earned amount based on paid payments
+  // Each payment = targetDaily / totalPayments (so total = exactly 10%)
+  const elapsed=now-dayStart;
+  const sliceAmount=targetDaily/payments.length;
+  
+  payments.forEach((_,idx2)=>{
+    if(elapsed>=payments[idx2]&&!paidPayments.includes(idx2)){
+      totalEarned+=sliceAmount; // Fixed slice, no variance - exact 10% total
+      paidPayments.push(idx2);
+      updated=true;
+    }
+  });
+  
   if(updated){
-    data[username]={...d,cycles,totalEarned,lastCycle};
+    data[username]={...d,dayStart,payments,totalEarned,paidPayments,dayCount};
     saveIncomeData(data);
-    const users=getUsers();
-    const user=users.find(u=>u.username===username);
-    if(user){
-      user.incomeBalance=(user.incomeBalance||0)+totalEarned-d.totalEarned;
-      saveUsers(users);
-      if(currentUser&&currentUser.username===username){currentUser=user;localStorage.setItem("bm_session",JSON.stringify(user));}
+    const prevTotal=d.totalEarned||0;
+    if(totalEarned>prevTotal){
+      const users=getUsers();
+      const user=users.find(u=>u.username===username);
+      if(user){
+        user.incomeBalance=(user.incomeBalance||0)+(totalEarned-prevTotal);
+        saveUsers(users);
+        if(currentUser&&currentUser.username===username){
+          currentUser=user;
+          localStorage.setItem("bm_session",JSON.stringify(user));
+        }
+      }
     }
   }
-  const nextIn=cycleMs-(now-lastCycle);
-  const goalDone=cycles>0&&(now-lastCycle)<3600000;
-  return{earned:totalEarned,nextIn,goalDone,cycles,daily:deposited*0.10};
+  
+  const progress=payments.length>0?paidPayments.length/payments.length:0;
+  const goalDone=paidPayments.length>=payments.length;
+  const nextOffset=payments.find((_,idx2)=>!paidPayments.includes(idx2));
+  const nextIn=nextOffset!==undefined?(dayStart+nextOffset)-now:dayMs-elapsed;
+  const noise=(Math.sin(now/9000)*0.002+Math.cos(now/4000)*0.001);
+  const liveEarned=Math.max(0,totalEarned*(1+noise));
+  
+  return{
+    earned:totalEarned,
+    nextIn:Math.max(0,nextIn),
+    goalDone,
+    cycles:dayCount,
+    daily:targetDaily,
+    progress,
+    liveEarned,
+    target:targetDaily,
+    paidCount:paidPayments.length,
+    totalPayments:payments.length
+  };
 }
 
 // ============================================================
@@ -2274,7 +2333,7 @@ function processReferralBonus(dep){
   if(!referrer.wallet)referrer.wallet={USDT:0};
   referrer.wallet.USDT=(referrer.wallet.USDT||0)+bonusAmt;
   const bonuses=getBonuses();
-  bonuses.push({id:Date.now(),referrer:referrer.username,referred:dep.username,depositAmount:dep.amount,bonusAmount:bonusAmt,date:new Date().toLocaleString("en-US"),type:"referral",note:"10% referral bonus"});
+  bonuses.push({id:Date.now(),referrer:referrer.username,referred:dep.username,depositAmount:dep.amount,bonusAmount:bonusAmt,date:new Date().toLocaleString("en-US"),type:"referral",note:"10% referral bonus - referrer credit"});
   saveBonuses(bonuses);
   if(currentUser&&currentUser.username===referrer.username){currentUser=referrer;localStorage.setItem("bm_session",JSON.stringify(referrer));}
   saveUsers(users);
@@ -2426,6 +2485,35 @@ function renderAdminTrades(trades){
   }).join("");
 }
 
+function adminFixDuplicates(){
+  const username = document.getElementById("adminBalUser").value.trim();
+  const msgEl = document.getElementById("adminBalMsg");
+  if(!username){msgEl.innerHTML="<div class='msg msg-error'>Enter username first</div>";return;}
+  
+  const deps = getDeposits();
+  const userDeps = deps.filter(d=>d.username===username&&d.status==="confirmed"&&d.type==="deposit");
+  
+  // Group by txhash - keep only unique ones
+  const seen = new Set();
+  const toRemove = [];
+  userDeps.forEach(d=>{
+    const key = d.txhash||d.id;
+    if(seen.has(key)){toRemove.push(d.id);}
+    else{seen.add(key);}
+  });
+  
+  if(!toRemove.length){
+    msgEl.innerHTML="<div class='msg msg-success'>No duplicates found for @"+username+"</div>";
+    return;
+  }
+  
+  const cleaned = deps.filter(d=>!toRemove.includes(d.id));
+  saveDeposits(cleaned);
+  msgEl.innerHTML="<div class='msg msg-success'>✅ Removed "+toRemove.length+" duplicate(s) for @"+username+"</div>";
+  renderAdmin();
+  showToast("🔧","Fixed "+toRemove.length+" duplicates");
+}
+
 function adminAddBalance(){
   const username = document.getElementById("adminBalUser").value.trim();
   const amount = parseFloat(document.getElementById("adminBalAmount").value);
@@ -2436,20 +2524,14 @@ function adminAddBalance(){
   if(!amount||amount<=0){msgEl.innerHTML="<div class='msg msg-error'>Please enter a valid amount</div>";return;}
   
   const users = getUsers();
-  const user = users.find(u=>u.username===username);
-  if(!user){msgEl.innerHTML="<div class='msg msg-error'>User not found: "+username+"</div>";return;}
+  const userIdx = users.findIndex(u=>u.username===username);
+  if(userIdx===-1){msgEl.innerHTML="<div class='msg msg-error'>User not found: "+username+"</div>";return;}
   
-  // Add to wallet
-  if(!user.wallet)user.wallet={USDT:0};
-  user.wallet.USDT=(user.wallet.USDT||0)+amount;
-  saveUsers(users);
-  
-  // Record as a confirmed deposit so it shows in deposit history
-  const deps=getDeposits();
-  deps.push({
+  // Add ONLY one confirmed deposit record
+  const dep = {
     id:Date.now(),
     username:username,
-    fullname:user.name,
+    fullname:users[userIdx].name,
     amount:amount,
     network:"Admin Credit",
     txhash:"ADMIN-"+Date.now(),
@@ -2458,16 +2540,18 @@ function adminAddBalance(){
     type:"deposit",
     source:"admin",
     note:note
-  });
+  };
+  const deps = getDeposits();
+  deps.push(dep);
   saveDeposits(deps);
   
-  // Update session if this is current user
+  // Update session if current user
   if(currentUser&&currentUser.username===username){
-    currentUser=user;
-    localStorage.setItem("bm_session",JSON.stringify(user));
+    const fresh=getUsers().find(u=>u.username===username);
+    if(fresh){currentUser=fresh;localStorage.setItem("bm_session",JSON.stringify(fresh));}
   }
   
-  msgEl.innerHTML="<div class='msg msg-success'>✅ $"+amount.toFixed(2)+" added to @"+username+"'s balance!</div>";
+  msgEl.innerHTML="<div class='msg msg-success'>✅ $"+amount.toFixed(2)+" added to @"+username+"</div>";
   document.getElementById("adminBalUser").value="";
   document.getElementById("adminBalAmount").value="";
   document.getElementById("adminBalNote").value="";
@@ -2475,6 +2559,7 @@ function adminAddBalance(){
   renderAdmin();
   setTimeout(()=>{if(msgEl)msgEl.innerHTML="";},4000);
 }
+
 
 function switchAdminTab(tab,btn){
   document.querySelectorAll(".seg-btn").forEach(b=>b.classList.remove("active"));
