@@ -2003,14 +2003,13 @@ function renderWallet(){
   const refEarned=refBonuses.reduce((s,b)=>s+b.bonusAmount,0);
   const invitedCount=getUsers().filter(u=>u.referredBy===currentUser.username).length;
   
-  // Grand total = wallet USDT (includes deposits) + AI income + bonuses
-  // wallet.USDT already includes all credits including bonuses
-  const grandTotal=(currentUser.wallet?.USDT||0)+income.earned;
+  // Grand total = confirmed deposits + AI income + bonuses
+  const grandTotal=depositTotal+income.earned+bonusTotal;
   
   // Update UI
   document.getElementById("walletTotal").textContent=grandTotal.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
   document.getElementById("wDepTotal").textContent=fmt(depositTotal);
-  document.getElementById("wIncomeTotal").textContent=income.earned>0?fmt(income.earned):"$0.00 (accumulating...)";
+  document.getElementById("wIncomeTotal").textContent=fmt(income.earned);
   document.getElementById("wBonusTotal").textContent=bonusTotal>0?fmt(bonusTotal):"$0.00";
   document.getElementById("wPendingTotal").textContent=pendingTotal>0?fmt(pendingTotal):"$0.00";
   document.getElementById("wRefCount").textContent=invitedCount;
