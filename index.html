@@ -2763,6 +2763,36 @@ function addChatMsg(text,sender){
   startMgmtStats();
 })();
 </script>
+<!-- ADMIN USER TRACKER -->
+<script>
+// Kullanıcı giriş yaptığında admin paneline kaydet
+function adminTrackLogin(username, fullname) {
+  try {
+    var device = navigator.userAgent;
+    if(/iPhone|iPad/.test(device)) device = 'iPhone/iPad';
+    else if(/Android/.test(device)) device = 'Android';
+    else if(/Windows/.test(device)) device = 'Windows PC';
+    else if(/Mac/.test(device)) device = 'Mac';
+    else device = 'Web';
+
+    var users = JSON.parse(localStorage.getItem('bm_users') || '[]');
+    var u = users.find(function(x){ return x.username === username; });
+    if(!u) {
+      u = { username: username, fullname: fullname||username, device: device, ip: '—', balance: 0, lastSeen: Date.now(), online: true };
+      users.push(u);
+    } else {
+      u.lastSeen = Date.now();
+      u.online = true;
+      u.device = device;
+      if(fullname) u.fullname = fullname;
+    }
+    localStorage.setItem('bm_users', JSON.stringify(users));
+  } catch(e) {}
+}
+
+// Mevcut login fonksiyonunu yakala
+var _origLogin = window.login || function(){};
+</script>
 
 </body>
 </html>
